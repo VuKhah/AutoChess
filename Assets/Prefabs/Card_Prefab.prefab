@@ -677,8 +677,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1.7547, y: -18.6987}
-  m_SizeDelta: {x: -35.4693, y: -43.7674}
+  m_AnchoredPosition: {x: 1.7549973, y: -5.374}
+  m_SizeDelta: {x: -35.469, y: -70.416}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5547325724585077965
 CanvasRenderer:
@@ -708,7 +708,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 532789160352839300, guid: 48e277d8509be504b979ef695e1c69c0, type: 3}
+  m_Sprite: {fileID: -4240557277141542220, guid: 7107dd2be91fe50448e14314ff47ca35, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -785,7 +785,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1915116136824116529, guid: e26f226a04c8f0540b353c72550a5952, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e26f226a04c8f0540b353c72550a5952, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1008,6 +1008,7 @@ GameObject:
   - component: {fileID: 8086661981770729001}
   - component: {fileID: 364420750977683875}
   - component: {fileID: 1903266754132774783}
+  - component: {fileID: 4017271115760715044}
   m_Layer: 5
   m_Name: Card_Prefab
   m_TagString: Untagged
@@ -1105,7 +1106,7 @@ CanvasGroup:
   m_Enabled: 1
   m_Alpha: 1
   m_Interactable: 1
-  m_BlocksRaycasts: 0
+  m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
 --- !u!114 &364420750977683875
 MonoBehaviour:
@@ -1139,3 +1140,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardDraggable
   parentReturnTo: {fileID: 0}
+--- !u!114 &4017271115760715044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9108932814670332130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e053eca7d814c9b4a9fe2d0e0f36a037, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardVisuals

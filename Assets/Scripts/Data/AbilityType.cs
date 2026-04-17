@@ -6,5 +6,6 @@ public enum AbilityType
     Growth = 3,  // Tăng ATK/HP sau mỗi lượt Prep
     Reborn = 4,  // Hồi sinh 1 lần với 1 HP
     Economy = 5, // Thắng/Sống sót -> Thêm Coin lượt sau
-    Taunt = 6    // Mục tiêu bắt buộc phải tấn công
+    Taunt = 6,    // Mục tiêu bắt buộc phải tấn công
+    SlainEffect = 7 // Kích hoạt hiệu ứng khi bị hạ gục
 }

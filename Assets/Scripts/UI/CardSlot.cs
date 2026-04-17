@@ -114,15 +114,18 @@ public class CardSlot : MonoBehaviour, IDropHandler
         switch (magic.Data.magicGroup)
         {
             case 1: // Nhóm 1: Tăng chỉ số
-                unit.currentATK += magic.Data.statBonusATK;
-                unit.currentHP += magic.Data.statBonusHP;
+                unit.permanentATKBonus += magic.Data.statBonusATK;
+                unit.permanentHPBonus += magic.Data.statBonusHP;
+                unit.ResetStats();
                 break;
             case 2: // Nhóm 2: Cấp Ability
                 unit.Data.ability = magic.Data.ability;
                 unit.Data.abilityValue = magic.Data.abilityValue;
+                unit.ResetStats();
                 break;
             case 3: // Nhóm 3: Kinh tế (Ví dụ đơn giản)
                 GameManager.Instance.playerCoins += 1;
+                unit.ResetStats();
                 // Có thể thêm logic GiveRandomCardFromTribe ở đây
                 break;
         }

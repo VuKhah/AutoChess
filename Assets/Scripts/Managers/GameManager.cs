@@ -1,7 +1,8 @@
-using UnityEngine;
-using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
-
+using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
@@ -18,7 +19,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Cấu hình Shop")]
     public int rollCost = 2;
-    public bool isShopFrozen = false; // Trạng thái đóng băng shop
+    public bool isShopFrozen = false;
 
     [Header("Cấu hình UI & Prefabs")]
     public GameObject cardPrefab;
@@ -26,17 +27,17 @@ public class GameManager : MonoBehaviour
     public Sprite cupIcon;
 
     [Header("Hệ thống Slots")]
-    public Transform[] playerSlots; // 6 ô Board nhà
-    public Transform[] enemySlots;  // 6 ô Board địch
-    public Transform[] shopSlots;   // 3-6 ô Shop
-    public Transform[] handSlots;   // 8 ô Bench/Hand
+    public Transform[] playerSlots;
+    public Transform[] enemySlots;
+    public Transform[] shopSlots;
+    public Transform[] handSlots;
 
     [Header("Trạng thái Game")]
     public bool isCombatActive = false;
 
     private CombatResolver resolver = new CombatResolver();
 
-    // Lưu trữ dữ liệu thực thể
+    // Dữ liệu thực thể để tính toán
     public List<CardInstance> playerBoard = new List<CardInstance>(new CardInstance[6]);
     public List<CardInstance> enemyBoard = new List<CardInstance>(new CardInstance[6]);
 
@@ -44,14 +45,10 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // Khởi tạo lượt 1
         currentTurn = 1;
         playerCups = 0;
-
-        // Cập nhật UI lần đầu (Pha Shop)
         UIManager.Instance.UpdateStats(playerHP, playerCups, playerCoins);
         UIManager.Instance.UpdateUIState(false);
-
         RefreshShop();
     }
 
@@ -62,56 +59,32 @@ public class GameManager : MonoBehaviour
         if (playerCoins >= rollCost)
         {
             playerCoins -= rollCost;
-            isShopFrozen = false; // Roll sẽ phá băng tự động
+            isShopFrozen = false;
             RefreshShop();
             UIManager.Instance.UpdateStats(playerHP, playerCups, playerCoins);
-            Debug.Log("<color=cyan>[SHOP]</color> Đã đổi bài mới (Tốn 2G)");
-        }
-        else
-        {
-            Debug.Log("<color=red>Kinh tế:</color> Không đủ tiền để Roll!");
         }
     }
 
-    public void ToggleLock()
-    {
-        isShopFrozen = !isShopFrozen;
-        Debug.Log(isShopFrozen ? "Đã KHÓA Shop" : "Đã MỞ KHÓA Shop");
-        // Bạn có thể gọi thêm hiệu ứng visual tại đây (VD: Đổi màu nút Lock)
-    }
+    public void ToggleLock() => isShopFrozen = !isShopFrozen;
 
     public void RefreshShop()
     {
-        // Nếu đang khóa thì không làm mới
         if (isShopFrozen) return;
-
-        // Dọn dẹp slot cũ
         foreach (var slot in shopSlots)
-        {
             foreach (Transform child in slot) Destroy(child.gameObject);
-        }
 
-        // Lấy bài mới dựa trên Tier (Cứ 2 turn tăng 1 tier)
-        int maxTier = (currentTurn / 2) + 1;
-        List<CardDefinition> shopData = CardDatabase.Instance.GetRandomShop(3); // Lấy 3 lá
-
+        List<CardDefinition> shopData = CardDatabase.Instance.GetRandomShop(3);
         for (int i = 0; i < shopData.Count; i++)
         {
-            if (i < shopSlots.Length)
-                CreateCardInSlot(shopData[i], shopSlots[i]);
+            if (i < shopSlots.Length) CreateCardInSlot(shopData[i], shopSlots[i]);
         }
     }
 
     private void CreateCardInSlot(CardDefinition data, Transform slot)
     {
         GameObject cardObj = Instantiate(cardPrefab, slot);
-
-        // Setup Transform
-        RectTransform rect = cardObj.GetComponent<RectTransform>();
-        rect.anchoredPosition = Vector2.zero;
+        cardObj.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         cardObj.transform.localScale = Vector3.one;
-
-        // Nạp dữ liệu vào CardUI
         CardInstance instance = new CardInstance(data, 0);
         cardObj.GetComponent<CardUI>().Setup(instance);
     }
@@ -135,99 +108,191 @@ public class GameManager : MonoBehaviour
 
     // --- HỆ THỐNG CHIẾN ĐẤU ---
 
+    public void SyncBoards()
+    {
+        for (int i = 0; i < playerSlots.Length; i++)
+        {
+            CardUI ui = playerSlots[i].GetComponentInChildren<CardUI>();
+            playerBoard[i] = (ui != null) ? ui.currentInstance : null;
+        }
+        for (int i = 0; i < enemySlots.Length; i++)
+        {
+            CardUI ui = enemySlots[i].GetComponentInChildren<CardUI>();
+            enemyBoard[i] = (ui != null) ? ui.currentInstance : null;
+        }
+    }
+
     public void StartCombatPhase()
     {
         if (isCombatActive) return;
 
-        isCombatActive = true;
-        UIManager.Instance.UpdateUIState(true); // Chuyển sang mode Combat
-
+        // 1. Triệu hồi đối thủ trước
         SummonEnemyTeam();
-        ProcessCombat();
+
+        // 2. Đồng bộ dữ liệu lên Board tính toán
+        SyncBoards();
+
+        isCombatActive = true;
+        UIManager.Instance.UpdateUIState(true);
+
+        // 3. Bắt đầu diễn biến
+        StartCoroutine(CombatSequence());
     }
 
-    public void ExecuteNextTurn()
+    // --- ĐẠO DIỄN TRẬN ĐẤU ---
+    private IEnumerator CombatSequence()
     {
-        currentTurn++;
+        // Giai đoạn A: Chuẩn bị sân khấu (Đảm bảo tọa độ UI chính xác)
+        LayoutRebuilder.ForceRebuildLayoutImmediate(playerSlots[0].parent.GetComponent<RectTransform>());
+        LayoutRebuilder.ForceRebuildLayoutImmediate(enemySlots[0].parent.GetComponent<RectTransform>());
+        yield return new WaitForEndOfFrame(); // Chờ Unity ổn định vị trí
 
-        // Kiểm tra điều kiện thắng theo Turn
-        if (currentTurn > maxTurns) { WinGame(); return; }
+        // Giai đoạn B: Viết kịch bản (Tính toán toàn bộ trận đấu trong 1 tích tắc)
+        TurnRecord combatLog = new TurnRecord();
+        // Bộ não CombatResolver sẽ tính toán thắng thua, ripple target, synergy...
+        resolver.ResolveTurn(playerBoard, enemyBoard, combatLog);
 
-        isCombatActive = false;
-        playerCoins += 10; // Tiền trợ cấp mỗi lượt
+        // Giai đoạn C: Trình diễn (Đọc từng dòng kịch bản và cho lính đấm nhau)
+        foreach (var action in combatLog.actions)
+        {
+            // VisualizeAction sẽ điều khiển các lá bài bay lên, rung lắc và trừ máu
+            yield return StartCoroutine(VisualizeAction(action));
 
-        // Nếu không khóa bài thì làm mới shop
-        if (!isShopFrozen) RefreshShop();
-        else isShopFrozen = false; // Tự động mở khóa cho lượt tiếp theo
+            // Tốc độ giữa các đòn đánh (chỉnh nhỏ lại để trận đấu kịch tính)
+            yield return new WaitForSeconds(0.1f);
+        }
 
-        UIManager.Instance.UpdateStats(playerHP, playerCups, playerCoins);
-        UIManager.Instance.UpdateUIState(false); // Quay lại mode Shop
+        // Giai đoạn D: Hạ màn (Chờ 1 giây để người chơi nhìn kết quả cuối cùng)
+        yield return new WaitForSeconds(1.0f);
 
-        Debug.Log($"<color=green>LƯỢT MỚI: {currentTurn}</color>");
+        // Giai đoạn E: Khôi phục & Dọn dẹp
+        // 1. Tính toán Cup và HP cho người chơi dựa trên kết quả Board
+        CheckVictoryConditions();
+
+        // 2. Hồi máu về mức (Base + Buff vĩnh viễn), hiện lại các lính bị ẩn
+        EndCombatAndPrepareNextTurn();
+
+        Debug.Log("<color=yellow>--- TRẬN ĐẤU KẾT THÚC, QUAY LẠI SHOP ---</color>");
     }
 
-    private void SummonEnemyTeam()
+    // --- HÀM DIỄN CHI TIẾT TỪNG CÚ ĐẤM ---
+    private IEnumerator VisualizeAction(CombatAction action)
     {
-        // 1. Dọn sân cũ
-        foreach (var slot in enemySlots)
-            foreach (Transform child in slot) Destroy(child.gameObject);
+        // Tìm "diễn viên" trên sân dựa vào Index và phe tấn công
+        CardVisuals attackerVis = (action.isPlayerAttacking ? playerSlots : enemySlots)[action.attackerIdx].GetComponentInChildren<CardVisuals>(true);
+        CardVisuals targetVis = (action.isPlayerAttacking ? enemySlots : playerSlots)[action.targetIdx].GetComponentInChildren<CardVisuals>(true);
 
+        // Nếu một trong hai biến mất (đã chết từ action trước) thì bỏ qua
+        if (attackerVis == null || targetVis == null) yield break;
 
-        // 2. Lọc danh sách lính
-        List<CardDefinition> allUnits = CardDatabase.Instance.GetAllCards().FindAll(c => c.cardType == CardType.Unit);
+        // 1. Lao vào va chạm: Tính trung điểm giữa 2 lá bài
+        Vector3 impactPos = (attackerVis.transform.position + targetVis.transform.position) / 2;
+        yield return StartCoroutine(attackerVis.AttackAnimation(impactPos, 0.12f));
 
+        // 2. Cập nhật HP: Ép máu của UI khớp chính xác với kết quả Resolver đã tính
+        CardUI atkUI = attackerVis.GetComponent<CardUI>();
+        CardUI tarUI = targetVis.GetComponent<CardUI>();
 
-        if (allUnits.Count == 0) return;
+        atkUI.currentInstance.currentHP = action.atkHPAfter;
+        tarUI.currentInstance.currentHP = action.defHPAfter;
 
-        // 3. Chỉ triệu hồi 3 con ngẫu nhiên (hoặc số lượng tùy ý < 6)
-        int countToSummon = 3;
-        for (int i = 0; i < countToSummon; i++)
-        {
-            if (i >= enemySlots.Length) break; // Bảo vệ nếu slot ít hơn số quân muốn triệu hồi
+        // Vẽ lại con số máu trên lá bài
+        atkUI.Setup(atkUI.currentInstance);
+        tarUI.Setup(tarUI.currentInstance);
 
-            // Chọn một quân bài ngẫu nhiên từ danh sách lính
-            CardDefinition randomUnit = allUnits[Random.Range(0, allUnits.Count)];
+        // 3. Xử lý tử trận: Nếu máu về 0 thì chạy animation nứt vỡ/ẩn bài
+        if (atkUI.currentInstance.IsDead) StartCoroutine(attackerVis.DieAnimation());
+        if (tarUI.currentInstance.IsDead) StartCoroutine(targetVis.DieAnimation());
 
-            GameObject cardObj = Instantiate(cardPrefab, enemySlots[i]);
-            cardObj.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-            cardObj.transform.localScale = Vector3.one;
-
-            if (cardObj.TryGetComponent<CardDraggable>(out var drg)) drg.enabled = false;
-
-            // Lưu vào bộ nhớ chiến đấu
-            enemyBoard[i] = new CardInstance(randomUnit, i);
-            cardObj.GetComponent<CardUI>().Setup(enemyBoard[i]);
-        }
+        yield return new WaitForSeconds(0.2f);
     }
 
-    public void ProcessCombat()
+    // --- HÀM KHÔI PHỤC TRẠNG THÁI ---
+    public void EndCombatAndPrepareNextTurn()
     {
-        Debug.Log("<color=white>Đang tính toán kết quả trận đấu...</color>");
-        TurnRecord log = new TurnRecord();
-        resolver.ResolveTurn(playerBoard, enemyBoard, log);
+        // Duyệt qua toàn bộ ô Board và Hand để hồi máu
+        ResetAllCardsInSlots(playerSlots);
+        ResetAllCardsInSlots(handSlots);
 
-        bool pAlive = playerBoard.Exists(u => u != null && u.currentHP > 0);
-        bool eAlive = enemyBoard.Exists(u => u != null && u.currentHP > 0);
+        // Gọi logic chuyển sang lượt mới (cộng tiền, roll shop...)
+        ExecuteNextTurn();
+    }
 
-        Debug.Log($"Kết quả: Player còn {playerBoard.Count(u => u != null && u.currentHP > 0)} quân | Enemy còn {enemyBoard.Count(u => u != null && u.currentHP > 0)} quân");
-
-        if (pAlive && !eAlive)
+    private void ResetAllCardsInSlots(Transform[] slots)
+    {
+        foreach (var slot in slots)
         {
-            playerCups++; // Thắng -> Được Cup
-            Debug.Log("<color=yellow>THẮNG: Nhận được 1 Cup!</color>");
+            // Tìm CardUI (kể cả những cái đang bị Deactivate)
+            CardUI ui = slot.GetComponentInChildren<CardUI>(true);
+            if (ui != null)
+            {
+                // Reset máu về (Gốc + Buff vĩnh viễn)
+                ui.currentInstance.ResetStats();
+
+                // Hiện lại lá bài, reset độ mờ và kích thước
+                CardVisuals vis = ui.GetComponent<CardVisuals>();
+                if (vis != null) vis.ResetVisuals();
+
+                // Vẽ lại UI sạch sẽ
+                ui.Setup(ui.currentInstance);
+            }
         }
-        else if (!pAlive && eAlive)
-        {
-            playerHP--; // Thua -> Mất máu
-            Debug.Log("<color=red>THUA: Bị trừ 1 HP!</color>");
-        }
+    }
+    private void CheckVictoryConditions()
+    {
+        bool pAlive = playerBoard.Any(u => u != null && !u.IsDead);
+        bool eAlive = enemyBoard.Any(u => u != null && !u.IsDead);
+
+        if (pAlive && !eAlive) playerCups++;
+        else if (!pAlive && eAlive) playerHP--;
 
         UIManager.Instance.UpdateStats(playerHP, playerCups, playerCoins);
 
         if (playerHP <= 0) GameOver();
         if (playerCups >= winConditionCups) WinGame();
+    }
+    void FinalCleanup()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            if (playerBoard[i] != null && playerBoard[i].IsDead) playerBoard[i] = null;
+            if (enemyBoard[i] != null && enemyBoard[i].IsDead) enemyBoard[i] = null;
+        }
+    }
 
+    private void SummonEnemyTeam()
+    {
+        foreach (var slot in enemySlots)
+            foreach (Transform child in slot) Destroy(child.gameObject);
 
+        List<CardDefinition> allUnits = CardDatabase.Instance.GetAllCards().FindAll(c => c.cardType == CardType.Unit);
+        if (allUnits.Count == 0) return;
+
+        int count = 3;
+        for (int i = 0; i < count; i++)
+        {
+            if (i >= enemySlots.Length) break;
+            CardDefinition data = allUnits[Random.Range(0, allUnits.Count)];
+            GameObject cardObj = Instantiate(cardPrefab, enemySlots[i]);
+            cardObj.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            cardObj.transform.localScale = Vector3.one;
+            if (cardObj.TryGetComponent<CardDraggable>(out var drg)) drg.enabled = false;
+
+            CardInstance instance = new CardInstance(data, i);
+            cardObj.GetComponent<CardUI>().Setup(instance);
+        }
+    }
+
+    public void ExecuteNextTurn()
+    {
+        currentTurn++;
+        if (currentTurn > maxTurns) { WinGame(); return; }
+        isCombatActive = false;
+        playerCoins += 10;
+        if (!isShopFrozen) RefreshShop();
+        else isShopFrozen = false;
+        UIManager.Instance.UpdateStats(playerHP, playerCups, playerCoins);
+        UIManager.Instance.UpdateUIState(false);
     }
 
     void WinGame() { Debug.Log("BẠN ĐÃ CHIẾN THẮNG!"); }

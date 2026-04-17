@@ -6261,26 +6261,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1655997816}
     m_Modifications:
-    - target: {fileID: 740510988991621942, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: e26f226a04c8f0540b353c72550a5952, type: 3}
-    - target: {fileID: 1502165997176734200, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -35.469
-      objectReference: {fileID: 0}
-    - target: {fileID: 1502165997176734200, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: -70.416
-      objectReference: {fileID: 0}
-    - target: {fileID: 1502165997176734200, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 1.7549973
-      objectReference: {fileID: 0}
-    - target: {fileID: 1502165997176734200, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -5.374
-      objectReference: {fileID: 0}
     - target: {fileID: 2823776546859311523, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -6323,7 +6303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2823776546859311523, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2823776546859311523, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6360,14 +6340,6 @@ PrefabInstance:
     - target: {fileID: 2823776546859311523, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5903524747079118782, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -4240557277141542220, guid: 7107dd2be91fe50448e14314ff47ca35, type: 3}
-    - target: {fileID: 8086661981770729001, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
-      propertyPath: m_BlocksRaycasts
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9108932814670332130, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
       propertyPath: m_Name
