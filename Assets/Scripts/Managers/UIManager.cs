@@ -1,0 +1,122 @@
+using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+
+public class UIManager : MonoBehaviour
+{
+    public static UIManager Instance;
+
+    [Header("Các Panel chính")]
+    public GameObject shopPanel;
+    public GameObject enemyBoardPanel;
+
+    [Header("Chỉ số hiển thị")]
+    public TextMeshProUGUI playerHPText;
+    public TextMeshProUGUI resourceText; // Hiển thị số Coin hoặc số Cup
+    public Image resourceIcon;           // Icon thay đổi giữa Coin/Cup
+
+    [Header("Hệ thống Nút bấm")]
+    public Button actionButton;          // Nút Start / Next Turn
+    public TextMeshProUGUI actionText;   // Chữ trên nút Action
+    public Button rollButton;
+    public Button lockButton;
+    public Image lockButtonImage;        // Để đổi màu nút khi khóa bài
+
+    [Header("Màu sắc giao diện")]
+    public Color lockActiveColor = Color.cyan;
+    public Color lockNormalColor = Color.white;
+
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
+
+    private void Start()
+    {
+        // Gán sự kiện cho các nút bấm
+        actionButton.onClick.AddListener(OnActionPressed);
+        rollButton.onClick.AddListener(OnRollPressed);
+        lockButton.onClick.AddListener(OnLockPressed);
+    }
+
+    /// <summary>
+    /// Cập nhật các chỉ số cơ bản lên màn hình
+    /// </summary>
+    public void UpdateStats(int hp, int cups, int coins)
+    {
+        playerHPText.text = hp.ToString();
+
+        // Nếu đang trong trận đấu thì hiện Cup, nếu ở Shop thì hiện Coin
+        if (GameManager.Instance.isCombatActive)
+        {
+            resourceText.text = cups.ToString();
+        }
+        else
+        {
+            resourceText.text = coins.ToString() + "G";
+        }
+    }
+
+    /// <summary>
+    /// Thay đổi trạng thái toàn bộ UI giữa Shop và Combat
+    /// </summary>
+    public void UpdateUIState(bool isCombat)
+    {
+        // 1. Chuyển đổi Panel
+        shopPanel.SetActive(!isCombat);
+        enemyBoardPanel.SetActive(isCombat);
+
+        // 2. Chuyển đổi Icon và Text tài nguyên
+        if (resourceIcon != null)
+            resourceIcon.sprite = isCombat ? GameManager.Instance.cupIcon : GameManager.Instance.coinIcon;
+
+        // 3. Ẩn/Hiện các nút chức năng Shop
+        rollButton.gameObject.SetActive(!isCombat);
+        lockButton.gameObject.SetActive(!isCombat);
+
+        // 4. Thay đổi nội dung nút hành động chính
+        actionText.text = isCombat ? "LƯỢT TIẾP" : "BẮT ĐẦU";
+
+        // Cập nhật lại chỉ số ngay lập tức để tránh bị trễ hiển thị
+        UpdateStats(GameManager.Instance.playerHP, GameManager.Instance.playerCups, GameManager.Instance.playerCoins);
+    }
+
+    // --- CÁC SỰ KIỆN NÚT BẤM ---
+
+    private void OnActionPressed()
+    {
+        if (!GameManager.Instance.isCombatActive)
+        {
+            // Nếu đang ở Shop -> Nhấn để Bắt đầu Combat
+            Debug.Log("<color=yellow>UI: Bắt đầu trận đấu!</color>");
+            GameManager.Instance.StartCombatPhase();
+        }
+        else
+        {
+            // Nếu đang ở Combat -> Nhấn để sang Lượt mới
+            Debug.Log("<color=green>UI: Chuyển sang lượt tiếp theo.</color>");
+            GameManager.Instance.ExecuteNextTurn();
+        }
+    }
+
+    private void OnRollPressed()
+    {
+        GameManager.Instance.RollShop();
+    }
+
+    private void OnLockPressed()
+    {
+        GameManager.Instance.ToggleLock();
+
+        // Thay đổi màu sắc nút Lock để người chơi biết đang ở trạng thái nào
+        if (lockButtonImage != null)
+        {
+            lockButtonImage.color = GameManager.Instance.isShopFrozen ? lockActiveColor : lockNormalColor;
+        }
+    }
+
+    // Các hàm bổ trợ nếu cần gọi riêng lẻ
+    public void ShowVictory() { /* Hiển thị Popup thắng */ }
+    public void ShowGameOver() { /* Hiển thị Popup thua */ }
+}
