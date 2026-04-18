@@ -42,17 +42,22 @@ public class CardDatabase : MonoBehaviour
     {
         return unitList.Concat(magicList).ToList();
     }
-
-    public List<CardDefinition> GetRandomShop(int count)
+    public List<CardDefinition> GetRandomShop(int count, int maxTier)
     {
-        List<CardDefinition> allCards = GetAllCards();
+        // 1. Chỉ lấy những thẻ có Tier <= maxTier
+        List<CardDefinition> validCards = GetAllCards().Where(c => c.tier <= maxTier).ToList();
         List<CardDefinition> shop = new List<CardDefinition>();
 
-        if (allCards.Count == 0) return shop;
+        if (validCards.Count == 0)
+        {
+            Debug.LogWarning($"[DATABASE] Không có lá bài nào thỏa mãn điều kiện Tier <= {maxTier}");
+            return shop;
+        }
 
+        // 2. Random từ Pool đã lọc (Roll bài)
         for (int i = 0; i < count; i++)
         {
-            shop.Add(allCards[Random.Range(0, allCards.Count)]);
+            shop.Add(validCards[Random.Range(0, validCards.Count)]);
         }
         return shop;
     }

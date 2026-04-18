@@ -119,14 +119,17 @@ public class CardSlot : MonoBehaviour, IDropHandler
                 unit.ResetStats();
                 break;
             case 2: // Nhóm 2: Cấp Ability
-                unit.Data.ability = magic.Data.ability;
-                unit.Data.abilityValue = magic.Data.abilityValue;
+                // [ĐÃ SỬA LỖI TTE] - Gán toàn bộ khối logic AbilityData từ bài Phép sang Lính
+                if (magic.Data.ability != null)
+                {
+                    // Copy dữ liệu kỹ năng để lính sở hữu kỹ năng này
+                    unit.Data.ability = magic.Data.ability;
+                }
                 unit.ResetStats();
                 break;
-            case 3: // Nhóm 3: Kinh tế (Ví dụ đơn giản)
+            case 3: // Nhóm 3: Kinh tế 
                 GameManager.Instance.playerCoins += 1;
                 unit.ResetStats();
-                // Có thể thêm logic GiveRandomCardFromTribe ở đây
                 break;
         }
     }

@@ -11,11 +11,10 @@ public class CardDefinition
     public Tribe tribe;      // None, Babylon, Olympus...
     public int baseATK;
     public int baseHP;
-    public AbilityType ability; // ID kỹ năng (1: Enrage, 4: Slain...)
-    public int abilityValue;
     public int cost;
     public int tier;
 
+    public AbilityData ability; // ID kỹ năng (1: Enrage, 4: Slain...)
     public string description; // Mô tả kỹ năng, có thể dùng để hiển thị tooltip
 
     // Các trường bổ sung cho Bài Phép (Magic)

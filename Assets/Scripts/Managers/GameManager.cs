@@ -67,13 +67,22 @@ public class GameManager : MonoBehaviour
 
     public void ToggleLock() => isShopFrozen = !isShopFrozen;
 
+    //Hàm tính toán Tier dựa trên Turn
+    public int GetCurrentShopTier()
+    {
+        // Công thức: Turn 1-2: Tier 1 | Turn 3-4: Tier 2 | Turn 5-6: Tier 3...
+        // Tối đa là Tier 6.
+        int calculatedTier = (currentTurn + 1) / 2;
+        return Mathf.Clamp(calculatedTier, 1, 6);
+    }
     public void RefreshShop()
     {
         if (isShopFrozen) return;
         foreach (var slot in shopSlots)
             foreach (Transform child in slot) Destroy(child.gameObject);
 
-        List<CardDefinition> shopData = CardDatabase.Instance.GetRandomShop(3);
+        int currentTier = GetCurrentShopTier();
+        List<CardDefinition> shopData = CardDatabase.Instance.GetRandomShop(shopSlots.Length, currentTier);
         for (int i = 0; i < shopData.Count; i++)
         {
             if (i < shopSlots.Length) CreateCardInSlot(shopData[i], shopSlots[i]);
@@ -288,7 +297,23 @@ public class GameManager : MonoBehaviour
         currentTurn++;
         if (currentTurn > maxTurns) { WinGame(); return; }
         isCombatActive = false;
-        playerCoins += 10;
+        // 1. Reset về đúng 10 Coin cố định (Không cộng dồn từ turn trước)
+        playerCoins = 10;
+
+        // 2. Tính Coin từ các Unit Kinh tế đang có trên bàn cờ
+        foreach (var unit in playerBoard)
+        {
+            if (unit != null && !unit.IsDead && unit.Data.ability != null)
+            {
+                if (unit.Data.ability.trigger == TriggerType.OnTurnStart && unit.Data.ability.effect == EffectType.GainCoin)
+                {
+                    playerCoins += unit.Data.ability.effectValue1;
+                    Debug.Log($"<color=yellow>[ECONOMY]</color> {unit.Data.cardName} đào được {unit.Data.ability.effectValue1} Coin!");
+                }
+            }
+        }
+
+        // 3. Refresh Shop sau khi đã có tổng số tiền chính xác
         if (!isShopFrozen) RefreshShop();
         else isShopFrozen = false;
         UIManager.Instance.UpdateStats(playerHP, playerCups, playerCoins);

@@ -51,17 +51,21 @@ public class CardUI : MonoBehaviour
         // 3. Nạp Hình 1: Icon Đặc tính (Ability)
         if (abilityIcon != null)
         {
-            // Ép kiểu Enum sang Int để lấy số (Ví dụ: Enrage -> 1)
-            int abilityID = (int)instance.Data.ability;
-
-            if (abilityID == 0) // 0 là None
+            // ability bây giờ là một class. Ta sẽ dùng ID của nó để tìm ảnh tương ứng. Ví dụ: Abi_1.png, Abi_2.png...
+            if (instance.Data.ability == null || instance.Data.ability.trigger == TriggerType.None)
             {
                 abilityIcon.gameObject.SetActive(false);
             }
             else
             {
-                // Nạp ảnh theo định dạng: Icons/Abilities/Abi_1.png, Icons/Abilities/Abi_2.png...
-                string iconName = "Abi_" + abilityID;
+                //Dùng EffectType để làm ID ảnh, vì mỗi kỹ năng sẽ có một hiệu ứng riêng. Ví dụ: AddStats = 1, Heal = 2... ảnh trong tương ứng thành Abi_1, Abi_2..
+
+                int iconID = (int)instance.Data.ability.effect;
+
+                // Nếu kỹ năng này là Taunt (Không có effect cụ thể), ta tự quy định iconID = 99
+                if (instance.Data.ability.isTaunt) iconID = 99;
+
+                string iconName = "Abi_" + iconID;
                 Sprite s = Resources.Load<Sprite>("Sprites/Icons/Abilities/" + iconName);
 
                 if (s != null)
@@ -72,7 +76,7 @@ public class CardUI : MonoBehaviour
                 else
                 {
                     abilityIcon.gameObject.SetActive(false);
-                    Debug.LogWarning($"Thiếu ảnh: Resources/Sprites/Icons/Abilities/{iconName}.png");
+                    Debug.LogWarning($"[UI] Không tìm thấy Icon Kỹ năng tại: Sprites/Icons/Abilities/{iconName}.png");
                 }
             }
         }
