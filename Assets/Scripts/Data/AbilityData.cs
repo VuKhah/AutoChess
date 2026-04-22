@@ -7,10 +7,10 @@ using UnityEngine;
 public enum TriggerType
 {
     None = 0,
-    OnTakeDamage = 1,   // Bị đánh
+    OnTakeDamage = 1,   // Khi bị đánh
     OnAttack = 2,       // Khi tấn công
     OnDeath = 3,        // Khi chết (Slain)
-    OnTurnStart = 4     // Đầu hiệp (dành cho Growth)
+    OnTurnStart = 4,     // Đầu hiệp (dành cho Growth)
 }
 // TargetType: Xác định mục tiêu của kỹ năng
 public enum TargetType
