@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Trạng thái Game")]
     public bool isCombatActive = false;
+    public int bonusCoinNextTurn = 0; // Coin từ magic kinh tế, cộng vào đầu turn sau
 
     private CombatResolver resolver = new CombatResolver();
 
@@ -297,8 +298,9 @@ public class GameManager : MonoBehaviour
         currentTurn++;
         if (currentTurn > maxTurns) { WinGame(); return; }
         isCombatActive = false;
-        // 1. Reset về đúng 10 Coin cố định (Không cộng dồn từ turn trước)
-        playerCoins = 10;
+        // 1. Reset về đúng 10 Coin cố định + bonus coin từ magic lượt trước
+        playerCoins = 10 + bonusCoinNextTurn;
+        bonusCoinNextTurn = 0;
 
         // 2. Tính Coin từ các Unit Kinh tế đang có trên bàn cờ
         foreach (var unit in playerBoard)

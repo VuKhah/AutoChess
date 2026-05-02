@@ -127,8 +127,8 @@ public class CardSlot : MonoBehaviour, IDropHandler
                 }
                 unit.ResetStats();
                 break;
-            case 3: // Nhóm 3: Kinh tế 
-                GameManager.Instance.playerCoins += 1;
+            case 3: // Nhóm 3: Kinh tế - cộng coin vào lượt sau (không cộng ngay)
+                GameManager.Instance.bonusCoinNextTurn += 1;
                 unit.ResetStats();
                 break;
         }

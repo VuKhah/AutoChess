@@ -152,8 +152,7 @@ public class CombatResolver
             {
                 if (unit != null && unit.Data.tribe == Tribe.Babylon)
                 {
-                    unit.currentHP += 1;
-                    unit.Data.baseHP += 1; // Tạm thời
+                    unit.currentHP += 1; // Buff HP tạm thời cho combat này, reset sau trận
                 }
             }
         }
@@ -180,20 +179,29 @@ public class CombatResolver
 
     private void TriggerAbility(TriggerType triggerContext, CardInstance source, CardInstance directEnemy, List<CardInstance> allyBoard, List<CardInstance> enemyBoard)
     {
-        // Bỏ qua nếu quân bài không có AbilityData hoặc không khớp Trigger
         if (source == null || source.Data.ability == null) return;
+        if (source.Data.ability.trigger != triggerContext) return;
 
-        if (source.Data.ability.trigger == triggerContext)
+        List<CardInstance> targets = GetTargets(source.Data.ability, source, directEnemy, allyBoard, enemyBoard);
+
+        // OnTurnStart + AddStats = Growth (tăng trưởng vĩnh viễn, lưu vào growthBonus)
+        bool isGrowth = triggerContext == TriggerType.OnTurnStart && source.Data.ability.effect == EffectType.AddStats;
+
+        foreach (var target in targets)
         {
-            // 1. Lấy danh sách mục tiêu
-            List<CardInstance> targets = GetTargets(source.Data.ability, source, directEnemy, allyBoard, enemyBoard);
-
-            // 2. Thực thi hiệu ứng lên từng mục tiêu
-            foreach (var target in targets)
-            {
-                ExecuteEffect(source.Data.ability, target);
-            }
+            if (isGrowth) ApplyGrowth(source.Data.ability, target);
+            else ExecuteEffect(source.Data.ability, target);
         }
+    }
+
+    private void ApplyGrowth(AbilityData ability, CardInstance target)
+    {
+        if (target == null || target.IsDead) return;
+        target.growthATKBonus += ability.effectValue1;
+        target.growthHPBonus += ability.effectValue2;
+        target.currentATK = target.Data.baseATK + target.permanentATKBonus + target.growthATKBonus;
+        target.currentHP = target.Data.baseHP + target.permanentHPBonus + target.growthHPBonus;
+        Debug.Log($"<color=lime>[GROWTH]</color> {target.Data.cardName} tăng trưởng +{ability.effectValue1}ATK/+{ability.effectValue2}HP (tổng tăng: +{target.growthATKBonus}/+{target.growthHPBonus})");
     }
 
     private List<CardInstance> GetTargets(AbilityData ability, CardInstance source, CardInstance directEnemy, List<CardInstance> allyBoard, List<CardInstance> enemyBoard)

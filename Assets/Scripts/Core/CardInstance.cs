@@ -6,10 +6,11 @@ public class CardInstance
     public int permanentATKBonus;
     public int permanentHPBonus;
 
-    // 2. Buff tạm thời (Chỉ dùng trong 1 trận Combat - Reset sau trận)
-    public int combatATKBonus;
-    public int combatHPBonus;
-    // 3. Chỉ số thực tế (Dùng để trừ máu)
+    // 2. Tăng trưởng tích lũy (Growth - cộng dồn qua các turn, không reset)
+    public int growthATKBonus;
+    public int growthHPBonus;
+
+    // 3. Chỉ số thực tế (Dùng để trừ máu, buff tạm thời combat sẽ cộng thẳng vào đây)
     public int currentATK;
     public int currentHP;
     public int slotIndex;
@@ -23,9 +24,9 @@ public class CardInstance
     }
     public void ResetStats()
     {
-        // Công thức: Thực tế = Gốc + Vĩnh viễn + Tạm thời
-        currentATK = Data.baseATK + permanentATKBonus;
-        currentHP = Data.baseHP + permanentHPBonus;
+        // Công thức: Thực tế = Gốc + Phép vĩnh viễn + Tăng trưởng (buff tạm thời combat bị xóa)
+        currentATK = Data.baseATK + permanentATKBonus + growthATKBonus;
+        currentHP = Data.baseHP + permanentHPBonus + growthHPBonus;
         hasRebornUsed = false;
     }
 
