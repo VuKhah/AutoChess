@@ -111,14 +111,14 @@ public class CardSlot : MonoBehaviour, IDropHandler
 
     private void ApplyMagicEffect(CardInstance magic, CardInstance unit)
     {
-        switch (magic.Data.magicGroup)
+        switch (magic.Data.magicGroup.ToString())
         {
-            case 1: // Nhóm 1: Tăng chỉ số
+            case "StatBoost": // Nhóm 1: Tăng chỉ số
                 unit.permanentATKBonus += magic.Data.statBonusATK;
                 unit.permanentHPBonus += magic.Data.statBonusHP;
                 unit.ResetStats();
                 break;
-            case 2: // Nhóm 2: Cấp Ability
+            case "AddAbility": // Nhóm 2: Cấp Ability
                 // [ĐÃ SỬA LỖI TTE] - Gán toàn bộ khối logic AbilityData từ bài Phép sang Lính
                 if (magic.Data.ability != null)
                 {
@@ -127,7 +127,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
                 }
                 unit.ResetStats();
                 break;
-            case 3: // Nhóm 3: Kinh tế - cộng coin vào lượt sau (không cộng ngay)
+            case "Economy": // Nhóm 3: Kinh tế - cộng coin vào lượt sau (không cộng ngay)
                 GameManager.Instance.bonusCoinNextTurn += 1;
                 unit.ResetStats();
                 break;

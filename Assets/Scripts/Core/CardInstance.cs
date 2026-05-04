@@ -2,7 +2,7 @@ public class CardInstance
 {
     public CardDefinition Data;
 
-    // 1. Chỉ số cộng thêm vĩnh viễn từ bài Phép
+    // 1. Chỉ số cộng thêm vĩnh viễn (Permanent - không reset, chỉ thay đổi khi có hiệu ứng vĩnh viễn)
     public int permanentATKBonus;
     public int permanentHPBonus;
 

@@ -13,7 +13,7 @@
                 "trigger": 1,
                 "target": 1,
                 "targetCount": 1,
-                "effect": 1,    
+                "effect": 1,
                 "effectValue1": 2,
                 "effectValue2": 0,
                 "isTaunt": false
@@ -159,22 +159,50 @@
             "cardName": "Sức mạnh Babylon",
             "cardType": 1,
             "tribe": 1,
-            "magicGroup": 1,
-            "statBonusATK": 2,
-            "statBonusHP": 2,
+            "magicGroup": "StatBoost",
+            "statBonusATK": 5,
+            "statBonusHP": 5,
             "cost": 2,
             "tier": 1,
-            "description": "+2/+2 cho 1 Unit"
+            "description": "+5/+5 cho 1 Unit"
         },
         {
             "cardID": "M_02",
             "cardName": "Giao ước Olympus",
             "cardType": 1,
             "tribe": 2,
-            "magicGroup": 3,
+            "magicGroup": "AddAbility",
             "cost": 3,
             "tier": 2,
-            "description": "+1 Coin lượt sau & nhận 1 bài Olympus"
+            "ability": {
+                "trigger": 0,
+                "target": 0,
+                "targetCount": 0,
+                "effect": 0,
+                "effectValue1": 0,
+                "effectValue2": 0,
+                "isTaunt": true
+            },
+            "description": "Nhận ability Taunt cho 1 Unit"
+        },
+        {
+            "cardID": "M_03",
+            "cardName": "Quà tặng của Thương Nhân",
+            "cardType": 1,
+            "tribe": 0,
+            "magicGroup": "Economy",
+            "ability": {
+                "trigger": 0,
+                "target": 0,
+                "targetCount": 0,
+                "effect": 5,
+                "effectValue1": 2,
+                "effectValue2": 0,
+                "isTaunt": false
+            },
+            "cost": 2,
+            "tier": 1,
+            "description": "Nhận 1 Coin vào lượt sau"
         }
     ]
 }
