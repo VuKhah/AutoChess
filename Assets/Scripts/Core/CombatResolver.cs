@@ -113,8 +113,7 @@ public class CombatResolver
 
     private CardInstance FindTarget(List<CardInstance> board, int prefSlot)
     {
-        // Cập nhật tìm Taunt bằng biến isTaunt từ AbilityData
-        var taunt = board.Find(u => u != null && !u.IsDead && u.Data.ability != null && u.Data.ability.isTaunt);
+        var taunt = board.Find(u => u != null && !u.IsDead && u.isTaunt);
         if (taunt != null) return taunt;
 
         // Ưu tiên 2: Ripple Search (Loang từ đối diện ra 2 bên)

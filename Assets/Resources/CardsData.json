@@ -171,19 +171,10 @@
             "cardName": "Giao ước Olympus",
             "cardType": 1,
             "tribe": 2,
-            "magicGroup": "AddAbility",
+            "magicGroup": "AddTaunt",
             "cost": 3,
             "tier": 2,
-            "ability": {
-                "trigger": 0,
-                "target": 0,
-                "targetCount": 0,
-                "effect": 0,
-                "effectValue1": 0,
-                "effectValue2": 0,
-                "isTaunt": true
-            },
-            "description": "Nhận ability Taunt cho 1 Unit"
+            "description": "Gán Taunt cho 1 Unit (không ảnh hưởng kỹ năng hiện tại)"
         },
         {
             "cardID": "M_03",

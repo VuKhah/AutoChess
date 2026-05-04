@@ -16,17 +16,25 @@ public class CardInstance
     public int slotIndex;
     public bool hasRebornUsed = false;
 
+    // 4. Merge level (0=gốc, 1=đã merge 1 lần, 2=đã merge 2 lần)
+    public int mergeLevel = 0;
+
+    // 5. Taunt runtime — độc lập với AbilityData, không bị ghi đè khi thay ability
+    public bool isTaunt;
+
     public CardInstance(CardDefinition data, int slot)
     {
         this.Data = data;
+        this.isTaunt = data.ability != null && data.ability.isTaunt;
         ResetStats();
         this.slotIndex = slot;
     }
     public void ResetStats()
     {
-        // Công thức: Thực tế = Gốc + Phép vĩnh viễn + Tăng trưởng (buff tạm thời combat bị xóa)
-        currentATK = Data.baseATK + permanentATKBonus + growthATKBonus;
-        currentHP = Data.baseHP + permanentHPBonus + growthHPBonus;
+        // Công thức: Thực tế = (Gốc × tier merge) + Phép vĩnh viễn + Tăng trưởng
+        int mergeMultiplier = mergeLevel + 1;
+        currentATK = Data.baseATK * mergeMultiplier + permanentATKBonus + growthATKBonus;
+        currentHP = Data.baseHP * mergeMultiplier + permanentHPBonus + growthHPBonus;
         hasRebornUsed = false;
     }
 

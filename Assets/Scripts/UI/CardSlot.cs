@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -99,6 +101,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
                 if (GameManager.Instance.TryBuyCard(unitUI.currentInstance.Data.cost))
                 {
                     unitCard.parentReturnTo = this.transform;
+                    StartCoroutine(CheckMergeNextFrame(unitUI.currentInstance.Data.cardID, unitUI.currentInstance.mergeLevel));
                 }
             }
         }
@@ -106,30 +109,76 @@ public class CardSlot : MonoBehaviour, IDropHandler
         else if (this.slotType == SlotType.Hand || this.slotType == SlotType.PlayerBoard)
         {
             unitCard.parentReturnTo = this.transform;
+            StartCoroutine(CheckMergeNextFrame(unitUI.currentInstance.Data.cardID, unitUI.currentInstance.mergeLevel));
         }
+    }
+
+    // ==========================================
+    // HỆ THỐNG MERGE
+    // ==========================================
+
+    private IEnumerator CheckMergeNextFrame(string cardID, int mergeLevel)
+    {
+        yield return null; // Chờ OnEndDrag chạy xong để bài vào đúng slot
+        CheckForMerge(cardID, mergeLevel);
+    }
+
+    private void CheckForMerge(string cardID, int mergeLevel)
+    {
+        List<CardUI> matches = new List<CardUI>();
+
+        foreach (var slot in GameManager.Instance.playerSlots)
+        {
+            CardUI ui = slot.GetComponentInChildren<CardUI>();
+            if (ui != null && ui.currentInstance.Data.cardID == cardID && ui.currentInstance.mergeLevel == mergeLevel)
+                matches.Add(ui);
+        }
+        foreach (var slot in GameManager.Instance.handSlots)
+        {
+            CardUI ui = slot.GetComponentInChildren<CardUI>();
+            if (ui != null && ui.currentInstance.Data.cardID == cardID && ui.currentInstance.mergeLevel == mergeLevel)
+                matches.Add(ui);
+        }
+
+        if (matches.Count >= 3)
+            PerformMerge(matches);
+    }
+
+    private void PerformMerge(List<CardUI> cards)
+    {
+        CardUI keeper = cards[0];
+        keeper.currentInstance.mergeLevel++;
+        keeper.currentInstance.ResetStats();
+        keeper.Setup(keeper.currentInstance);
+
+        for (int i = 1; i < 3; i++)
+            Destroy(cards[i].gameObject);
+
+        Debug.Log($"<color=gold>[MERGE]</color> 3x {keeper.currentInstance.Data.cardName} hợp nhất thành cấp {keeper.currentInstance.mergeLevel + 1}!");
+
+        // Kiểm tra tiếp nếu vừa tạo ra quân đủ bộ 3 ở cấp mới
+        StartCoroutine(CheckMergeNextFrame(keeper.currentInstance.Data.cardID, keeper.currentInstance.mergeLevel));
     }
 
     private void ApplyMagicEffect(CardInstance magic, CardInstance unit)
     {
-        switch (magic.Data.magicGroup.ToString())
+        switch (magic.Data.magicGroup)
         {
-            case "StatBoost": // Nhóm 1: Tăng chỉ số
+            case "StatBoost":
                 unit.permanentATKBonus += magic.Data.statBonusATK;
                 unit.permanentHPBonus += magic.Data.statBonusHP;
                 unit.ResetStats();
                 break;
-            case "AddAbility": // Nhóm 2: Cấp Ability
-                // [ĐÃ SỬA LỖI TTE] - Gán toàn bộ khối logic AbilityData từ bài Phép sang Lính
+            case "AddAbility":
                 if (magic.Data.ability != null)
-                {
-                    // Copy dữ liệu kỹ năng để lính sở hữu kỹ năng này
                     unit.Data.ability = magic.Data.ability;
-                }
                 unit.ResetStats();
                 break;
-            case "Economy": // Nhóm 3: Kinh tế - cộng coin vào lượt sau (không cộng ngay)
+            case "AddTaunt": // Taunt độc lập — không ảnh hưởng đến TTE ability hiện có
+                unit.isTaunt = true;
+                break;
+            case "Economy":
                 GameManager.Instance.bonusCoinNextTurn += 1;
-                unit.ResetStats();
                 break;
         }
     }
