@@ -1,0 +1,56 @@
+├── scripts/
+│   ├── AI.meta
+│   ├── Core.meta
+│   ├── Data.meta
+│   ├── Editor.meta
+│   ├── Managers.meta
+│   ├── Test.meta
+│   ├── UI.meta
+│   ├── AI/
+│   │   ├── AILibrary.cs
+│   │   ├── AILibrary.cs.meta
+│   │   ├── BotAgent.cs
+│   │   ├── BotAgent.cs.meta
+│   │   ├── Chromosome.cs
+│   │   ├── Chromosome.cs.meta
+│   │   ├── GameSimulator.cs
+│   │   ├── GameSimulator.cs.meta
+│   │   ├── GATrainer.cs
+│   │   ├── GATrainer.cs.meta
+│   ├── Core/
+│   │   ├── CardInstance.cs
+│   │   ├── CardInstance.cs.meta
+│   │   ├── CombatResolver.cs
+│   │   ├── CombatResolver.cs.meta
+│   │   ├── GameRecord.cs
+│   │   ├── GameRecord.cs.meta
+│   ├── Data/
+│   │   ├── AbilityType.cs
+│   │   ├── AbilityType.cs.meta
+│   │   ├── CardDefinition.cs
+│   │   ├── CardDefinition.cs.meta
+│   ├── Editor/
+│   ├── Managers/
+│   │   ├── AIManager.cs
+│   │   ├── AIManager.cs.meta
+│   │   ├── CardDatabase.cs
+│   │   ├── CardDatabase.cs.meta
+│   │   ├── EconomyManager.cs
+│   │   ├── EconomyManager.cs.meta
+│   │   ├── GameManager.cs
+│   │   ├── GameManager.cs.meta
+│   │   ├── UIManager.cs
+│   │   ├── UIManager.cs.meta
+│   ├── Test/
+│   │   ├── ProjectSanityChecker.cs
+│   │   ├── ProjectSanityChecker.cs.meta
+│   │   ├── scan_assets.py
+│   ├── UI/
+│   │   ├── CardDraggable.cs
+│   │   ├── CardDraggable.cs.meta
+│   │   ├── CardSlot.cs
+│   │   ├── CardSlot.cs.meta
+│   │   ├── CardUI.cs
+│   │   ├── CardUI.cs.meta
+│   │   ├── CardVisuals.cs
+│   │   ├── CardVisuals.cs.meta

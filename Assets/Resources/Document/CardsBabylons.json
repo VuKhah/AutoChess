@@ -1,0 +1,364 @@
+{
+    "cards": [
+        {
+            "_comment": "// ================= BABYLON =================",
+            "cardID": "U_01_Babylon",
+            "cardName": "Ereskigal",
+            "tribe": 1,
+            "tier": 6,
+            "baseATK": 10,
+            "baseHP": 10,
+            "cost": 3,
+            "ability": {
+                "trigger": 7,
+                "target": 1,
+                "effect": 1,
+                "triggerLimit": 3,
+                "isPermanent": true
+            }
+        },
+        {
+            "cardID": "U_02_Babylon",
+            "cardName": "Ninurta",
+            "tribe": 1,
+            "tier": 6,
+            "baseATK": 9,
+            "baseHP": 9,
+            "cost": 3,
+            "ability": {
+                "trigger": 6,
+                "target": 1,
+                "effect": 6,
+                "effectValue1": 1,
+                "conditionCount": 3,
+                "isPermanent": false
+            }
+        },
+        {
+            "cardID": "U_03_Babylon",
+            "cardName": "Utu",
+            "tribe": 1,
+            "tier": 6,
+            "baseATK": 8,
+            "baseHP": 8,
+            "cost": 3,
+            "ability": {
+                "trigger": 6,
+                "target": 10,
+                "effect": 1,
+                "effectValue1": 1,
+                "effectValue2": 1,
+                "isPermanent": true
+            }
+        },
+        {
+            "cardID": "U_04_Babylon",
+            "cardName": "Ki",
+            "tribe": 1,
+            "tier": 5,
+            "baseATK": 6,
+            "baseHP": 6,
+            "cost": 3,
+            "ability": {
+                "trigger": 6,
+                "target": 2,
+                "effect": 1,
+                "effectValue1": 3,
+                "effectValue2": 3,
+                "isPermanent": true
+            }
+        },
+        {
+            "cardID": "U_05_Babylon",
+            "cardName": "Nanna",
+            "tribe": 1,
+            "tier": 5,
+            "baseATK": 15,
+            "baseHP": 15,
+            "cost": 3,
+            "ability": {
+                "trigger": 7,
+                "target": 10,
+                "targetCount": 2,
+                "effect": 1,
+                "isPermanent": true
+            }
+        },
+        {
+            "cardID": "U_06_Babylon",
+            "cardName": "Ashur",
+            "tribe": 1,
+            "tier": 5,
+            "baseATK": 6,
+            "baseHP": 6,
+            "cost": 3,
+            "ability": {
+                "trigger": 7,
+                "target": 3,
+                "effect": 1,
+                "effectValue1": 5,
+                "effectValue2": 5,
+                "isPermanent": true
+            }
+        },
+        {
+            "cardID": "U_07_Babylon",
+            "cardName": "Enki",
+            "tribe": 1,
+            "tier": 5,
+            "baseATK": 2,
+            "baseHP": 15,
+            "cost": 3,
+            "ability": {
+                "isTaunt": true,
+                "trigger": 1,
+                "target": 5,
+                "effect": 2,
+                "isPermanent": false
+            }
+        },
+        {
+            "cardID": "U_08_Babylon",
+            "cardName": "Gugalana",
+            "tribe": 1,
+            "tier": 4,
+            "baseATK": 10,
+            "baseHP": 10,
+            "cost": 3,
+            "ability": {
+                "isTaunt": true,
+                "trigger": 6,
+                "target": 1,
+                "effect": 1,
+                "effectValue1": 20,
+                "effectValue2": 20,
+                "isPermanent": true
+            }
+        },
+        {
+            "cardID": "U_09_Babylon",
+            "cardName": "Umu Drabutu",
+            "tribe": 1,
+            "tier": 4,
+            "baseATK": 5,
+            "baseHP": 5,
+            "cost": 3,
+            "ability": {
+                "trigger": 6,
+                "target": 1,
+                "effect": 4,
+                "effectValue1": 2,
+                "isPermanent": false
+            }
+        },
+        {
+            "cardID": "U_10_Babylon",
+            "cardName": "Enkidu",
+            "tribe": 1,
+            "tier": 4,
+            "baseATK": 5,
+            "baseHP": 5,
+            "cost": 3,
+            "ability": {
+                "trigger": 6,
+                "target": 8,
+                "effect": 1,
+                "effectValue1": 3,
+                "effectValue2": 3,
+                "isPermanent": true
+            }
+        },
+        {
+            "cardID": "U_11_Babylon",
+            "cardName": "Gilgamesh",
+            "tribe": 1,
+            "tier": 4,
+            "baseATK": 8,
+            "baseHP": 8,
+            "cost": 3,
+            "ability": {
+                "trigger": 11,
+                "target": 1,
+                "effect": 1,
+                "effectValue1": 3,
+                "effectValue2": 2,
+                "isPermanent": true
+            }
+        },
+        {
+            "cardID": "U_12_Babylon",
+            "cardName": "Humbaba",
+            "tribe": 1,
+            "tier": 4,
+            "baseATK": 7,
+            "baseHP": 1,
+            "cost": 3,
+            "ability": {
+                "trigger": 2,
+                "target": 1,
+                "effect": 6,
+                "effectValue1": 2,
+                "isPermanent": false
+            }
+        },
+        {
+            "cardID": "U_13_Babylon",
+            "cardName": "Asag",
+            "tribe": 1,
+            "tier": 4,
+            "baseATK": 8,
+            "baseHP": 8,
+            "cost": 3,
+            "ability": {
+                "trigger": 6,
+                "target": 2,
+                "effect": 1,
+                "isPermanent": true
+            }
+        },
+        {
+            "cardID": "U_14_Babylon",
+            "cardName": "Usumgallu",
+            "tribe": 1,
+            "tier": 3,
+            "baseATK": 3,
+            "baseHP": 3,
+            "cost": 3,
+            "ability": {
+                "isTaunt": true,
+                "trigger": 1,
+                "target": 10,
+                "effect": 1,
+                "effectValue1": 1,
+                "effectValue2": 2,
+                "isPermanent": false
+            }
+        },
+        {
+            "cardID": "U_15_Babylon",
+            "cardName": "Lamashtu",
+            "tribe": 1,
+            "tier": 3,
+            "baseATK": 1,
+            "baseHP": 5,
+            "cost": 3,
+            "ability": {
+                "trigger": 12,
+                "target": 10,
+                "effect": 1,
+                "effectValue1": 1,
+                "isPermanent": true
+            }
+        },
+        {
+            "cardID": "U_16_Babylon",
+            "cardName": "Pazuzu",
+            "tribe": 1,
+            "tier": 3,
+            "baseATK": 1,
+            "baseHP": 2,
+            "cost": 3,
+            "ability": {
+                "trigger": 6,
+                "target": 1,
+                "effect": 6,
+                "effectValue1": 2,
+                "isPermanent": false
+            }
+        },
+        {
+            "cardID": "U_17_Babylon",
+            "cardName": "Kingu",
+            "tribe": 1,
+            "tier": 2,
+            "baseATK": 2,
+            "baseHP": 2,
+            "cost": 3,
+            "ability": {
+                "isTaunt": true,
+                "isReborn": true
+            }
+        },
+        {
+            "cardID": "U_18_Babylon",
+            "cardName": "Uridimmu",
+            "tribe": 1,
+            "tier": 2,
+            "baseATK": 5,
+            "baseHP": 1,
+            "cost": 3,
+            "ability": {
+                "trigger": 12,
+                "target": 10,
+                "effect": 1,
+                "effectValue2": 1,
+                "isPermanent": true
+            }
+        },
+        {
+            "cardID": "U_19_Babylon",
+            "cardName": "Ugallu",
+            "tribe": 1,
+            "tier": 2,
+            "baseATK": 3,
+            "baseHP": 3,
+            "cost": 3,
+            "ability": {
+                "trigger": 7,
+                "target": 1,
+                "effect": 4,
+                "effectValue1": 1,
+                "isPermanent": false
+            }
+        },
+        {
+            "cardID": "U_20_Babylon",
+            "cardName": "Kusarikku",
+            "tribe": 1,
+            "tier": 1,
+            "baseATK": 3,
+            "baseHP": 3,
+            "cost": 3,
+            "ability": {
+                "trigger": 7,
+                "target": 1,
+                "effect": 1,
+                "effectValue1": 1,
+                "effectValue2": 1,
+                "isPermanent": true
+            }
+        },
+        {
+            "cardID": "U_21_Babylon",
+            "cardName": "Babilonian Soldier",
+            "tribe": 1,
+            "tier": 1,
+            "baseATK": 2,
+            "baseHP": 4,
+            "cost": 3,
+            "ability": {
+                "trigger": 6,
+                "target": 1,
+                "effect": 1,
+                "effectValue2": 1,
+                "isPermanent": true
+            }
+        },
+        {
+            "cardID": "U_22_Babylon",
+            "cardName": "Sumerian Scholar",
+            "tribe": 1,
+            "tier": 1,
+            "baseATK": 3,
+            "baseHP": 2,
+            "cost": 3,
+            "ability": {
+                "trigger": 6,
+                "target": 1,
+                "effect": 6,
+                "effectValue1": 1,
+                "isPermanent": false
+            }
+        }
+    ]
+}

@@ -62,7 +62,7 @@ public class BotAgent
             }
 
             // Đánh giá Growth (Tăng trưởng: Đầu hiệp -> AddStats)
-            if (c.ability.trigger == TriggerType.OnTurnStart && c.ability.effect == EffectType.AddStats)
+            if (c.ability.trigger == TriggerType.StartOfBattle && c.ability.effect == EffectType.AddStats)
             {
                 s += 12 * brain.genes[4];
             }

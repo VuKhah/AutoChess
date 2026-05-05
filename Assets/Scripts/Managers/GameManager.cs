@@ -307,7 +307,7 @@ public class GameManager : MonoBehaviour
         {
             if (unit != null && !unit.IsDead && unit.Data.ability != null)
             {
-                if (unit.Data.ability.trigger == TriggerType.OnTurnStart && unit.Data.ability.effect == EffectType.GainCoin)
+                if (unit.Data.ability.trigger == TriggerType.StartOfBattle && unit.Data.ability.effect == EffectType.GainCoin)
                 {
                     playerCoins += unit.Data.ability.effectValue1;
                     Debug.Log($"<color=yellow>[ECONOMY]</color> {unit.Data.cardName} đào được {unit.Data.ability.effectValue1} Coin!");

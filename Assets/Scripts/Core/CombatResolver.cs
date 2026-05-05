@@ -13,10 +13,10 @@ public class CombatResolver
         for (int i = 0; i < 6; i++)
         {
             if (pBoard[i] != null && !pBoard[i].IsDead)
-                TriggerAbility(TriggerType.OnTurnStart, pBoard[i], null, pBoard, eBoard);
+                TriggerAbility(TriggerType.StartOfBattle, pBoard[i], null, pBoard, eBoard);
 
             if (eBoard[i] != null && !eBoard[i].IsDead)
-                TriggerAbility(TriggerType.OnTurnStart, eBoard[i], null, eBoard, pBoard);
+                TriggerAbility(TriggerType.StartOfBattle, eBoard[i], null, eBoard, pBoard);
         }
 
         int maxRounds = 50; // Giới hạn an toàn để tránh vòng lặp vô tận (Infinity Loop)
@@ -183,8 +183,8 @@ public class CombatResolver
 
         List<CardInstance> targets = GetTargets(source.Data.ability, source, directEnemy, allyBoard, enemyBoard);
 
-        // OnTurnStart + AddStats = Growth (tăng trưởng vĩnh viễn, lưu vào growthBonus)
-        bool isGrowth = triggerContext == TriggerType.OnTurnStart && source.Data.ability.effect == EffectType.AddStats;
+        // StartOfBattle + AddStats = Growth (tăng trưởng vĩnh viễn, lưu vào growthBonus)
+        bool isGrowth = triggerContext == TriggerType.StartOfBattle && source.Data.ability.effect == EffectType.AddStats;
 
         foreach (var target in targets)
         {
@@ -211,7 +211,7 @@ public class CombatResolver
         {
             validTargets.Add(source);
         }
-        else if (ability.target == TargetType.Enemy && directEnemy != null && !directEnemy.IsDead)
+        else if (ability.target == TargetType.DirectEnemy && directEnemy != null && !directEnemy.IsDead)
         {
             validTargets.Add(directEnemy);
         }
@@ -251,11 +251,6 @@ public class CombatResolver
                 target.currentATK += ability.effectValue1;
                 target.currentHP += ability.effectValue2;
                 Debug.Log($"<color=cyan>[ABILITY]</color> {target.Data.cardName} được buff +{ability.effectValue1}ATK / +{ability.effectValue2}HP");
-                break;
-
-            case EffectType.Heal:
-                target.currentHP += ability.effectValue1;
-                Debug.Log($"<color=green>[ABILITY]</color> {target.Data.cardName} hồi {ability.effectValue1} HP");
                 break;
 
             case EffectType.DealDamage:

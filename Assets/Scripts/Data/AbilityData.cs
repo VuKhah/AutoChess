@@ -40,7 +40,6 @@ public enum EffectType
     AddStats = 1,       // Tăng ATK/HP (Enrage, Growth)
     DealDamage = 2,     // Gây sát thương
     GiveBuff = 3,      // Ban hiệu ứng (VD: Taunt, Reborn)
-
     Summon = 4,          // Triệu hồi (Đặc biệt)
     Destroy = 5,         // Hủy diệt (VD: Banish)
     GainCoin = 6,       // Thêm Coin (Kinh tế)
@@ -54,6 +53,7 @@ public class AbilityData
     [Header("Core TTE")]
     public TriggerType trigger;
     public TargetType target;
+    public int targetCount;    // Số lượng mục tiêu (VD: Buff 2 đồng minh ngẫu nhiên)
     public EffectType effect;
 
     [Header("Values")]
