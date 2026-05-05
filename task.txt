@@ -1,9 +1,0 @@
-Thứ nhất là 3 cái Khanh nhắn ông lúc sáng, ông còn nhớ luật chọn sự kiên - mục tiêu - hiệu ứng TTF  chứ. ông thêm hàm KHanh chưa thử nên tôi không biết thế nào. 
-Thứ 2: là luật Merge (ba quân cùng loại gộp thành quân cấp cao) - cái này tôi đang mò mà chưa được, hiện có 2 hướng là thay CardInstance hoặc thay CardDefine. tôi thiên về Instance nhưng bug tới giờ. và chưa có bất kì hiệu ứng nào cho biết 3 quân đã gọp
-cái thứ 3 là Luật. hiệu tôi chỉ test thử được những cái Khanh nói. còn cái gì không thì KHanh không clean hết được. ông check phụ với.
-xong được mấy cái này là xong luật - phải xong luật mới làm gen được
-
-->mục tiêu trước mắc:
-fix lại nhóm ground Magic cards (int thành tring)
-chuyển Taunt độc lập với Abi khác (tui cần ý keiens ông khúcnayf)
-viết lại Luật Merge
