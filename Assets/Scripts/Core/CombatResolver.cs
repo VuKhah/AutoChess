@@ -289,6 +289,15 @@ public class CombatResolver
                 unit.isTaunt = true;
                 break;
 
+            case "RemoveTaunt":
+                unit.isTaunt = false;
+                break;
+            case "Economy":
+                // Ví dụ: Thêm 1 vàng vào túi (cần gọi GameManager để cập nhật UI)
+                GameManager.Instance.bonusCoinNextTurn += 1;
+                Debug.Log($"<color=yellow>[ECONOMY]</color> Đã nhận 1 vàng từ phép {magic.Data.cardName}");
+                break;
+
             default:
                 Debug.LogWarning($"Chưa có logic xử lý cho magicGroup: {magic.Data.magicGroup}");
                 break;
