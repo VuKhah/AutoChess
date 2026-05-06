@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     public int winConditionCups = 10;
 
     [Header("Cấu hình Shop")]
-    public int rollCost = 2;
+    public int rollCost = 1;
     public bool isShopFrozen = false;
 
     [Header("Cấu hình UI & Prefabs")]
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     public bool isCombatActive = false;
     public int bonusCoinNextTurn = 0; // Coin từ magic kinh tế, cộng vào đầu turn sau
 
-    private CombatResolver resolver = new CombatResolver();
+    public CombatResolver resolver = new CombatResolver();
 
     // Dữ liệu thực thể để tính toán
     public List<CardInstance> playerBoard = new List<CardInstance>(new CardInstance[6]);

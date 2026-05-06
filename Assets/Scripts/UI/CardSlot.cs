@@ -46,7 +46,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
             }
 
             // Kích hoạt hiệu ứng
-            ApplyMagicEffect(magicUI.currentInstance, targetUnitUI.currentInstance);
+            GameManager.Instance.resolver.ApplyMagicToUnit(magicUI.currentInstance, targetUnitUI.currentInstance);
 
             // Cập nhật lại hiển thị cho Unit (để nhảy số ATK/HP mới)
             targetUnitUI.Setup(targetUnitUI.currentInstance);
@@ -143,7 +143,6 @@ public class CardSlot : MonoBehaviour, IDropHandler
         if (matches.Count >= 3)
             PerformMerge(matches);
     }
-
     private void PerformMerge(List<CardUI> cards)
     {
         CardUI keeper = cards[0];
@@ -158,28 +157,5 @@ public class CardSlot : MonoBehaviour, IDropHandler
 
         // Kiểm tra tiếp nếu vừa tạo ra quân đủ bộ 3 ở cấp mới
         StartCoroutine(CheckMergeNextFrame(keeper.currentInstance.Data.cardID, keeper.currentInstance.mergeLevel));
-    }
-
-    private void ApplyMagicEffect(CardInstance magic, CardInstance unit)
-    {
-        switch (magic.Data.magicGroup)
-        {
-            case "StatBoost":
-                unit.permanentATKBonus += magic.Data.statBonusATK;
-                unit.permanentHPBonus += magic.Data.statBonusHP;
-                unit.ResetStats();
-                break;
-            case "AddAbility":
-                if (magic.Data.ability != null)
-                    unit.Data.ability = magic.Data.ability;
-                unit.ResetStats();
-                break;
-            case "AddTaunt": // Taunt độc lập — không ảnh hưởng đến TTE ability hiện có
-                unit.isTaunt = true;
-                break;
-            case "Economy":
-                GameManager.Instance.bonusCoinNextTurn += 1;
-                break;
-        }
     }
 }

@@ -1,4 +1,7 @@
-public class CardInstance
+using System.Collections.Generic;
+using UnityEngine;
+
+[System.Serializable] public class CardInstance
 {
     public CardDefinition Data;
 
@@ -29,12 +32,15 @@ public class CardInstance
         ResetStats();
         this.slotIndex = slot;
     }
+
     public void ResetStats()
     {
-        // Công thức: Thực tế = (Gốc × tier merge) + Phép vĩnh viễn + Tăng trưởng
-        int mergeMultiplier = mergeLevel + 1;
-        currentATK = Data.baseATK * mergeMultiplier + permanentATKBonus + growthATKBonus;
-        currentHP = Data.baseHP * mergeMultiplier + permanentHPBonus + growthHPBonus;
+        const float keepRatio = 0.7f;
+        int tier = mergeLevel + 1;
+        currentATK = Mathf.RoundToInt(Data.baseATK * tier
+                + keepRatio * (growthATKBonus + permanentATKBonus));
+        currentHP  = Mathf.RoundToInt(Data.baseHP  * tier
+                 + keepRatio * (growthHPBonus  + permanentHPBonus));
         hasRebornUsed = false;
     }
 

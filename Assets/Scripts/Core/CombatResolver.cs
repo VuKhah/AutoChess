@@ -267,4 +267,36 @@ public class CombatResolver
                 break;
         }
     }
+    public void ApplyMagicToUnit(CardInstance magic, CardInstance unit)
+    {
+        if (magic == null || unit == null) return;
+
+        switch (magic.Data.magicGroup)
+        {
+            case "StatBoost":
+                unit.permanentATKBonus += magic.Data.statBonusATK;
+                unit.permanentHPBonus += magic.Data.statBonusHP;
+                break;
+
+            case "AddAbility":
+                if (magic.Data.ability != null)
+                    // Cẩn thận: Nếu sau này cần Deep Copy AbilityData để không đè data gốc, 
+                    // ta sẽ xử lý ở đây. Tạm thời gán reference.
+                    unit.Data.ability = magic.Data.ability;
+                break;
+
+            case "AddTaunt":
+                unit.isTaunt = true;
+                break;
+
+            default:
+                Debug.LogWarning($"Chưa có logic xử lý cho magicGroup: {magic.Data.magicGroup}");
+                break;
+        }
+
+        // Core logic: Luôn gọi ResetStats từ Engine sau khi thay đổi base data
+        unit.ResetStats();
+
+        Debug.Log($"<color=cyan>[MAGIC]</color> Áp dụng phép {magic.Data.cardName} lên {unit.Data.cardName}. ATK/HP mới: {unit.currentATK}/{unit.currentHP}");
+    }
 }
