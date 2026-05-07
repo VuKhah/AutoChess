@@ -13,13 +13,18 @@ public class CombatResolver
         for (int i = 0; i < 6; i++)
         {
             if (pBoard[i] != null && !pBoard[i].IsDead)
+            {
                 TriggerAbility(TriggerType.StartOfBattle, pBoard[i], null, pBoard, eBoard);
-
+                TriggerAbility(TriggerType.Aura, pBoard[i], null, pBoard, eBoard); // Kích hoạt Aura sau Growth để buff kịp thời
+            }
             if (eBoard[i] != null && !eBoard[i].IsDead)
+            {
                 TriggerAbility(TriggerType.StartOfBattle, eBoard[i], null, eBoard, pBoard);
+                TriggerAbility(TriggerType.Aura, eBoard[i], null, eBoard, pBoard); // Kích hoạt Aura sau Growth để buff kịp thời
+            }
         }
 
-        int maxRounds = 50; // Giới hạn an toàn để tránh vòng lặp vô tận (Infinity Loop)
+        int maxRounds = 50;
         int currentRound = 0;
 
         while (currentRound < maxRounds)
@@ -102,6 +107,7 @@ public class CombatResolver
             TriggerAbility(TriggerType.OnDeath, defender, attacker, defBoard, atkBoard);
         if (attacker.IsDead)
             TriggerAbility(TriggerType.OnDeath, attacker, defender, atkBoard, defBoard);
+
         // Ghi log ra Console và TurnRecord
         Debug.Log($"<color=white>[CLASH]</color> {attacker.Data.cardName} đấm {defender.Data.cardName}. " +
                   $"HP Atk: {aBefore}->{attacker.currentHP}, HP Def: {dBefore}->{defender.currentHP}");
@@ -176,7 +182,7 @@ public class CombatResolver
     // HỆ THỐNG ENGINE TTE (TRIGGER - TARGET - EFFECT)
     // ==========================================
 
-    private void TriggerAbility(TriggerType triggerContext, CardInstance source, CardInstance directEnemy, List<CardInstance> allyBoard, List<CardInstance> enemyBoard)
+    public void TriggerAbility(TriggerType triggerContext, CardInstance source, CardInstance directEnemy, List<CardInstance> allyBoard, List<CardInstance> enemyBoard)
     {
         if (source == null || source.Data.ability == null) return;
         if (source.Data.ability.trigger != triggerContext) return;
@@ -232,6 +238,49 @@ public class CombatResolver
                 int r = Random.Range(0, pool.Count);
                 validTargets.Add(pool[r]);
                 pool.RemoveAt(r); // Chống trùng lặp mục tiêu
+            }
+        }
+        else if (ability.target == TargetType.LowestHealthAlly)
+        {
+            CardInstance lowestHPUnit = null;
+            int minHP = int.MaxValue;
+
+            foreach (var unit in allyBoard)
+            {
+                if (unit != null && !unit.IsDead && unit.currentHP < minHP)
+                {
+                    minHP = unit.currentHP;
+                    lowestHPUnit = unit;
+                }
+            }
+
+            if (lowestHPUnit != null)
+            {
+                validTargets.Add(lowestHPUnit);
+            }
+        }
+        else if (ability.target == TargetType.LeftAlly)
+        {
+            int leftIndex = source.slotIndex - 1;
+            if (leftIndex >= 0)
+            {
+                CardInstance leftUnit = allyBoard[leftIndex];
+                if (leftUnit != null && !leftUnit.IsDead)
+                {
+                    validTargets.Add(leftUnit);
+                }
+            }
+        }
+        else if (ability.target == TargetType.RightAlly)
+        {
+            int rightIndex = source.slotIndex + 1;
+            if (rightIndex < 6) // Giả định bàn cờ có 6 ô (0-5)
+            {
+                CardInstance rightUnit = allyBoard[rightIndex];
+                if (rightUnit != null && !rightUnit.IsDead)
+                {
+                    validTargets.Add(rightUnit);
+                }
             }
         }
 
@@ -292,6 +341,7 @@ public class CombatResolver
             case "RemoveTaunt":
                 unit.isTaunt = false;
                 break;
+
             case "Economy":
                 // Ví dụ: Thêm 1 vàng vào túi (cần gọi GameManager để cập nhật UI)
                 GameManager.Instance.bonusCoinNextTurn += 1;

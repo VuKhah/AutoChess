@@ -84,6 +84,19 @@ public class CardSlot : MonoBehaviour, IDropHandler
         {
             if (sourceSlot != null && sourceSlot.slotType != SlotType.Shop)
             {
+                // [THÊM MỚI] BẮN SỰ KIỆN ONSELL TRƯỚC KHI BAY MÀU
+                if (unitUI.currentInstance != null)
+                {
+                    Debug.Log($"<color=red>[EVENT]</color> Bắn sự kiện OnSell cho {unitUI.currentInstance.Data.cardName}");
+                    GameManager.Instance.resolver.TriggerAbility(
+                        TriggerType.OnSell,
+                        unitUI.currentInstance,
+                        null,
+                        GameManager.Instance.playerBoard,
+                        null
+                    );
+                }
+
                 GameManager.Instance.SellCard();
                 Destroy(unitCard.gameObject);
             }
@@ -101,6 +114,13 @@ public class CardSlot : MonoBehaviour, IDropHandler
                 if (GameManager.Instance.TryBuyCard(unitUI.currentInstance.Data.cost))
                 {
                     unitCard.parentReturnTo = this.transform;
+
+                    // [THÊM MỚI] BẮN SỰ KIỆN ONDEPLOY NẾU MUA THẲNG TỪ SHOP LÊN BÀN CỜ
+                    if (this.slotType == SlotType.PlayerBoard)
+                    {
+                        TriggerOnDeploy(unitUI);
+                    }
+
                     StartCoroutine(CheckMergeNextFrame(unitUI.currentInstance.Data.cardID, unitUI.currentInstance.mergeLevel));
                 }
             }
@@ -109,9 +129,36 @@ public class CardSlot : MonoBehaviour, IDropHandler
         else if (this.slotType == SlotType.Hand || this.slotType == SlotType.PlayerBoard)
         {
             unitCard.parentReturnTo = this.transform;
+
+            // [THÊM MỚI] BẮN SỰ KIỆN ONDEPLOY NẾU KÉO TỪ HAND LÊN BÀN CỜ
+            // Chỉ bắn khi nguồn kéo không phải là PlayerBoard (để tránh lính đổi chỗ cho nhau cũng được tính là Deploy)
+            if (this.slotType == SlotType.PlayerBoard && sourceSlot.slotType != SlotType.PlayerBoard)
+            {
+                TriggerOnDeploy(unitUI);
+            }
+
             StartCoroutine(CheckMergeNextFrame(unitUI.currentInstance.Data.cardID, unitUI.currentInstance.mergeLevel));
         }
     }
+
+    // ==========================================
+    // HỆ THỐNG TRIGGER HỖ TRỢ
+    // ==========================================
+    private void TriggerOnDeploy(CardUI unitUI)
+    {
+        if (unitUI.currentInstance != null)
+        {
+            Debug.Log($"<color=green>[EVENT]</color> Bắn sự kiện OnDeploy cho {unitUI.currentInstance.Data.cardName}");
+            GameManager.Instance.resolver.TriggerAbility(
+                TriggerType.OnDeploy,
+                unitUI.currentInstance,
+                null,
+                GameManager.Instance.playerBoard,
+                GameManager.Instance.enemyBoard
+            );
+        }
+    }
+
 
     // ==========================================
     // HỆ THỐNG MERGE
@@ -143,6 +190,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
         if (matches.Count >= 3)
             PerformMerge(matches);
     }
+
     private void PerformMerge(List<CardUI> cards)
     {
         CardUI keeper = cards[0];

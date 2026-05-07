@@ -358,7 +358,8 @@
                 "effect": 6,
                 "effectValue1": 1,
                 "isPermanent": false
-            }
+            },
+            "description": "Deploy: +1 coin "
         },
         {
             "_comment": "// ================= NILES =================",
