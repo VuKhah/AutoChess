@@ -46,39 +46,22 @@ public class BotAgent
         float s = c.baseATK * brain.genes[0] + c.baseHP * brain.genes[1];
 
         // 2. Chấm điểm dựa trên hệ thống Kỹ năng TTE mới
-        if (c.ability != null)
+        if (c.abilities != null && c.abilities.Count > 0)
         {
-
-            // Đánh giá Taunt (Bắt buộc tấn công)
-            if (c.ability.isTaunt)
-            {
+            if (c.hasTaunt)
                 s += 8 * brain.genes[3];
-            }
 
-            // Đánh giá Thorns (Phản sát thương: Bị đánh -> DealDamage)
-            if (c.ability.trigger == TriggerType.OnTakeDamage && c.ability.effect == EffectType.DealDamage)
-            {
+            if (c.abilities.Exists(a => a != null && a.trigger == TriggerType.OnTakeDamage && a.effect == EffectType.DealDamage))
                 s += 8 * brain.genes[3];
-            }
 
-            // Đánh giá Growth (Tăng trưởng: Đầu hiệp -> AddStats)
-            if (c.ability.trigger == TriggerType.StartOfBattle && c.ability.effect == EffectType.AddStats)
-            {
+            if (c.abilities.Exists(a => a != null && a.trigger == TriggerType.StartOfBattle && a.effect == EffectType.AddStats))
                 s += 12 * brain.genes[4];
-            }
 
-            // Đánh giá Reborn (Hồi sinh)
-            if (c.ability.effect == EffectType.Reborn)
-            {
+            if (c.hasReborn)
                 s += 10 * brain.genes[5];
-            }
 
-            // Đánh giá SlainEffect (Khi chết -> Buff đồng minh) 
-            // Tạm dùng gene[2] (gene Economy cũ) để chấm điểm cho hiệu ứng buff khi chết
-            if (c.ability.trigger == TriggerType.OnDeath && c.ability.effect == EffectType.AddStats)
-            {
+            if (c.abilities.Exists(a => a != null && a.trigger == TriggerType.OnDeath && a.effect == EffectType.AddStats))
                 s += 10 * brain.genes[2];
-            }
         }
 
         return s;

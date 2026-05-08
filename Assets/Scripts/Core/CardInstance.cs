@@ -22,16 +22,20 @@ using UnityEngine;
     // 4. Merge level (0=gốc, 1=đã merge 1 lần, 2=đã merge 2 lần)
     public int mergeLevel = 0;
 
-    // 5. Taunt runtime — độc lập với AbilityData, không bị ghi đè khi thay ability
+    // 5. Passive keywords runtime — khởi tạo từ CardDefinition, có thể được grant bởi abilities
     public bool isTaunt;
+    public bool isReborn;
+    public bool safeguardActive;
 
-    // 6. Đếm số lần ability đã kích hoạt trong combat này (cho triggerLimit)
-    public int abilityTriggerCount = 0;
+    // 6. Đếm số lần mỗi ability đã kích hoạt trong combat này (cho triggerLimit)
+    public List<int> abilityTriggerCounts = new List<int>();
+
+    // 7. Danh sách cardID của các unit đã bị Consume (Sekhmet mechanic)
+    public List<string> consumedCardIDs = new List<string>();
 
     public CardInstance(CardDefinition data, int slot)
     {
         this.Data = data;
-        this.isTaunt = data.ability != null && data.ability.isTaunt;
         ResetStats();
         this.slotIndex = slot;
     }
@@ -44,8 +48,14 @@ using UnityEngine;
                 + keepRatio * (growthATKBonus + permanentATKBonus));
         currentHP  = Mathf.RoundToInt(Data.baseHP  * tier
                  + keepRatio * (growthHPBonus  + permanentHPBonus));
-        hasRebornUsed = false;
-        abilityTriggerCount = 0;
+        // Reset passives từ data gốc (mỗi combat bắt đầu lại từ đầu)
+        isTaunt         = Data.hasTaunt;
+        isReborn        = Data.hasReborn;
+        safeguardActive = Data.hasSafeguard;
+        hasRebornUsed   = false;
+        int abCount = Data.abilities != null ? Data.abilities.Count : 0;
+        abilityTriggerCounts = new List<int>(new int[abCount]);
+        consumedCardIDs = new List<string>();
     }
 
     public void Revive(int hp)

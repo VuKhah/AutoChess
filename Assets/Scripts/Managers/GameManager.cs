@@ -99,6 +99,39 @@ public class GameManager : MonoBehaviour
         cardObj.GetComponent<CardUI>().Setup(instance);
     }
 
+    // Sau ResolveTurn(), tạo CardUI cho bất kỳ unit nào được triệu hồi trong battle
+    // mà chưa có GameObject trên sân (data tồn tại nhưng UI chưa có)
+    private void SpawnMissingBoardUI()
+    {
+        SpawnMissingOnSide(playerBoard, playerSlots);
+        SpawnMissingOnSide(enemyBoard,  enemySlots);
+    }
+
+    private void SpawnMissingOnSide(List<CardInstance> board, Transform[] slots)
+    {
+        for (int i = 0; i < slots.Length; i++)
+        {
+            CardInstance unit = (i < board.Count) ? board[i] : null;
+            if (unit == null || unit.IsDead) continue;
+
+            CardUI existing = slots[i].GetComponentInChildren<CardUI>();
+            if (existing != null)
+            {
+                // Unit đã có UI — chỉ refresh để đồng bộ passives/HP
+                existing.Setup(unit);
+            }
+            else
+            {
+                // Unit được triệu hồi trong trận, chưa có GameObject — tạo mới
+                GameObject go = Instantiate(cardPrefab, slots[i]);
+                go.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                go.transform.localScale = Vector3.one;
+                go.GetComponent<CardUI>().Setup(unit);
+                Debug.Log($"<color=green>[UI]</color> Spawn UI cho unit triệu hồi: {unit.Data.cardName} tại slot {i}");
+            }
+        }
+    }
+
     public bool TryBuyCard(int cost)
     {
         if (playerCoins >= cost)
@@ -113,6 +146,11 @@ public class GameManager : MonoBehaviour
     public void SellCard()
     {
         playerCoins += 1;
+        UIManager.Instance.UpdateStats(playerHP, playerCups, playerCoins);
+    }
+
+    public void UpdateCoinUI()
+    {
         UIManager.Instance.UpdateStats(playerHP, playerCups, playerCoins);
     }
 
@@ -159,8 +197,11 @@ public class GameManager : MonoBehaviour
 
         // Giai đoạn B: Viết kịch bản (Tính toán toàn bộ trận đấu trong 1 tích tắc)
         TurnRecord combatLog = new TurnRecord();
-        // Bộ não CombatResolver sẽ tính toán thắng thua, ripple target, synergy...
         resolver.ResolveTurn(playerBoard, enemyBoard, combatLog);
+
+        // Giai đoạn B.5: Spawn UI cho các unit được triệu hồi trong trận (chưa có GameObject)
+        SpawnMissingBoardUI();
+        yield return new WaitForEndOfFrame(); // Chờ Unity cập nhật layout mới
 
         // Giai đoạn C: Trình diễn (Đọc từng dòng kịch bản và cho lính đấm nhau)
         foreach (var action in combatLog.actions)
@@ -314,11 +355,12 @@ public class GameManager : MonoBehaviour
         // 2. Tính Coin từ các Unit Kinh tế đang có trên bàn cờ (kích hoạt ở cuối Shop Phase)
         foreach (var unit in playerBoard)
         {
-            if (unit != null && !unit.IsDead && unit.Data.ability != null)
+            if (unit == null || unit.IsDead || unit.Data.abilities == null) continue;
+            foreach (var ab in unit.Data.abilities)
             {
-                if (unit.Data.ability.trigger == TriggerType.EndTurnShop && unit.Data.ability.effect == EffectType.GainCoin)
+                if (ab != null && ab.trigger == TriggerType.EndTurnShop && ab.effect == EffectType.GainCoin)
                 {
-                    int coinGain = unit.Data.ability.effectValue1 * (unit.mergeLevel + 1);
+                    int coinGain = ab.effectValue1 * (unit.mergeLevel + 1);
                     playerCoins += coinGain;
                     Debug.Log($"<color=yellow>[ECONOMY]</color> {unit.Data.cardName} (Lv{unit.mergeLevel}) đào được {coinGain} Coin!");
                 }

@@ -15,7 +15,13 @@ public class CardDefinition
     public int cost;
     public int tier;
 
-    public AbilityData ability;
+    public List<AbilityData> abilities;
+
+    // Passive keywords — độc lập hoàn toàn với hệ thống TTE
+    public bool hasTaunt;
+    public bool hasReborn;
+    public bool hasSafeguard;
+
     public string description;
 
     // Magic fields — magicGroup là string để JSON dùng tên trực tiếp (StatBoost, AddAbility, AddTaunt, Economy)

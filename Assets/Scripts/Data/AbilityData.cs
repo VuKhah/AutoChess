@@ -30,6 +30,7 @@ public enum TargetType
     RightAlly = 8,        // Đồng minh bên phải
     AllNilesAllies = 9,   // Toàn bộ đồng minh thuộc bộ tộc Niles (Đặc biệt, chỉ áp dụng cho thẻ có bộ tộc Niles)
     AllBabylonAllies = 10, // Toàn bộ đồng minh thuộc bộ tộc Babylon (Đặc biệt, chỉ áp dụng cho thẻ có bộ tộc Babylon)
+    TriggerSubject = 11,  // Đơn vị gây ra sự kiện (VD: unit vừa được triệu hồi trong OnAllySummon, đồng minh vừa chết trong OnAllyDeath)
 }
 
 
@@ -45,6 +46,7 @@ public enum EffectType
     GainCoin = 6,       // Thêm Coin (Kinh tế)
     Reborn = 7,         // Hồi sinh (Đặc biệt)
     TriggerAbility = 8,   // Kích hoạt ability của target (copy battlecry/deathrattle đồng minh) — không chain nếu target cũng là TriggerAbility
+    SummonConsumed = 9,   // Triệu hồi lại tất cả unit đã bị Consume bởi source (dùng với OnDeath)
 }
 
 [System.Serializable]
@@ -66,9 +68,11 @@ public class AbilityData
     public int conditionCount;   // Số lần điều kiện đã được đáp ứng (VD: Đã bị đánh 2 lần)
 
 
-    [Header("Special Flags")]
-    public bool isTaunt;        // Taunt là cơ chế ưu tiên mục tiêu
-    public bool isReborn;       // Thẻ có sẵn khả năng hồi sinh không?
+    [Header("Special Flags — chỉ dùng cho GiveBuff effect")]
+    public bool isTaunt;        // GiveBuff: grant Taunt cho target
+    public bool isReborn;       // GiveBuff: grant Reborn cho target
+    public bool isSafeguard;    // GiveBuff: grant Safeguard cho target
+    public bool isConsume;      // Destroy: "nuốt" unit — lưu cardID để SummonConsumed dùng sau
     public int targetTribe;    // Bộ tộc mục tiêu — cast sang Tribe enum: 0=All, 1=Babylon, 2=Olympus, 3=Niles
 
     // Hàm hỗ trợ kiểm tra xem kỹ năng có tác dụng vĩnh viễn không

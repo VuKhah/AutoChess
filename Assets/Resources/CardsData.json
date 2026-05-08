@@ -1,4 +1,4 @@
-{
+﻿{
     "cards": [
         {
             "_comment": "// ================= BABYLON =================",
@@ -9,13 +9,13 @@
             "baseATK": 10,
             "baseHP": 10,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 7,
                 "target": 1,
                 "effect": 1,
                 "triggerLimit": 3,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_02_Babylon",
@@ -25,14 +25,14 @@
             "baseATK": 9,
             "baseHP": 9,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 6,
                 "target": 1,
                 "effect": 6,
                 "effectValue1": 1,
                 "conditionCount": 3,
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_03_Babylon",
@@ -42,14 +42,14 @@
             "baseATK": 8,
             "baseHP": 8,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 6,
                 "target": 10,
                 "effect": 1,
                 "effectValue1": 1,
                 "effectValue2": 1,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_04_Babylon",
@@ -59,14 +59,14 @@
             "baseATK": 6,
             "baseHP": 6,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 6,
                 "target": 2,
                 "effect": 1,
                 "effectValue1": 3,
                 "effectValue2": 3,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_05_Babylon",
@@ -76,13 +76,13 @@
             "baseATK": 15,
             "baseHP": 15,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 7,
                 "target": 10,
                 "targetCount": 2,
                 "effect": 1,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_06_Babylon",
@@ -92,14 +92,14 @@
             "baseATK": 6,
             "baseHP": 6,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 7,
                 "target": 3,
                 "effect": 1,
                 "effectValue1": 5,
                 "effectValue2": 5,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_07_Babylon",
@@ -109,13 +109,13 @@
             "baseATK": 2,
             "baseHP": 15,
             "cost": 3,
-            "ability": {
-                "isTaunt": true,
+            "hasTaunt": true,
+            "abilities": [{
                 "trigger": 1,
                 "target": 5,
                 "effect": 2,
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_08_Babylon",
@@ -125,15 +125,15 @@
             "baseATK": 10,
             "baseHP": 10,
             "cost": 3,
-            "ability": {
-                "isTaunt": true,
+            "hasTaunt": true,
+            "abilities": [{
                 "trigger": 6,
                 "target": 1,
                 "effect": 1,
                 "effectValue1": 20,
                 "effectValue2": 20,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_09_Babylon",
@@ -143,13 +143,13 @@
             "baseATK": 5,
             "baseHP": 5,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 6,
                 "target": 1,
                 "effect": 4,
                 "effectValue1": 2,
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_10_Babylon",
@@ -159,14 +159,14 @@
             "baseATK": 5,
             "baseHP": 5,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 6,
                 "target": 8,
                 "effect": 1,
                 "effectValue1": 3,
                 "effectValue2": 3,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_11_Babylon",
@@ -176,14 +176,14 @@
             "baseATK": 8,
             "baseHP": 8,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 11,
                 "target": 1,
                 "effect": 1,
                 "effectValue1": 3,
                 "effectValue2": 2,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_12_Babylon",
@@ -193,13 +193,13 @@
             "baseATK": 7,
             "baseHP": 1,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 2,
                 "target": 1,
                 "effect": 6,
                 "effectValue1": 2,
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_13_Babylon",
@@ -209,12 +209,12 @@
             "baseATK": 8,
             "baseHP": 8,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 6,
                 "target": 2,
                 "effect": 1,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_14_Babylon",
@@ -224,15 +224,15 @@
             "baseATK": 3,
             "baseHP": 3,
             "cost": 3,
-            "ability": {
-                "isTaunt": true,
+            "hasTaunt": true,
+            "abilities": [{
                 "trigger": 1,
                 "target": 10,
                 "effect": 1,
                 "effectValue1": 1,
                 "effectValue2": 2,
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_15_Babylon",
@@ -242,13 +242,13 @@
             "baseATK": 1,
             "baseHP": 5,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 12,
                 "target": 10,
                 "effect": 1,
                 "effectValue1": 1,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_16_Babylon",
@@ -258,13 +258,13 @@
             "baseATK": 1,
             "baseHP": 2,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 6,
                 "target": 1,
                 "effect": 6,
                 "effectValue1": 2,
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_17_Babylon",
@@ -274,10 +274,9 @@
             "baseATK": 2,
             "baseHP": 2,
             "cost": 3,
-            "ability": {
-                "isTaunt": true,
-                "isReborn": true
-            }
+            "hasTaunt": true,
+            "hasReborn": true,
+            "abilities": []
         },
         {
             "cardID": "U_18_Babylon",
@@ -287,13 +286,13 @@
             "baseATK": 5,
             "baseHP": 1,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 12,
                 "target": 10,
                 "effect": 1,
                 "effectValue2": 1,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_19_Babylon",
@@ -303,13 +302,13 @@
             "baseATK": 3,
             "baseHP": 3,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 7,
                 "target": 1,
                 "effect": 4,
                 "effectValue1": 1,
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_20_Babylon",
@@ -319,14 +318,14 @@
             "baseATK": 3,
             "baseHP": 3,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 7,
                 "target": 1,
                 "effect": 1,
                 "effectValue1": 1,
                 "effectValue2": 1,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_21_Babylon",
@@ -336,13 +335,13 @@
             "baseATK": 2,
             "baseHP": 4,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 6,
                 "target": 1,
                 "effect": 1,
                 "effectValue2": 1,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_22_Babylon",
@@ -352,13 +351,13 @@
             "baseATK": 3,
             "baseHP": 2,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 6,
-                "target": 1,
+                "target": 0,
                 "effect": 6,
                 "effectValue1": 1,
                 "isPermanent": false
-            },
+            }],
             "description": "Deploy: +1 coin "
         },
         {
@@ -370,7 +369,7 @@
             "baseATK": 5,
             "baseHP": 5,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 8,
                 "target": 6,
                 "effect": 3,
@@ -379,7 +378,7 @@
                 "isReborn": true,
                 "triggerLimit": 2,
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_02_Niles",
@@ -389,13 +388,23 @@
             "baseATK": 9,
             "baseHP": 3,
             "cost": 3,
-            "ability": {
-                "trigger": 9,
-                "target": 2,
-                "effect": 5,
-                "triggerLimit": 2,
-                "isPermanent": false
-            }
+            "abilities": [
+                {
+                    "trigger": 9,
+                    "target": 11,
+                    "effect": 5,
+                    "triggerLimit": 2,
+                    "isConsume": true,
+                    "isPermanent": false
+                },
+                {
+                    "trigger": 3,
+                    "target": 1,
+                    "effect": 9,
+                    "isPermanent": false
+                }
+            ],
+            "description": "OnAllySummon: Consume unit đó (tối đa 2 lần). Slain: triệu hồi lại tất cả unit đã Consume."
         },
         {
             "cardID": "U_03_Niles",
@@ -405,14 +414,14 @@
             "baseATK": 3,
             "baseHP": 3,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 10,
                 "target": 2,
                 "effect": 1,
                 "effectValue1": 3,
                 "effectValue2": 3,
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_04_Niles",
@@ -422,14 +431,14 @@
             "baseATK": 2,
             "baseHP": 2,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 11,
                 "target": 1,
                 "effect": 1,
                 "effectValue1": 1,
                 "effectValue2": 1,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_05_Niles",
@@ -439,7 +448,7 @@
             "baseATK": 4,
             "baseHP": 8,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 9,
                 "target": 9,
                 "effect": 1,
@@ -447,7 +456,7 @@
                 "effectValue2": 1,
                 "conditionCount": 2,
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_06_Niles",
@@ -457,15 +466,15 @@
             "baseATK": 8,
             "baseHP": 5,
             "cost": 3,
-            "ability": {
+            "hasReborn": true,
+            "abilities": [{
                 "trigger": 3,
                 "target": 9,
                 "effect": 1,
                 "effectValue1": 2,
                 "effectValue2": 0,
-                "isReborn": true,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_07_Niles",
@@ -475,14 +484,14 @@
             "baseATK": 2,
             "baseHP": 9,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 10,
                 "target": 3,
                 "effect": 1,
                 "effectValue1": 3,
                 "effectValue2": 3,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_08_Niles",
@@ -492,14 +501,14 @@
             "baseATK": 5,
             "baseHP": 2,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 9,
                 "target": 2,
                 "effect": 1,
                 "effectValue1": 4,
                 "effectValue2": 4,
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_09_Niles",
@@ -509,13 +518,13 @@
             "baseATK": 4,
             "baseHP": 2,
             "cost": 3,
-            "ability": {
+            "hasReborn": true,
+            "abilities": [{
                 "trigger": 3,
                 "target": 2,
                 "effect": 3,
-                "isReborn": true,
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_10_Niles",
@@ -525,14 +534,14 @@
             "baseATK": 6,
             "baseHP": 2,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 3,
                 "target": 1,
                 "effect": 4,
                 "effectValue1": 2,
                 "summonCardID": "U_20",
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_11_Niles",
@@ -542,12 +551,13 @@
             "baseATK": 5,
             "baseHP": 2,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 6,
-                "target": 2,
+                "target": 7,
                 "effect": 5,
-                "isPermanent": false
-            }
+                "isPermanent": false,
+                "description":"When Deploy, destroy Left Ally"
+            }]
         },
         {
             "cardID": "U_12_Niles",
@@ -557,14 +567,14 @@
             "baseATK": 3,
             "baseHP": 1,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 4,
                 "target": 7,
                 "effect": 1,
                 "effectValue1": 2,
                 "effectValue2": 0,
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_13_Niles",
@@ -574,7 +584,7 @@
             "baseATK": 3,
             "baseHP": 1,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 8,
                 "target": 9,
                 "effect": 1,
@@ -582,7 +592,7 @@
                 "effectValue2": 0,
                 "conditionCount": 3,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_14_Niles",
@@ -592,13 +602,13 @@
             "baseATK": 1,
             "baseHP": 1,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 2,
                 "target": 4,
                 "effect": 2,
                 "effectValue1": 5,
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_15_Niles",
@@ -608,14 +618,14 @@
             "baseATK": 2,
             "baseHP": 2,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 8,
                 "target": 1,
                 "effect": 1,
                 "effectValue1": 1,
                 "effectValue2": 1,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_16_Niles",
@@ -625,13 +635,13 @@
             "baseATK": 3,
             "baseHP": 1,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 6,
                 "target": 1,
                 "effect": 6,
                 "effectValue1": 1,
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_17_Niles",
@@ -641,14 +651,14 @@
             "baseATK": 1,
             "baseHP": 1,
             "cost": 3,
-            "ability": {
+            "hasReborn": true,
+            "abilities": [{
                 "trigger": 11,
                 "target": 1,
                 "effect": 1,
                 "effectValue1": 1,
-                "isReborn": true,
                 "isPermanent": true
-            }
+            }]
         },
         {
             "cardID": "U_18_Niles",
@@ -658,14 +668,14 @@
             "baseATK": 4,
             "baseHP": 4,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 9,
                 "target": 1,
                 "effect": 1,
                 "effectValue1": 1,
                 "effectValue2": 1,
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_19_Niles",
@@ -675,14 +685,14 @@
             "baseATK": 0,
             "baseHP": 1,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 3,
                 "target": 1,
                 "effect": 4,
                 "effectValue1": 2,
                 "summonCardID": "U_23_Niles",
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_20_Niles",
@@ -692,14 +702,14 @@
             "baseATK": 2,
             "baseHP": 1,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 3,
                 "target": 1,
                 "effect": 4,
                 "effectValue1": 1,
                 "summonCardID": "U_22_Niles",
                 "isPermanent": false
-            }
+            }]
         },
         {
             "cardID": "U_21_Niles",
@@ -709,10 +719,9 @@
             "baseATK": 2,
             "baseHP": 1,
             "cost": 3,
-            "ability": {
-                "isTaunt": true,
-                "isReborn": true
-            }
+            "hasTaunt": true,
+            "hasReborn": true,
+            "abilities": []
         },
         {
             "cardID": "U_22_Niles",
@@ -722,9 +731,9 @@
             "baseATK": 1,
             "baseHP": 1,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 0
-            }
+            }]
         },
         {
             "cardID": "U_23_Niles",
@@ -734,9 +743,9 @@
             "baseATK": 3,
             "baseHP": 2,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 0
-            }
+            }]
         },
         {
             "cardID": "U_24_Niles",
@@ -746,9 +755,9 @@
             "baseATK": 3,
             "baseHP": 2,
             "cost": 3,
-            "ability": {
+            "abilities": [{
                 "trigger": 0
-            }
+            }]
         },
         {
             "_comment": "// ================= MAGIC =================",
@@ -779,15 +788,14 @@
             "cardType": 1,
             "tribe": 0,
             "magicGroup": "Economy",
-            "ability": {
+            "abilities": [{
                 "trigger": 0,
                 "target": 0,
                 "targetCount": 0,
                 "effect": 5,
                 "effectValue1": 2,
-                "effectValue2": 0,
-                "isTaunt": false
-            },
+                "effectValue2": 0
+            }],
             "cost": 2,
             "tier": 1,
             "description": "Nhận 1 Coin vào lượt sau"

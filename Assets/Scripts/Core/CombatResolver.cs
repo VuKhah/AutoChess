@@ -88,9 +88,22 @@ public class CombatResolver
         int aBefore = attacker.currentHP;
         int dBefore = defender.currentHP;
 
-        // 1. Sát thương vật lý cơ bản (đánh đồng thời)
+        // 1. Sát thương vật lý cơ bản (đánh đồng thời) — Safeguard chặn đòn đầu tiên
         int dmgToDefender = attacker.currentATK;
         int dmgToAttacker = defender.currentATK;
+
+        if (defender.safeguardActive)
+        {
+            dmgToDefender = 0;
+            defender.safeguardActive = false;
+            Debug.Log($"<color=cyan>[SAFEGUARD]</color> {defender.Data.cardName} chặn đòn tấn công!");
+        }
+        if (attacker.safeguardActive)
+        {
+            dmgToAttacker = 0;
+            attacker.safeguardActive = false;
+            Debug.Log($"<color=cyan>[SAFEGUARD]</color> {attacker.Data.cardName} chặn phản đòn!");
+        }
 
         defender.currentHP -= dmgToDefender;
         attacker.currentHP -= dmgToAttacker;
@@ -134,14 +147,22 @@ public class CombatResolver
         }
     }
 
-    // Giờ chỉ có nhiệm vụ duy nhất: dọn dẹp các thi thể (đã chết và không thể cứu vãn)
+    // Dọn dẹp xác chết — kiểm tra Reborn passive trước khi xóa
     private void CleanupBoard(List<CardInstance> allyBoard, List<CardInstance> enemyBoard)
     {
         for (int i = 0; i < allyBoard.Count; i++)
         {
-            if (allyBoard[i] != null && allyBoard[i].IsDead)
+            var unit = allyBoard[i];
+            if (unit == null || !unit.IsDead) continue;
+
+            if (unit.isReborn && !unit.hasRebornUsed)
             {
-                // Chỉ dọn dẹp xác chết thực sự.
+                unit.Revive(1);
+                Debug.Log($"<color=magenta>[REBORN]</color> {unit.Data.cardName} hồi sinh với 1 HP!");
+                BroadcastAllyEvent(TriggerType.OnAllyReborn, unit, allyBoard, enemyBoard);
+            }
+            else
+            {
                 allyBoard[i] = null;
             }
         }
@@ -202,27 +223,30 @@ public class CombatResolver
     // Public để CardSlot.cs có thể gọi OnDeploy/OnSell
     public void TriggerAbility(TriggerType triggerContext, CardInstance source, CardInstance directEnemy, List<CardInstance> allyBoard, List<CardInstance> enemyBoard)
     {
-        if (source == null || source.Data.ability == null) return;
-        if (source.Data.ability.trigger != triggerContext) return;
-
-        AbilityData ability = source.Data.ability;
-
-        // Kiểm tra giới hạn kích hoạt (0 = không giới hạn)
-        if (ability.triggerLimit > 0 && source.abilityTriggerCount >= ability.triggerLimit) return;
-
-        // StartOfBattle + AddStats = Growth (tăng trưởng vĩnh viễn, lưu vào growthBonus)
-        bool isGrowth = triggerContext == TriggerType.StartOfBattle && ability.effect == EffectType.AddStats;
+        if (source == null || source.Data.abilities == null || source.Data.abilities.Count == 0) return;
 
         int scaleFactor = source.mergeLevel + 1;
-        List<CardInstance> targets = FindTargets(ability, source, directEnemy, allyBoard, enemyBoard);
 
-        foreach (var target in targets)
+        for (int i = 0; i < source.Data.abilities.Count; i++)
         {
-            if (isGrowth) ApplyGrowth(ability, target, scaleFactor);
-            else ExecuteEffect(ability, target, source, allyBoard, enemyBoard, scaleFactor);
-        }
+            AbilityData ability = source.Data.abilities[i];
+            if (ability == null || ability.trigger != triggerContext) continue;
 
-        if (ability.triggerLimit > 0) source.abilityTriggerCount++;
+            // Kiểm tra giới hạn kích hoạt (0 = không giới hạn)
+            if (ability.triggerLimit > 0 && source.abilityTriggerCounts[i] >= ability.triggerLimit) continue;
+
+            // StartOfBattle + AddStats = Growth (tăng trưởng vĩnh viễn, lưu vào growthBonus)
+            bool isGrowth = triggerContext == TriggerType.StartOfBattle && ability.effect == EffectType.AddStats;
+
+            List<CardInstance> targets = FindTargets(ability, source, directEnemy, allyBoard, enemyBoard);
+            foreach (var target in targets)
+            {
+                if (isGrowth) ApplyGrowth(ability, target, scaleFactor);
+                else ExecuteEffect(ability, target, source, allyBoard, enemyBoard, scaleFactor);
+            }
+
+            if (ability.triggerLimit > 0) source.abilityTriggerCounts[i]++;
+        }
     }
 
     private void ApplyGrowth(AbilityData ability, CardInstance target, int scaleFactor)
@@ -241,8 +265,11 @@ public class CombatResolver
     {
         if (target == null) return;
 
-        // Chỉ hồi sinh (Reborn) mới được thực thi trên xác chết
-        if (target.IsDead && ability.effect != EffectType.Reborn) return;
+        // Reborn, Summon, SummonConsumed được phép thực thi dù target đã chết (OnDeath effects)
+        bool isDeathSafeEffect = ability.effect == EffectType.Reborn
+                              || ability.effect == EffectType.Summon
+                              || ability.effect == EffectType.SummonConsumed;
+        if (target.IsDead && !isDeathSafeEffect) return;
 
         switch (ability.effect)
         {
@@ -262,9 +289,12 @@ public class CombatResolver
             }
 
             case EffectType.GiveBuff:
-                if (ability.isTaunt) target.isTaunt = true;
-                Debug.Log($"<color=cyan>[ABILITY]</color> {target.Data.cardName} nhận buff trạng thái (Taunt={target.isTaunt})");
+            {
+                if (ability.isTaunt)      { target.isTaunt = true;         Debug.Log($"<color=cyan>[BUFF]</color> {target.Data.cardName} nhận Taunt!"); }
+                if (ability.isReborn)     { target.isReborn = true;        Debug.Log($"<color=cyan>[BUFF]</color> {target.Data.cardName} nhận Reborn!"); }
+                if (ability.isSafeguard)  { target.safeguardActive = true; Debug.Log($"<color=cyan>[BUFF]</color> {target.Data.cardName} nhận Safeguard!"); }
                 break;
+            }
 
             case EffectType.DealDamage:
             {
@@ -276,7 +306,9 @@ public class CombatResolver
 
             case EffectType.Destroy:
                 target.currentHP = 0;
-                Debug.Log($"<color=red>[ABILITY]</color> {target.Data.cardName} bị tiêu diệt (Banish)!");
+                if (ability.isConsume)
+                    source.consumedCardIDs.Add(target.Data.cardID);
+                Debug.Log($"<color=red>[ABILITY]</color> {source.Data.cardName} tiêu diệt {target.Data.cardName}{(ability.isConsume ? " (Consumed!)" : "")}");
                 break;
 
             case EffectType.Reborn:
@@ -296,16 +328,49 @@ public class CombatResolver
                 if (summoned != null)
                 {
                     Debug.Log($"<color=green>[SUMMON]</color> {source.Data.cardName} triệu hồi {summoned.Data.cardName}!");
+                    TriggerAbility(TriggerType.OnDeploy, summoned, null, allyBoard, enemyBoard);
                     // [SYNERGY] Bắn tin cho đồng minh: "Có đứa vừa được triệu hồi nè!"
                     BroadcastAllyEvent(TriggerType.OnAllySummon, summoned, allyBoard, enemyBoard);
                 }
                 break;
 
+            case EffectType.GainCoin:
+            {
+                int coins = ability.effectValue1 * scaleFactor;
+                GameManager.Instance.playerCoins += coins;
+                GameManager.Instance.UpdateCoinUI();
+                Debug.Log($"<color=yellow>[ABILITY]</color> {source.Data.cardName} cộng {coins} Coin! (Deploy)");
+                break;
+            }
+
             case EffectType.TriggerAbility:
-                // Kích hoạt ability của chính target (copy battlecry / deathrattle của đồng minh)
-                // Guard: không chain nếu target cũng là TriggerAbility (tránh vòng lặp vô hạn)
-                if (target.Data.ability != null && target.Data.ability.effect != EffectType.TriggerAbility)
-                    TriggerAbility(target.Data.ability.trigger, target, null, allyBoard, enemyBoard);
+                // Kích hoạt tất cả abilities của target — guard chống chain vô hạn
+                if (target.Data.abilities != null)
+                {
+                    foreach (var ab in target.Data.abilities)
+                    {
+                        if (ab != null && ab.effect != EffectType.TriggerAbility)
+                            TriggerAbility(ab.trigger, target, null, allyBoard, enemyBoard);
+                    }
+                }
+                break;
+
+            case EffectType.SummonConsumed:
+                // Triệu hồi lại tất cả unit mà source đã Consume
+                if (source.consumedCardIDs != null && source.consumedCardIDs.Count > 0)
+                {
+                    Debug.Log($"<color=magenta>[CONSUME]</color> {source.Data.cardName} giải phóng {source.consumedCardIDs.Count} unit đã tiêu thụ!");
+                    foreach (var cardID in source.consumedCardIDs)
+                    {
+                        CardInstance released = SummonUnit(cardID, allyBoard);
+                        if (released != null)
+                        {
+                            TriggerAbility(TriggerType.OnDeploy, released, null, allyBoard, enemyBoard);
+                            BroadcastAllyEvent(TriggerType.OnAllySummon, released, allyBoard, enemyBoard);
+                        }
+                    }
+                    source.consumedCardIDs.Clear();
+                }
                 break;
         }
     }
@@ -401,6 +466,12 @@ public class CombatResolver
             case TargetType.AllBabylonAllies:
                 validTargets.AddRange(allyBoard.FindAll(u => u != null && !u.IsDead && u.Data.tribe == Tribe.Babylon));
                 break;
+
+            case TargetType.TriggerSubject:
+                // Unit đã gây ra sự kiện — trong OnAllySummon/OnAllyDeath/OnAllyReborn được pass qua directEnemy
+                if (directEnemy != null)
+                    validTargets.Add(directEnemy);
+                break;
         }
 
         return validTargets;
@@ -447,10 +518,12 @@ public class CombatResolver
                 break;
 
             case "AddAbility":
-                if (magic.Data.ability != null)
-                    // Cẩn thận: Nếu sau này cần Deep Copy AbilityData để không đè data gốc,
-                    // ta sẽ xử lý ở đây. Tạm thời gán reference.
-                    unit.Data.ability = magic.Data.ability;
+                if (magic.Data.abilities != null && magic.Data.abilities.Count > 0)
+                {
+                    if (unit.Data.abilities == null) unit.Data.abilities = new List<AbilityData>();
+                    foreach (var ab in magic.Data.abilities)
+                        if (ab != null) unit.Data.abilities.Add(ab);
+                }
                 break;
 
             case "AddTaunt":

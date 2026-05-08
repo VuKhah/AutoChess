@@ -4,98 +4,84 @@ using TMPro;
 
 public class CardUI : MonoBehaviour
 {
-    [Header("Visual Elements")]
-    public Image characterArt;
-    public Image abilityIcon;
-    public Image tierIcon;
+    [Header("Stats")]
     public TextMeshProUGUI atkText;
     public TextMeshProUGUI hpText;
+    public Image characterArt;
 
-    [HideInInspector]
-    public CardInstance currentInstance;
+    [Header("Ability Icon (TTE)")]
+    public Image abilityIcon;       // Sprite: Sprites/Icons/Abilities/Abi_{effectID}
+
+    [Header("Passive Keyword Icons")]
+    public Image tauntIcon;         // Sprite: Sprites/Icons/Passives/Taunt   — khiên lớn
+    public Image rebornIcon;        // Sprite: Sprites/Icons/Passives/Reborn  — bình thuốc
+    public Image safeguardIcon;     // Sprite: Sprites/Icons/Passives/Safeguard — vòng bảo vệ
+
+    [Header("Tier Icon")]
+    public Image tierIcon;          // Sprite: Sprites/Icons/Tiers/Tier_{n}
+
+    [HideInInspector] public CardInstance currentInstance;
 
     [Header("Visual Feedback")]
-    public Color normalHealthColor = Color.white;
+    public Color normalHealthColor  = Color.white;
     public Color damagedHealthColor = Color.red;
 
     public void Setup(CardInstance instance)
     {
-        // 0. Kiểm tra dữ liệu đầu vào
         if (instance == null) return;
 
-        // --- BÀI KIỂM TRA AN TOÀN TRƯỚC KHI CHẠY ---
         if (characterArt == null || atkText == null || hpText == null)
         {
-            Debug.LogError($"<color=red>[LỖI]</color> Thiếu thành phần UI (Image/Text) trên Prefab: {gameObject.name}. Hãy kéo thả lại trong Inspector!");
+            Debug.LogError($"[CardUI] Thiếu Visual Elements trên prefab: {gameObject.name}");
             return;
         }
 
-        currentInstance = instance; // Lưu lại instance để tham chiếu sau này (ví dụ: khi bị tấn công, kích hoạt kỹ năng...)
+        currentInstance = instance;
 
-        string folder = (instance.Data.cardType == CardType.Magic) ? "Magic" : "Units";
-
-        // Đường dẫn bây giờ cực kỳ gọn: Sprites/Cards/Units/U_01
-        // Tribe giờ chỉ dùng để tính toán cộng điểm, không dùng để tìm ảnh nữa
-        string artPath = $"Sprites/Cards/{folder}/{instance.Data.cardID}";
-
-        Sprite art = Resources.Load<Sprite>(artPath);
+        // --- Art ---
+        string folder  = instance.Data.cardType == CardType.Magic ? "Magic" : "Units";
+        Sprite art = Resources.Load<Sprite>($"Sprites/Cards/{folder}/{instance.Data.cardID}");
         if (art != null) characterArt.sprite = art;
 
-        // 2. Cập nhật chỉ số ATK và HP
-        atkText.text = instance.currentATK.ToString();
-        hpText.text = instance.currentHP.ToString();
+        // --- Stats ---
+        atkText.text  = instance.currentATK.ToString();
+        hpText.text   = instance.currentHP.ToString();
+        hpText.color  = instance.IsDamaged ? damagedHealthColor : normalHealthColor;
 
-        // Đổi màu chữ HP nếu bị mất máu (Phản hồi trực quan)
-        hpText.color = instance.IsDamaged ? damagedHealthColor : normalHealthColor;
-
-        // 3. Nạp Hình 1: Icon Đặc tính (Ability)
+        // --- TTE Ability icon (chỉ effect của TTE, không lẫn passive) ---
         if (abilityIcon != null)
         {
-            bool hasTTE = instance.Data.ability != null && instance.Data.ability.trigger != TriggerType.None;
-
-            if (!hasTTE && !instance.isTaunt)
+            AbilityData firstActive = instance.Data.abilities?.Find(a => a != null && a.trigger != TriggerType.None);
+            if (firstActive != null)
+            {
+                string iconName = "Abi_" + (int)firstActive.effect;
+                Sprite s = Resources.Load<Sprite>("Sprites/Icons/Abilities/" + iconName);
+                abilityIcon.sprite = s;
+                abilityIcon.gameObject.SetActive(s != null);
+                if (s == null) Debug.LogWarning($"[CardUI] Không tìm thấy: Sprites/Icons/Abilities/{iconName}");
+            }
+            else
             {
                 abilityIcon.gameObject.SetActive(false);
             }
-            else
-            {
-                // Taunt (runtime) ưu tiên icon 99; TTE dùng EffectType làm ID
-                int iconID = instance.isTaunt ? 99 : (int)instance.Data.ability.effect;
-
-                string iconName = "Abi_" + iconID;
-                Sprite s = Resources.Load<Sprite>("Sprites/Icons/Abilities/" + iconName);
-
-                if (s != null)
-                {
-                    abilityIcon.sprite = s;
-                    abilityIcon.gameObject.SetActive(true);
-                }
-                else
-                {
-                    abilityIcon.gameObject.SetActive(false);
-                    Debug.LogWarning($"[UI] Không tìm thấy Icon Kỹ năng tại: Sprites/Icons/Abilities/{iconName}.png");
-                }
-            }
         }
 
-        // 4. Nạp Hình 2: Icon Tier (Cấp độ bài)
+        // --- Passive keyword icons (độc lập, không ghi đè nhau) ---
+        SetPassiveIcon(tauntIcon,     instance.isTaunt);
+        SetPassiveIcon(rebornIcon,    instance.isReborn);
+        SetPassiveIcon(safeguardIcon, instance.safeguardActive);
+
+        // --- Tier icon ---
         if (tierIcon != null)
         {
-            // Quy tắc đặt tên ảnh trong Resources/Icons: Tier_1, Tier_2, Tier_3...
-            string tierPath = "Sprites/Icons/Tiers/Tier_" + instance.Data.tier;
-            Sprite tSprite = Resources.Load<Sprite>(tierPath);
-
-            if (tSprite != null)
-            {
-                tierIcon.sprite = tSprite;
-                tierIcon.gameObject.SetActive(true);
-            }
-            else
-            {
-                tierIcon.gameObject.SetActive(false);
-                // Nếu chưa có ảnh Tier, chỉ log lỗi nếu Tier > 0
-                if (instance.Data.tier > 0) Debug.LogWarning($"[UI] Không tìm thấy Icon Tier tại: {tierPath}");
-            }
+            Sprite tSprite = Resources.Load<Sprite>("Sprites/Icons/Tiers/Tier_" + instance.Data.tier);
+            tierIcon.sprite = tSprite;
+            tierIcon.gameObject.SetActive(tSprite != null);
         }
+    }
+
+    private void SetPassiveIcon(Image icon, bool active)
+    {
+        if (icon != null) icon.gameObject.SetActive(active);
     }
 }

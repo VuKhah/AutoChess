@@ -44,11 +44,12 @@ public class ProjectSanityChecker : MonoBehaviour
         List<CardInstance> pBoard = new List<CardInstance>(new CardInstance[6]);
         List<CardInstance> eBoard = new List<CardInstance>(new CardInstance[6]);
 
-        // [ĐÃ CẬP NHẬT TTE ENGINE] - Tạo 1 quân taunt ở slot 5 cho đối thủ
+        // Tạo 1 quân taunt ở slot 5 cho đối thủ — hasTaunt là passive keyword, không phải TTE ability
         CardDefinition tauntDef = new CardDefinition
         {
             cardName = "Tường Chắn",
-            ability = new AbilityData { isTaunt = true }, // Khai báo chuẩn hệ thống mới
+            hasTaunt = true,
+            abilities = null,
             baseATK = 1,
             baseHP = 10
         };
@@ -58,7 +59,7 @@ public class ProjectSanityChecker : MonoBehaviour
         CardDefinition atkDef = new CardDefinition
         {
             cardName = "Chiến Binh",
-            ability = null, // AbilityType.None được thay bằng null
+            abilities = null, // AbilityType.None được thay bằng null
             baseATK = 2,
             baseHP = 5
         };
