@@ -87,6 +87,8 @@ public class CardSlot : MonoBehaviour, IDropHandler
                 // [THÊM MỚI] BẮN SỰ KIỆN ONSELL TRƯỚC KHI BAY MÀU
                 if (unitUI.currentInstance != null)
                 {
+                    // Sync trước khi bắn: lá bài vẫn đang nằm ở slot cũ nên SyncBoards bắt được
+                    GameManager.Instance.SyncBoards();
                     Debug.Log($"<color=red>[EVENT]</color> Bắn sự kiện OnSell cho {unitUI.currentInstance.Data.cardName}");
                     GameManager.Instance.resolver.TriggerAbility(
                         TriggerType.OnSell,
@@ -115,13 +117,8 @@ public class CardSlot : MonoBehaviour, IDropHandler
                 {
                     unitCard.parentReturnTo = this.transform;
 
-                    // [THÊM MỚI] BẮN SỰ KIỆN ONDEPLOY NẾU MUA THẲNG TỪ SHOP LÊN BÀN CỜ
-                    if (this.slotType == SlotType.PlayerBoard)
-                    {
-                        TriggerOnDeploy(unitUI);
-                    }
-
-                    StartCoroutine(CheckMergeNextFrame(unitUI.currentInstance.Data.cardID, unitUI.currentInstance.mergeLevel));
+                    bool shouldDeploy = this.slotType == SlotType.PlayerBoard;
+                    StartCoroutine(CheckMergeNextFrame(unitUI.currentInstance.Data.cardID, unitUI.currentInstance.mergeLevel, shouldDeploy, unitUI));
                 }
             }
         }
@@ -130,14 +127,9 @@ public class CardSlot : MonoBehaviour, IDropHandler
         {
             unitCard.parentReturnTo = this.transform;
 
-            // [THÊM MỚI] BẮN SỰ KIỆN ONDEPLOY NẾU KÉO TỪ HAND LÊN BÀN CỜ
-            // Chỉ bắn khi nguồn kéo không phải là PlayerBoard (để tránh lính đổi chỗ cho nhau cũng được tính là Deploy)
-            if (this.slotType == SlotType.PlayerBoard && sourceSlot.slotType != SlotType.PlayerBoard)
-            {
-                TriggerOnDeploy(unitUI);
-            }
-
-            StartCoroutine(CheckMergeNextFrame(unitUI.currentInstance.Data.cardID, unitUI.currentInstance.mergeLevel));
+            // Chỉ bắn OnDeploy khi kéo từ Hand lên Board (không phải đổi chỗ trong Board)
+            bool shouldDeploy = this.slotType == SlotType.PlayerBoard && sourceSlot.slotType != SlotType.PlayerBoard;
+            StartCoroutine(CheckMergeNextFrame(unitUI.currentInstance.Data.cardID, unitUI.currentInstance.mergeLevel, shouldDeploy, unitUI));
         }
     }
 
@@ -159,14 +151,19 @@ public class CardSlot : MonoBehaviour, IDropHandler
         }
     }
 
-
     // ==========================================
     // HỆ THỐNG MERGE
     // ==========================================
 
-    private IEnumerator CheckMergeNextFrame(string cardID, int mergeLevel)
+    private IEnumerator CheckMergeNextFrame(string cardID, int mergeLevel, bool shouldDeploy = false, CardUI deployedUI = null)
     {
-        yield return null; // Chờ OnEndDrag chạy xong để bài vào đúng slot
+        yield return null; // Chờ OnEndDrag reparent lá bài vào slot mới
+        if (shouldDeploy && deployedUI != null)
+        {
+            // Sync board từ UI hiện tại (lá bài đã ở slot mới sau yield)
+            GameManager.Instance.SyncBoards();
+            TriggerOnDeploy(deployedUI);
+        }
         CheckForMerge(cardID, mergeLevel);
     }
 

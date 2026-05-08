@@ -25,6 +25,9 @@ using UnityEngine;
     // 5. Taunt runtime — độc lập với AbilityData, không bị ghi đè khi thay ability
     public bool isTaunt;
 
+    // 6. Đếm số lần ability đã kích hoạt trong combat này (cho triggerLimit)
+    public int abilityTriggerCount = 0;
+
     public CardInstance(CardDefinition data, int slot)
     {
         this.Data = data;
@@ -42,6 +45,7 @@ using UnityEngine;
         currentHP  = Mathf.RoundToInt(Data.baseHP  * tier
                  + keepRatio * (growthHPBonus  + permanentHPBonus));
         hasRebornUsed = false;
+        abilityTriggerCount = 0;
     }
 
     public void Revive(int hp)

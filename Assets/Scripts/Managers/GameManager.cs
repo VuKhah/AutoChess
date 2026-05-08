@@ -224,8 +224,17 @@ public class GameManager : MonoBehaviour
         ResetAllCardsInSlots(playerSlots);
         ResetAllCardsInSlots(handSlots);
 
+        // Dọn sạch lính địch trên UI ngay sau combat, không chờ SummonEnemyTeam
+        CleanupEnemySlots();
+
         // Gọi logic chuyển sang lượt mới (cộng tiền, roll shop...)
         ExecuteNextTurn();
+    }
+
+    private void CleanupEnemySlots()
+    {
+        foreach (var slot in enemySlots)
+            foreach (Transform child in slot) Destroy(child.gameObject);
     }
 
     private void ResetAllCardsInSlots(Transform[] slots)
@@ -302,15 +311,16 @@ public class GameManager : MonoBehaviour
         playerCoins = 10 + bonusCoinNextTurn;
         bonusCoinNextTurn = 0;
 
-        // 2. Tính Coin từ các Unit Kinh tế đang có trên bàn cờ
+        // 2. Tính Coin từ các Unit Kinh tế đang có trên bàn cờ (kích hoạt ở cuối Shop Phase)
         foreach (var unit in playerBoard)
         {
             if (unit != null && !unit.IsDead && unit.Data.ability != null)
             {
-                if (unit.Data.ability.trigger == TriggerType.StartOfBattle && unit.Data.ability.effect == EffectType.GainCoin)
+                if (unit.Data.ability.trigger == TriggerType.EndTurnShop && unit.Data.ability.effect == EffectType.GainCoin)
                 {
-                    playerCoins += unit.Data.ability.effectValue1;
-                    Debug.Log($"<color=yellow>[ECONOMY]</color> {unit.Data.cardName} đào được {unit.Data.ability.effectValue1} Coin!");
+                    int coinGain = unit.Data.ability.effectValue1 * (unit.mergeLevel + 1);
+                    playerCoins += coinGain;
+                    Debug.Log($"<color=yellow>[ECONOMY]</color> {unit.Data.cardName} (Lv{unit.mergeLevel}) đào được {coinGain} Coin!");
                 }
             }
         }

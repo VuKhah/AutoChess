@@ -39,12 +39,12 @@ public enum EffectType
     None = 0,
     AddStats = 1,       // Tăng ATK/HP (Enrage, Growth)
     DealDamage = 2,     // Gây sát thương
-    GiveBuff = 3,      // Ban hiệu ứng (VD: Taunt, Reborn)
+    GiveBuff = 3,      // Ban hiệu ứng trạng thái (VD: Taunt) — dùng flag isTaunt trong AbilityData
     Summon = 4,          // Triệu hồi (Đặc biệt)
-    Destroy = 5,         // Hủy diệt (VD: Banish)
+    Destroy = 5,         // Hủy diệt tức thì (Banish) — set HP về 0, trigger OnDeath bình thường
     GainCoin = 6,       // Thêm Coin (Kinh tế)
     Reborn = 7,         // Hồi sinh (Đặc biệt)
-    TriggerAbility = 8,   // Kích hoạt một kỹ năng khác 
+    TriggerAbility = 8,   // Kích hoạt ability của target (copy battlecry/deathrattle đồng minh) — không chain nếu target cũng là TriggerAbility
 }
 
 [System.Serializable]
@@ -69,7 +69,7 @@ public class AbilityData
     [Header("Special Flags")]
     public bool isTaunt;        // Taunt là cơ chế ưu tiên mục tiêu
     public bool isReborn;       // Thẻ có sẵn khả năng hồi sinh không?
-    public int targetTribe;    // Bộ tộc mục tiêu ( 0:All, 1:Babylon, 2:Niles,...)
+    public int targetTribe;    // Bộ tộc mục tiêu — cast sang Tribe enum: 0=All, 1=Babylon, 2=Olympus, 3=Niles
 
     // Hàm hỗ trợ kiểm tra xem kỹ năng có tác dụng vĩnh viễn không
     public string GetDescription()
