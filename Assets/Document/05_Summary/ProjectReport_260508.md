@@ -153,7 +153,7 @@ AutoChess là game thể loại **Auto-battler** (tự động chiến đấu) t
 
 ---
 
-### ❌ Chưa làm
+### Chưa làm
 
 | Tính năng | Ưu tiên | Ghi chú |
 |-----------|---------|---------|
@@ -161,12 +161,8 @@ AutoChess là game thể loại **Auto-battler** (tự động chiến đấu) t
 | Tier icon sprites | Trung | `Resources/Sprites/Icons/Tiers/Tier_1..6` |
 | Ability icon sprites | Trung | `Resources/Sprites/Icons/Abilities/Abi_1..9` |
 | Passive icon sprites | Cao | `Resources/Sprites/Icons/Passives/Taunt/Reborn/Safeguard` |
-| Olympus tribe | Cao | Tribe enum có nhưng không có unit data và không có synergy |
-| Tribe synergy Niles | Cao | Chưa có synergy cho Niles (Babylon đã có) |
 | Merge animation | Thấp | Merge xảy ra instant, chưa có hiệu ứng |
 | AI difficulty selection | Thấp | `AIManager.GetBrain()` có nhưng chưa có UI chọn độ khó |
-| Sound system | Thấp | Chưa có |
-| Tutorial / onboarding | Thấp | Chưa có |
 
 ---
 
@@ -198,13 +194,13 @@ Data (CardDefinition reference)
 
 ## 6. Bug đã biết
 
-| # | Mô tả | File | Nghiêm trọng |
-|---|-------|------|-------------|
-| ~~B1~~ | ~~`ProjectSanityChecker` dùng API cũ: `new AbilityData { isTaunt = true }` thay vì `hasTaunt = true` trên `CardDefinition`~~ | ~~`ProjectSanityChecker.cs:50`~~ | **Đã sửa 26/05/08** |
-| B2 | Unit được triệu hồi rồi chết trong battle không có UI — `VisualizeAction` silently `yield break` các action liên quan | `GameManager.cs:237` | Trung |
-| B3 | `EconomyManager` tồn tại độc lập nhưng `GameManager` tự quản lý coin bằng `playerCoins` riêng — hai hệ thống không đồng bộ | `EconomyManager.cs`, `GameManager.cs` | Thấp (AI dùng EconomyManager, Game dùng GameManager) |
-| B4 | `WinGame()` và `GameOver()` chỉ là `Debug.Log` — không có state reset, không có UI | `GameManager.cs:377-378` | Cao |
-| B5 | `Aura` trigger được gọi đúng nhưng không có TargetType "AllAllies including self" — target Self chỉ buff bản thân, target AllAllies buff cả đội nhưng Aura thường muốn buff đồng minh khác | `CombatResolver.cs` | Trung |
+       | # | Mô tả | File | Nghiêm trọng |
+       |---|-------|------|-------------|
+       | ~~B1~~ | ~~`ProjectSanityChecker` dùng API cũ: `new AbilityData { isTaunt = true }` thay vì `hasTaunt = true` trên `CardDefinition`~~ | ~~`ProjectSanityChecker.cs:50`~~ | **Đã sửa 26/05/08** |
+       | B2 | Unit được triệu hồi rồi chết trong battle không có UI — `VisualizeAction` silently `yield break` các action liên quan | `GameManager.cs:237` | Trung |
+       | B3 | `EconomyManager` tồn tại độc lập nhưng `GameManager` tự quản lý coin bằng `playerCoins` riêng — hai hệ thống không đồng bộ | `EconomyManager.cs`, `GameManager.cs` | Thấp (AI dùng EconomyManager, Game dùng GameManager) |
+       | B4 | `WinGame()` và `GameOver()` chỉ là `Debug.Log` — không có state reset, không có UI | `GameManager.cs:377-378` | Cao |
+       | B5 | `Aura` trigger được gọi đúng nhưng không có TargetType "AllAllies including self" — target Self chỉ buff bản thân, target AllAllies buff cả đội nhưng Aura thường muốn buff đồng minh khác | `CombatResolver.cs` | Trung |
 
 ---
 

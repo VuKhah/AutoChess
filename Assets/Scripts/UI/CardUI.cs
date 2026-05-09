@@ -67,9 +67,9 @@ public class CardUI : MonoBehaviour
         }
 
         // --- Passive keyword icons (độc lập, không ghi đè nhau) ---
-        SetPassiveIcon(tauntIcon,     instance.isTaunt);
-        SetPassiveIcon(rebornIcon,    instance.isReborn);
-        SetPassiveIcon(safeguardIcon, instance.safeguardActive);
+        SetPassiveIcon(tauntIcon,     instance.isTaunt,        "Taunt");
+        SetPassiveIcon(rebornIcon,    instance.isReborn,        "Reborn");
+        SetPassiveIcon(safeguardIcon, instance.safeguardActive, "Safeguard");
 
         // --- Tier icon ---
         if (tierIcon != null)
@@ -80,8 +80,14 @@ public class CardUI : MonoBehaviour
         }
     }
 
-    private void SetPassiveIcon(Image icon, bool active)
+    private void SetPassiveIcon(Image icon, bool active, string spriteName)
     {
-        if (icon != null) icon.gameObject.SetActive(active);
+        if (icon == null) return;
+        if (active)
+        {
+            Sprite s = Resources.Load<Sprite>("Sprites/Icons/Passives/" + spriteName);
+            if (s != null) icon.sprite = s;
+        }
+        icon.gameObject.SetActive(active);
     }
 }

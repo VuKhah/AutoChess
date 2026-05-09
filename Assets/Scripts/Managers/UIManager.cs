@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -26,6 +27,17 @@ public class UIManager : MonoBehaviour
     public Color lockActiveColor = Color.cyan;
     public Color lockNormalColor = Color.white;
 
+    [Header("End Game")]
+    public GameObject endGamePanel;
+    public TextMeshProUGUI endGameText;
+    public Button restartButton;
+
+    [Header("AI Difficulty")]
+    public GameObject difficultyPanel;
+    public Button easyBtn;
+    public Button mediumBtn;
+    public Button hardBtn;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -38,6 +50,15 @@ public class UIManager : MonoBehaviour
         actionButton.onClick.AddListener(OnActionPressed);
         rollButton.onClick.AddListener(OnRollPressed);
         lockButton.onClick.AddListener(OnLockPressed);
+        if (restartButton != null)
+            restartButton.onClick.AddListener(() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex));
+        if (endGamePanel != null)
+            endGamePanel.SetActive(false);
+
+        easyBtn?.onClick.AddListener(()   => SelectDifficulty("Easy"));
+        mediumBtn?.onClick.AddListener(() => SelectDifficulty("Medium"));
+        hardBtn?.onClick.AddListener(()   => SelectDifficulty("Hard"));
+        if (difficultyPanel != null) difficultyPanel.SetActive(true);
     }
 
     /// <summary>
@@ -116,7 +137,21 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // Các hàm bổ trợ nếu cần gọi riêng lẻ
-    public void ShowVictory() { /* Hiển thị Popup thắng */ }
-    public void ShowGameOver() { /* Hiển thị Popup thua */ }
+    private void SelectDifficulty(string difficulty)
+    {
+        GameManager.Instance.SetDifficulty(difficulty);
+        if (difficultyPanel != null) difficultyPanel.SetActive(false);
+    }
+
+    private void ShowEndGame(string message)
+    {
+        if (endGamePanel != null) endGamePanel.SetActive(true);
+        if (endGameText  != null) endGameText.text = message;
+        actionButton.interactable = false;
+        rollButton.interactable   = false;
+        lockButton.interactable   = false;
+    }
+
+    public void ShowVictory()  => ShowEndGame("CHIẾN THẮNG!");
+    public void ShowGameOver() => ShowEndGame("THUA CUỘC!");
 }

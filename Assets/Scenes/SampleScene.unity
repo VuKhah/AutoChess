@@ -2670,7 +2670,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   playerHP: 7
-  playerCoins: 10
   playerCups: 0
   currentTurn: 1
   maxTurns: 20
@@ -2712,6 +2711,381 @@ MonoBehaviour:
   - {fileID: 872339966}
   - {fileID: 466847309}
   isCombatActive: 0
+  selectedDifficulty: Medium
+  playerBoard:
+  - Data:
+      cardID: 
+      cardName: 
+      cardType: 0
+      tribe: 0
+      baseATK: 0
+      baseHP: 0
+      cost: 0
+      tier: 0
+      abilities: []
+      hasTaunt: 0
+      hasReborn: 0
+      hasSafeguard: 0
+      description: 
+      magicGroup: 
+      statBonusATK: 0
+      statBonusHP: 0
+    permanentATKBonus: 0
+    permanentHPBonus: 0
+    growthATKBonus: 0
+    growthHPBonus: 0
+    currentATK: 0
+    currentHP: 0
+    slotIndex: 0
+    hasRebornUsed: 0
+    mergeLevel: 0
+    isTaunt: 0
+    isReborn: 0
+    safeguardActive: 0
+    abilityTriggerCounts: 
+    consumedCardIDs: []
+  - Data:
+      cardID: 
+      cardName: 
+      cardType: 0
+      tribe: 0
+      baseATK: 0
+      baseHP: 0
+      cost: 0
+      tier: 0
+      abilities: []
+      hasTaunt: 0
+      hasReborn: 0
+      hasSafeguard: 0
+      description: 
+      magicGroup: 
+      statBonusATK: 0
+      statBonusHP: 0
+    permanentATKBonus: 0
+    permanentHPBonus: 0
+    growthATKBonus: 0
+    growthHPBonus: 0
+    currentATK: 0
+    currentHP: 0
+    slotIndex: 0
+    hasRebornUsed: 0
+    mergeLevel: 0
+    isTaunt: 0
+    isReborn: 0
+    safeguardActive: 0
+    abilityTriggerCounts: 
+    consumedCardIDs: []
+  - Data:
+      cardID: 
+      cardName: 
+      cardType: 0
+      tribe: 0
+      baseATK: 0
+      baseHP: 0
+      cost: 0
+      tier: 0
+      abilities: []
+      hasTaunt: 0
+      hasReborn: 0
+      hasSafeguard: 0
+      description: 
+      magicGroup: 
+      statBonusATK: 0
+      statBonusHP: 0
+    permanentATKBonus: 0
+    permanentHPBonus: 0
+    growthATKBonus: 0
+    growthHPBonus: 0
+    currentATK: 0
+    currentHP: 0
+    slotIndex: 0
+    hasRebornUsed: 0
+    mergeLevel: 0
+    isTaunt: 0
+    isReborn: 0
+    safeguardActive: 0
+    abilityTriggerCounts: 
+    consumedCardIDs: []
+  - Data:
+      cardID: 
+      cardName: 
+      cardType: 0
+      tribe: 0
+      baseATK: 0
+      baseHP: 0
+      cost: 0
+      tier: 0
+      abilities: []
+      hasTaunt: 0
+      hasReborn: 0
+      hasSafeguard: 0
+      description: 
+      magicGroup: 
+      statBonusATK: 0
+      statBonusHP: 0
+    permanentATKBonus: 0
+    permanentHPBonus: 0
+    growthATKBonus: 0
+    growthHPBonus: 0
+    currentATK: 0
+    currentHP: 0
+    slotIndex: 0
+    hasRebornUsed: 0
+    mergeLevel: 0
+    isTaunt: 0
+    isReborn: 0
+    safeguardActive: 0
+    abilityTriggerCounts: 
+    consumedCardIDs: []
+  - Data:
+      cardID: 
+      cardName: 
+      cardType: 0
+      tribe: 0
+      baseATK: 0
+      baseHP: 0
+      cost: 0
+      tier: 0
+      abilities: []
+      hasTaunt: 0
+      hasReborn: 0
+      hasSafeguard: 0
+      description: 
+      magicGroup: 
+      statBonusATK: 0
+      statBonusHP: 0
+    permanentATKBonus: 0
+    permanentHPBonus: 0
+    growthATKBonus: 0
+    growthHPBonus: 0
+    currentATK: 0
+    currentHP: 0
+    slotIndex: 0
+    hasRebornUsed: 0
+    mergeLevel: 0
+    isTaunt: 0
+    isReborn: 0
+    safeguardActive: 0
+    abilityTriggerCounts: 
+    consumedCardIDs: []
+  - Data:
+      cardID: 
+      cardName: 
+      cardType: 0
+      tribe: 0
+      baseATK: 0
+      baseHP: 0
+      cost: 0
+      tier: 0
+      abilities: []
+      hasTaunt: 0
+      hasReborn: 0
+      hasSafeguard: 0
+      description: 
+      magicGroup: 
+      statBonusATK: 0
+      statBonusHP: 0
+    permanentATKBonus: 0
+    permanentHPBonus: 0
+    growthATKBonus: 0
+    growthHPBonus: 0
+    currentATK: 0
+    currentHP: 0
+    slotIndex: 0
+    hasRebornUsed: 0
+    mergeLevel: 0
+    isTaunt: 0
+    isReborn: 0
+    safeguardActive: 0
+    abilityTriggerCounts: 
+    consumedCardIDs: []
+  enemyBoard:
+  - Data:
+      cardID: 
+      cardName: 
+      cardType: 0
+      tribe: 0
+      baseATK: 0
+      baseHP: 0
+      cost: 0
+      tier: 0
+      abilities: []
+      hasTaunt: 0
+      hasReborn: 0
+      hasSafeguard: 0
+      description: 
+      magicGroup: 
+      statBonusATK: 0
+      statBonusHP: 0
+    permanentATKBonus: 0
+    permanentHPBonus: 0
+    growthATKBonus: 0
+    growthHPBonus: 0
+    currentATK: 0
+    currentHP: 0
+    slotIndex: 0
+    hasRebornUsed: 0
+    mergeLevel: 0
+    isTaunt: 0
+    isReborn: 0
+    safeguardActive: 0
+    abilityTriggerCounts: 
+    consumedCardIDs: []
+  - Data:
+      cardID: 
+      cardName: 
+      cardType: 0
+      tribe: 0
+      baseATK: 0
+      baseHP: 0
+      cost: 0
+      tier: 0
+      abilities: []
+      hasTaunt: 0
+      hasReborn: 0
+      hasSafeguard: 0
+      description: 
+      magicGroup: 
+      statBonusATK: 0
+      statBonusHP: 0
+    permanentATKBonus: 0
+    permanentHPBonus: 0
+    growthATKBonus: 0
+    growthHPBonus: 0
+    currentATK: 0
+    currentHP: 0
+    slotIndex: 0
+    hasRebornUsed: 0
+    mergeLevel: 0
+    isTaunt: 0
+    isReborn: 0
+    safeguardActive: 0
+    abilityTriggerCounts: 
+    consumedCardIDs: []
+  - Data:
+      cardID: 
+      cardName: 
+      cardType: 0
+      tribe: 0
+      baseATK: 0
+      baseHP: 0
+      cost: 0
+      tier: 0
+      abilities: []
+      hasTaunt: 0
+      hasReborn: 0
+      hasSafeguard: 0
+      description: 
+      magicGroup: 
+      statBonusATK: 0
+      statBonusHP: 0
+    permanentATKBonus: 0
+    permanentHPBonus: 0
+    growthATKBonus: 0
+    growthHPBonus: 0
+    currentATK: 0
+    currentHP: 0
+    slotIndex: 0
+    hasRebornUsed: 0
+    mergeLevel: 0
+    isTaunt: 0
+    isReborn: 0
+    safeguardActive: 0
+    abilityTriggerCounts: 
+    consumedCardIDs: []
+  - Data:
+      cardID: 
+      cardName: 
+      cardType: 0
+      tribe: 0
+      baseATK: 0
+      baseHP: 0
+      cost: 0
+      tier: 0
+      abilities: []
+      hasTaunt: 0
+      hasReborn: 0
+      hasSafeguard: 0
+      description: 
+      magicGroup: 
+      statBonusATK: 0
+      statBonusHP: 0
+    permanentATKBonus: 0
+    permanentHPBonus: 0
+    growthATKBonus: 0
+    growthHPBonus: 0
+    currentATK: 0
+    currentHP: 0
+    slotIndex: 0
+    hasRebornUsed: 0
+    mergeLevel: 0
+    isTaunt: 0
+    isReborn: 0
+    safeguardActive: 0
+    abilityTriggerCounts: 
+    consumedCardIDs: []
+  - Data:
+      cardID: 
+      cardName: 
+      cardType: 0
+      tribe: 0
+      baseATK: 0
+      baseHP: 0
+      cost: 0
+      tier: 0
+      abilities: []
+      hasTaunt: 0
+      hasReborn: 0
+      hasSafeguard: 0
+      description: 
+      magicGroup: 
+      statBonusATK: 0
+      statBonusHP: 0
+    permanentATKBonus: 0
+    permanentHPBonus: 0
+    growthATKBonus: 0
+    growthHPBonus: 0
+    currentATK: 0
+    currentHP: 0
+    slotIndex: 0
+    hasRebornUsed: 0
+    mergeLevel: 0
+    isTaunt: 0
+    isReborn: 0
+    safeguardActive: 0
+    abilityTriggerCounts: 
+    consumedCardIDs: []
+  - Data:
+      cardID: 
+      cardName: 
+      cardType: 0
+      tribe: 0
+      baseATK: 0
+      baseHP: 0
+      cost: 0
+      tier: 0
+      abilities: []
+      hasTaunt: 0
+      hasReborn: 0
+      hasSafeguard: 0
+      description: 
+      magicGroup: 
+      statBonusATK: 0
+      statBonusHP: 0
+    permanentATKBonus: 0
+    permanentHPBonus: 0
+    growthATKBonus: 0
+    growthHPBonus: 0
+    currentATK: 0
+    currentHP: 0
+    slotIndex: 0
+    hasRebornUsed: 0
+    mergeLevel: 0
+    isTaunt: 0
+    isReborn: 0
+    safeguardActive: 0
+    abilityTriggerCounts: 
+    consumedCardIDs: []
 --- !u!224 &1032976629 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3045163549536598338, guid: 2b45526df71e4704c9ef16feffe2e617, type: 3}
@@ -2778,6 +3152,13 @@ MonoBehaviour:
   lockButtonImage: {fileID: 626191970}
   lockActiveColor: {r: 0, g: 1, b: 1, a: 1}
   lockNormalColor: {r: 1, g: 1, b: 1, a: 1}
+  endGamePanel: {fileID: 0}
+  endGameText: {fileID: 0}
+  restartButton: {fileID: 0}
+  difficultyPanel: {fileID: 0}
+  easyBtn: {fileID: 0}
+  mediumBtn: {fileID: 0}
+  hardBtn: {fileID: 0}
 --- !u!224 &1089271632 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3045163549536598338, guid: 2b45526df71e4704c9ef16feffe2e617, type: 3}
@@ -6261,6 +6642,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1655997816}
     m_Modifications:
+    - target: {fileID: 1502165997176734200, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -45.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 1502165997176734200, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -58.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1502165997176734200, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.16699982
+      objectReference: {fileID: 0}
+    - target: {fileID: 1502165997176734200, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 3.761
+      objectReference: {fileID: 0}
     - target: {fileID: 2823776546859311523, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -6340,6 +6737,22 @@ PrefabInstance:
     - target: {fileID: 2823776546859311523, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6806142446931578872, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 136.541
+      objectReference: {fileID: 0}
+    - target: {fileID: 6806142446931578872, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 167.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 6806142446931578872, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -1.589
+      objectReference: {fileID: 0}
+    - target: {fileID: 6806142446931578872, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 23.994
       objectReference: {fileID: 0}
     - target: {fileID: 9108932814670332130, guid: 56420bf932b727f45a192cc4410067d8, type: 3}
       propertyPath: m_Name

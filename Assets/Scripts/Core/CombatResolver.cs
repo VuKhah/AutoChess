@@ -3,25 +3,36 @@ using UnityEngine;
 
 public class CombatResolver
 {
+    private readonly AbilityEngine engine = new AbilityEngine();
+
+    // Public API: CardSlot.cs gọi trực tiếp để kích trigger OnDeploy/OnSell
+    public void TriggerAbility(TriggerType trigger, CardInstance source, CardInstance directEnemy, List<CardInstance> allyBoard, List<CardInstance> enemyBoard)
+        => engine.TriggerAbility(trigger, source, directEnemy, allyBoard, enemyBoard);
+
+    // Public API: CardSlot.cs gọi để áp dụng phép lên unit
+    public void ApplyMagicToUnit(CardInstance magic, CardInstance unit)
+        => engine.ApplyMagicToUnit(magic, unit);
+
+    // ==========================================
+    // COMBAT FLOW
+    // ==========================================
+
     public void ResolveTurn(List<CardInstance> pBoard, List<CardInstance> eBoard, TurnRecord log)
     {
-        // 1. Kích hoạt Synergy một lần duy nhất lúc đầu (Buff theo Tộc)
         ApplyTribeSynergies(pBoard);
         ApplyTribeSynergies(eBoard);
 
-        // 2. Kích hoạt kỹ năng đầu hiệp & Aura
         for (int i = 0; i < 6; i++)
         {
             if (pBoard[i] != null && !pBoard[i].IsDead)
             {
-                TriggerAbility(TriggerType.StartOfBattle, pBoard[i], null, pBoard, eBoard);
-                TriggerAbility(TriggerType.Aura, pBoard[i], null, pBoard, eBoard); // Kích hoạt Aura sau Growth để buff kịp thời
+                engine.TriggerAbility(TriggerType.StartOfBattle, pBoard[i], null, pBoard, eBoard);
+                engine.TriggerAbility(TriggerType.Aura, pBoard[i], null, pBoard, eBoard);
             }
-
             if (eBoard[i] != null && !eBoard[i].IsDead)
             {
-                TriggerAbility(TriggerType.StartOfBattle, eBoard[i], null, eBoard, pBoard);
-                TriggerAbility(TriggerType.Aura, eBoard[i], null, eBoard, pBoard); // Kích hoạt Aura sau Growth để buff kịp thời
+                engine.TriggerAbility(TriggerType.StartOfBattle, eBoard[i], null, eBoard, pBoard);
+                engine.TriggerAbility(TriggerType.Aura, eBoard[i], null, eBoard, pBoard);
             }
         }
 
@@ -34,7 +45,6 @@ public class CombatResolver
 
             for (int i = 0; i < 6; i++)
             {
-                // --- PLAYER TẤN CÔNG ---
                 if (pBoard[i] != null && !pBoard[i].IsDead && pBoard[i].currentATK > 0)
                 {
                     CardInstance target = FindTarget(eBoard, i);
@@ -45,7 +55,6 @@ public class CombatResolver
                     }
                 }
 
-                // --- ENEMY TẤN CÔNG ---
                 if (eBoard[i] != null && !eBoard[i].IsDead && eBoard[i].currentATK > 0)
                 {
                     CardInstance target = FindTarget(pBoard, i);
@@ -56,17 +65,14 @@ public class CombatResolver
                     }
                 }
 
-                // Dọn dẹp xác chết / Kích hoạt Reborn, SlainEffect sau mỗi cặp đấu
                 CleanupBoard(pBoard, eBoard);
                 CleanupBoard(eBoard, pBoard);
             }
 
             currentRound++;
 
-            // KIỂM TRA ĐIỀU KIỆN KẾT THÚC
             if (IsSideEliminated(pBoard) || IsSideEliminated(eBoard)) break;
 
-            // TRƯỜNG HỢP HÒA: Không ai có ATK > 0 để tấn công tiếp
             if (!actionTakenInThisRound)
             {
                 Debug.Log("<color=gray>[COMBAT]</color> Trận đấu hòa: Không bên nào còn quân có khả năng tấn công!");
@@ -77,18 +83,11 @@ public class CombatResolver
         RecordSnapshots(pBoard, eBoard, log);
     }
 
-    private bool IsSideEliminated(List<CardInstance> board)
-    {
-        return !board.Exists(u => u != null && !u.IsDead);
-    }
-
     private void ExecuteClash(CardInstance attacker, CardInstance defender, int atkIdx, int defIdx, TurnRecord log, bool isPlayerAttacking, List<CardInstance> atkBoard, List<CardInstance> defBoard)
     {
-        // Lưu máu trước khi đấm cho TurnRecord
         int aBefore = attacker.currentHP;
         int dBefore = defender.currentHP;
 
-        // 1. Sát thương vật lý cơ bản (đánh đồng thời) — Safeguard chặn đòn đầu tiên
         int dmgToDefender = attacker.currentATK;
         int dmgToAttacker = defender.currentATK;
 
@@ -108,20 +107,14 @@ public class CombatResolver
         defender.currentHP -= dmgToDefender;
         attacker.currentHP -= dmgToAttacker;
 
-        // 2. Check Triggers sau va chạm
-        TriggerAbility(TriggerType.OnAttack, attacker, defender, atkBoard, defBoard);
+        engine.TriggerAbility(TriggerType.OnAttack, attacker, defender, atkBoard, defBoard);
 
-        // Trigger kỹ năng Khi Bị Đánh (OnTakeDamage)
-        if (dmgToAttacker > 0)
-            TriggerAbility(TriggerType.OnTakeDamage, attacker, defender, atkBoard, defBoard);
-        if (dmgToDefender > 0)
-            TriggerAbility(TriggerType.OnTakeDamage, defender, attacker, defBoard, atkBoard);
+        if (dmgToAttacker > 0) engine.TriggerAbility(TriggerType.OnTakeDamage, attacker, defender, atkBoard, defBoard);
+        if (dmgToDefender > 0) engine.TriggerAbility(TriggerType.OnTakeDamage, defender, attacker, defBoard, atkBoard);
 
-        // 3. XỬ LÝ CÁI CHẾT VÀ BẮN TIN CHO ĐỒNG MINH (OnAllyDeath)
         HandlePotentialDeath(defender, attacker, defBoard, atkBoard);
         HandlePotentialDeath(attacker, defender, atkBoard, defBoard);
 
-        // Ghi log ra Console và TurnRecord
         Debug.Log($"<color=white>[CLASH]</color> {attacker.Data.cardName} đấm {defender.Data.cardName}. " +
                   $"HP Atk: {aBefore}->{attacker.currentHP}, HP Def: {dBefore}->{defender.currentHP}");
 
@@ -134,20 +127,15 @@ public class CombatResolver
     {
         if (!victim.IsDead) return;
 
-        // Bản thân victim kích OnDeath
-        TriggerAbility(TriggerType.OnDeath, victim, killer, victimBoard, killerBoard);
+        engine.TriggerAbility(TriggerType.OnDeath, victim, killer, victimBoard, killerBoard);
 
-        // [SYNERGY] Toàn bộ đồng đội nhìn thấy cái chết này và phản ứng
         foreach (var ally in victimBoard)
         {
             if (ally != null && !ally.IsDead && ally != victim)
-            {
-                TriggerAbility(TriggerType.OnAllyDeath, ally, victim, victimBoard, killerBoard);
-            }
+                engine.TriggerAbility(TriggerType.OnAllyDeath, ally, victim, victimBoard, killerBoard);
         }
     }
 
-    // Dọn dẹp xác chết — kiểm tra Reborn passive trước khi xóa
     private void CleanupBoard(List<CardInstance> allyBoard, List<CardInstance> enemyBoard)
     {
         for (int i = 0; i < allyBoard.Count; i++)
@@ -159,31 +147,13 @@ public class CombatResolver
             {
                 unit.Revive(1);
                 Debug.Log($"<color=magenta>[REBORN]</color> {unit.Data.cardName} hồi sinh với 1 HP!");
-                BroadcastAllyEvent(TriggerType.OnAllyReborn, unit, allyBoard, enemyBoard);
+                engine.BroadcastAllyEvent(TriggerType.OnAllyReborn, unit, allyBoard, enemyBoard);
             }
             else
             {
                 allyBoard[i] = null;
             }
         }
-    }
-
-    private CardInstance FindTarget(List<CardInstance> board, int prefSlot)
-    {
-        // Ưu tiên 1: Taunt
-        var taunt = board.Find(u => u != null && !u.IsDead && u.isTaunt);
-        if (taunt != null) return taunt;
-
-        // Ưu tiên 2: Ripple Search (Loang từ đối diện ra 2 bên)
-        for (int d = 0; d < 6; d++)
-        {
-            int left = prefSlot - d;
-            int right = prefSlot + d;
-
-            if (left >= 0 && left < board.Count && board[left] != null && !board[left].IsDead) return board[left];
-            if (right >= 0 && right < board.Count && board[right] != null && !board[right].IsDead) return board[right];
-        }
-        return null;
     }
 
     private void ApplyTribeSynergies(List<CardInstance> board)
@@ -194,360 +164,37 @@ public class CombatResolver
             foreach (var unit in board)
             {
                 if (unit != null && unit.Data.tribe == Tribe.Babylon)
-                {
-                    unit.currentHP += 1; // Buff HP tạm thời cho combat này, reset sau trận
-                }
+                    unit.currentHP += 1;
             }
         }
     }
 
-    private void RecordSnapshots(List<CardInstance> pBoard, List<CardInstance> eBoard, TurnRecord log)
+    private CardInstance FindTarget(List<CardInstance> board, int prefSlot)
     {
-        foreach (var unit in pBoard)
+        // Ưu tiên 1: Taunt
+        var taunt = board.Find(u => u != null && !u.IsDead && u.isTaunt);
+        if (taunt != null) return taunt;
+
+        // Ưu tiên 2: Ripple Search (loang từ đối diện ra 2 bên)
+        for (int d = 0; d < 6; d++)
         {
-            if (unit != null)
-                log.playerBoardFinal.Add(new CardSnapshot(unit.Data.cardID, unit.currentHP, unit.currentATK));
-        }
-
-        foreach (var unit in eBoard)
-        {
-            if (unit != null)
-                log.enemyBoardFinal.Add(new CardSnapshot(unit.Data.cardID, unit.currentHP, unit.currentATK));
-        }
-    }
-
-    // ==========================================
-    // HỆ THỐNG ENGINE TTE (TRIGGER - TARGET - EFFECT)
-    // ==========================================
-
-    // Public để CardSlot.cs có thể gọi OnDeploy/OnSell
-    public void TriggerAbility(TriggerType triggerContext, CardInstance source, CardInstance directEnemy, List<CardInstance> allyBoard, List<CardInstance> enemyBoard)
-    {
-        if (source == null || source.Data.abilities == null || source.Data.abilities.Count == 0) return;
-
-        int scaleFactor = source.mergeLevel + 1;
-
-        for (int i = 0; i < source.Data.abilities.Count; i++)
-        {
-            AbilityData ability = source.Data.abilities[i];
-            if (ability == null || ability.trigger != triggerContext) continue;
-
-            // Kiểm tra giới hạn kích hoạt (0 = không giới hạn)
-            if (ability.triggerLimit > 0 && source.abilityTriggerCounts[i] >= ability.triggerLimit) continue;
-
-            // StartOfBattle + AddStats = Growth (tăng trưởng vĩnh viễn, lưu vào growthBonus)
-            bool isGrowth = triggerContext == TriggerType.StartOfBattle && ability.effect == EffectType.AddStats;
-
-            List<CardInstance> targets = FindTargets(ability, source, directEnemy, allyBoard, enemyBoard);
-            foreach (var target in targets)
-            {
-                if (isGrowth) ApplyGrowth(ability, target, scaleFactor);
-                else ExecuteEffect(ability, target, source, allyBoard, enemyBoard, scaleFactor);
-            }
-
-            if (ability.triggerLimit > 0) source.abilityTriggerCounts[i]++;
-        }
-    }
-
-    private void ApplyGrowth(AbilityData ability, CardInstance target, int scaleFactor)
-    {
-        if (target == null || target.IsDead) return;
-        int atkGain = ability.effectValue1 * scaleFactor;
-        int hpGain  = ability.effectValue2 * scaleFactor;
-        target.growthATKBonus += atkGain;
-        target.growthHPBonus  += hpGain;
-        target.currentATK = target.Data.baseATK + target.permanentATKBonus + target.growthATKBonus;
-        target.currentHP  = target.Data.baseHP  + target.permanentHPBonus  + target.growthHPBonus;
-        Debug.Log($"<color=lime>[GROWTH]</color> {target.Data.cardName} tăng trưởng +{atkGain}ATK/+{hpGain}HP (tổng tăng: +{target.growthATKBonus}/+{target.growthHPBonus})");
-    }
-
-    private void ExecuteEffect(AbilityData ability, CardInstance target, CardInstance source, List<CardInstance> allyBoard, List<CardInstance> enemyBoard, int scaleFactor = 1)
-    {
-        if (target == null) return;
-
-        // Reborn, Summon, SummonConsumed được phép thực thi dù target đã chết (OnDeath effects)
-        bool isDeathSafeEffect = ability.effect == EffectType.Reborn
-                              || ability.effect == EffectType.Summon
-                              || ability.effect == EffectType.SummonConsumed;
-        if (target.IsDead && !isDeathSafeEffect) return;
-
-        switch (ability.effect)
-        {
-            case EffectType.AddStats:
-            {
-                int atk = ability.effectValue1 * scaleFactor;
-                int hp  = ability.effectValue2 * scaleFactor;
-                target.currentATK += atk;
-                target.currentHP  += hp;
-                if (ability.isPermanent)
-                {
-                    target.permanentATKBonus += atk;
-                    target.permanentHPBonus  += hp;
-                }
-                Debug.Log($"<color=cyan>[ABILITY]</color> {target.Data.cardName} được buff +{atk}ATK / +{hp}HP");
-                break;
-            }
-
-            case EffectType.GiveBuff:
-            {
-                if (ability.isTaunt)      { target.isTaunt = true;         Debug.Log($"<color=cyan>[BUFF]</color> {target.Data.cardName} nhận Taunt!"); }
-                if (ability.isReborn)     { target.isReborn = true;        Debug.Log($"<color=cyan>[BUFF]</color> {target.Data.cardName} nhận Reborn!"); }
-                if (ability.isSafeguard)  { target.safeguardActive = true; Debug.Log($"<color=cyan>[BUFF]</color> {target.Data.cardName} nhận Safeguard!"); }
-                break;
-            }
-
-            case EffectType.DealDamage:
-            {
-                int dmg = ability.effectValue1 * scaleFactor;
-                target.currentHP -= dmg;
-                Debug.Log($"<color=orange>[ABILITY]</color> {target.Data.cardName} chịu {dmg} sát thương kỹ năng");
-                break;
-            }
-
-            case EffectType.Destroy:
-                target.currentHP = 0;
-                if (ability.isConsume)
-                    source.consumedCardIDs.Add(target.Data.cardID);
-                Debug.Log($"<color=red>[ABILITY]</color> {source.Data.cardName} tiêu diệt {target.Data.cardName}{(ability.isConsume ? " (Consumed!)" : "")}");
-                break;
-
-            case EffectType.Reborn:
-                if (!target.hasRebornUsed)
-                {
-                    int reviveHP = ability.effectValue1 * scaleFactor;
-                    target.Revive(reviveHP);
-                    Debug.Log($"<color=magenta>[ABILITY]</color> {target.Data.cardName} HỒI SINH với {reviveHP} HP!");
-                    // [SYNERGY] Bắn tin cho đồng minh: "Có đứa vừa sống lại kìa!"
-                    BroadcastAllyEvent(TriggerType.OnAllyReborn, target, allyBoard, enemyBoard);
-                }
-                break;
-
-            case EffectType.Summon:
-                // Logic triệu hồi quái vật vào ô trống gần nhất
-                CardInstance summoned = SummonUnit(ability.summonCardID, allyBoard);
-                if (summoned != null)
-                {
-                    Debug.Log($"<color=green>[SUMMON]</color> {source.Data.cardName} triệu hồi {summoned.Data.cardName}!");
-                    TriggerAbility(TriggerType.OnDeploy, summoned, null, allyBoard, enemyBoard);
-                    // [SYNERGY] Bắn tin cho đồng minh: "Có đứa vừa được triệu hồi nè!"
-                    BroadcastAllyEvent(TriggerType.OnAllySummon, summoned, allyBoard, enemyBoard);
-                }
-                break;
-
-            case EffectType.GainCoin:
-            {
-                int coins = ability.effectValue1 * scaleFactor;
-                GameManager.Instance.playerCoins += coins;
-                GameManager.Instance.UpdateCoinUI();
-                Debug.Log($"<color=yellow>[ABILITY]</color> {source.Data.cardName} cộng {coins} Coin! (Deploy)");
-                break;
-            }
-
-            case EffectType.TriggerAbility:
-                // Kích hoạt tất cả abilities của target — guard chống chain vô hạn
-                if (target.Data.abilities != null)
-                {
-                    foreach (var ab in target.Data.abilities)
-                    {
-                        if (ab != null && ab.effect != EffectType.TriggerAbility)
-                            TriggerAbility(ab.trigger, target, null, allyBoard, enemyBoard);
-                    }
-                }
-                break;
-
-            case EffectType.SummonConsumed:
-                // Triệu hồi lại tất cả unit mà source đã Consume
-                if (source.consumedCardIDs != null && source.consumedCardIDs.Count > 0)
-                {
-                    Debug.Log($"<color=magenta>[CONSUME]</color> {source.Data.cardName} giải phóng {source.consumedCardIDs.Count} unit đã tiêu thụ!");
-                    foreach (var cardID in source.consumedCardIDs)
-                    {
-                        CardInstance released = SummonUnit(cardID, allyBoard);
-                        if (released != null)
-                        {
-                            TriggerAbility(TriggerType.OnDeploy, released, null, allyBoard, enemyBoard);
-                            BroadcastAllyEvent(TriggerType.OnAllySummon, released, allyBoard, enemyBoard);
-                        }
-                    }
-                    source.consumedCardIDs.Clear();
-                }
-                break;
-        }
-    }
-
-    private void BroadcastAllyEvent(TriggerType context, CardInstance subject, List<CardInstance> allyBoard, List<CardInstance> enemyBoard)
-    {
-        foreach (var unit in allyBoard)
-        {
-            if (unit != null && !unit.IsDead && unit != subject)
-            {
-                TriggerAbility(context, unit, subject, allyBoard, enemyBoard);
-            }
-        }
-    }
-
-    private List<CardInstance> FindTargets(AbilityData ability, CardInstance source, CardInstance directEnemy, List<CardInstance> allyBoard, List<CardInstance> enemyBoard)
-    {
-        List<CardInstance> validTargets = new List<CardInstance>();
-
-        switch (ability.target)
-        {
-            case TargetType.Self:
-                validTargets.Add(source);
-                break;
-
-            case TargetType.DirectEnemy:
-                if (directEnemy != null && !directEnemy.IsDead)
-                    validTargets.Add(directEnemy);
-                break;
-
-            case TargetType.AllAllies:
-            {
-                var pool = allyBoard.FindAll(u => u != null && !u.IsDead);
-                if (ability.targetTribe != 0) pool = pool.FindAll(u => u.Data.tribe == (Tribe)ability.targetTribe);
-                validTargets.AddRange(pool);
-                break;
-            }
-
-            case TargetType.RandomAlly:
-            {
-                var pool = allyBoard.FindAll(u => u != null && !u.IsDead && u != source);
-                if (ability.targetTribe != 0) pool = pool.FindAll(u => u.Data.tribe == (Tribe)ability.targetTribe);
-                validTargets.AddRange(GetRandomFromPool(pool, ability.targetCount > 0 ? ability.targetCount : 1, null));
-                break;
-            }
-
-            case TargetType.RandomEnemy:
-            {
-                var pool = enemyBoard.FindAll(u => u != null && !u.IsDead);
-                if (ability.targetTribe != 0) pool = pool.FindAll(u => u.Data.tribe == (Tribe)ability.targetTribe);
-                validTargets.AddRange(GetRandomFromPool(pool, ability.targetCount > 0 ? ability.targetCount : 1, null));
-                break;
-            }
-
-            case TargetType.LowestHealthAlly:
-                CardInstance lowestHPUnit = null;
-                int minHP = int.MaxValue;
-                foreach (var unit in allyBoard)
-                {
-                    if (unit != null && !unit.IsDead && unit.currentHP < minHP)
-                    {
-                        minHP = unit.currentHP;
-                        lowestHPUnit = unit;
-                    }
-                }
-                if (lowestHPUnit != null) validTargets.Add(lowestHPUnit);
-                break;
-
-            case TargetType.LeftAlly:
-                int leftIndex = source.slotIndex - 1;
-                if (leftIndex >= 0)
-                {
-                    CardInstance leftUnit = allyBoard[leftIndex];
-                    if (leftUnit != null && !leftUnit.IsDead)
-                        validTargets.Add(leftUnit);
-                }
-                break;
-
-            case TargetType.RightAlly:
-                int rightIndex = source.slotIndex + 1;
-                if (rightIndex < 6)
-                {
-                    CardInstance rightUnit = allyBoard[rightIndex];
-                    if (rightUnit != null && !rightUnit.IsDead)
-                        validTargets.Add(rightUnit);
-                }
-                break;
-
-            case TargetType.AllNilesAllies:
-                validTargets.AddRange(allyBoard.FindAll(u => u != null && !u.IsDead && u.Data.tribe == Tribe.Niles));
-                break;
-
-            case TargetType.AllBabylonAllies:
-                validTargets.AddRange(allyBoard.FindAll(u => u != null && !u.IsDead && u.Data.tribe == Tribe.Babylon));
-                break;
-
-            case TargetType.TriggerSubject:
-                // Unit đã gây ra sự kiện — trong OnAllySummon/OnAllyDeath/OnAllyReborn được pass qua directEnemy
-                if (directEnemy != null)
-                    validTargets.Add(directEnemy);
-                break;
-        }
-
-        return validTargets;
-    }
-
-    private CardInstance SummonUnit(string cardID, List<CardInstance> board)
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            if (board[i] == null || board[i].IsDead)
-            {
-                CardDefinition data = CardDatabase.Instance.GetCard(cardID);
-                if (data == null) return null;
-                board[i] = new CardInstance(data, i);
-                Debug.Log($"<color=green>[SUMMON]</color> Đã triệu hồi {data.cardName} vào slot {i}");
-                return board[i];
-            }
+            int left  = prefSlot - d;
+            int right = prefSlot + d;
+            if (left  >= 0 && left  < board.Count && board[left]  != null && !board[left].IsDead)  return board[left];
+            if (right >= 0 && right < board.Count && board[right] != null && !board[right].IsDead) return board[right];
         }
         return null;
     }
 
-    private List<CardInstance> GetRandomFromPool(List<CardInstance> pool, int count, CardInstance exclude)
+    private bool IsSideEliminated(List<CardInstance> board)
+        => !board.Exists(u => u != null && !u.IsDead);
+
+    private void RecordSnapshots(List<CardInstance> pBoard, List<CardInstance> eBoard, TurnRecord log)
     {
-        List<CardInstance> results = new List<CardInstance>();
-        List<CardInstance> temp = new List<CardInstance>(pool.FindAll(u => u != null && !u.IsDead && u != exclude));
-        for (int i = 0; i < count && temp.Count > 0; i++)
-        {
-            int r = Random.Range(0, temp.Count);
-            results.Add(temp[r]);
-            temp.RemoveAt(r); // Chống trùng lặp mục tiêu
-        }
-        return results;
-    }
+        foreach (var unit in pBoard)
+            if (unit != null) log.playerBoardFinal.Add(new CardSnapshot(unit.Data.cardID, unit.currentHP, unit.currentATK));
 
-    public void ApplyMagicToUnit(CardInstance magic, CardInstance unit)
-    {
-        if (magic == null || unit == null) return;
-
-        switch (magic.Data.magicGroup)
-        {
-            case "StatBoost":
-                unit.permanentATKBonus += magic.Data.statBonusATK;
-                unit.permanentHPBonus += magic.Data.statBonusHP;
-                break;
-
-            case "AddAbility":
-                if (magic.Data.abilities != null && magic.Data.abilities.Count > 0)
-                {
-                    if (unit.Data.abilities == null) unit.Data.abilities = new List<AbilityData>();
-                    foreach (var ab in magic.Data.abilities)
-                        if (ab != null) unit.Data.abilities.Add(ab);
-                }
-                break;
-
-            case "AddTaunt":
-                unit.isTaunt = true;
-                break;
-
-            case "RemoveTaunt":
-                unit.isTaunt = false;
-                break;
-
-            case "Economy":
-                // Ví dụ: Thêm 1 vàng vào túi (cần gọi GameManager để cập nhật UI)
-                GameManager.Instance.bonusCoinNextTurn += 1;
-                Debug.Log($"<color=yellow>[ECONOMY]</color> Đã nhận 1 vàng từ phép {magic.Data.cardName}");
-                break;
-
-            default:
-                Debug.LogWarning($"Chưa có logic xử lý cho magicGroup: {magic.Data.magicGroup}");
-                break;
-        }
-
-        // Core logic: Luôn gọi ResetStats từ Engine sau khi thay đổi base data
-        unit.ResetStats();
-
-        Debug.Log($"<color=cyan>[MAGIC]</color> Áp dụng phép {magic.Data.cardName} lên {unit.Data.cardName}. ATK/HP mới: {unit.currentATK}/{unit.currentHP}");
+        foreach (var unit in eBoard)
+            if (unit != null) log.enemyBoardFinal.Add(new CardSnapshot(unit.Data.cardID, unit.currentHP, unit.currentATK));
     }
 }

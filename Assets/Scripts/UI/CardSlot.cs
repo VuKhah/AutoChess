@@ -200,6 +200,9 @@ public class CardSlot : MonoBehaviour, IDropHandler
 
         Debug.Log($"<color=gold>[MERGE]</color> 3x {keeper.currentInstance.Data.cardName} hợp nhất thành cấp {keeper.currentInstance.mergeLevel + 1}!");
 
+        CardVisuals vis = keeper.GetComponent<CardVisuals>();
+        if (vis != null) StartCoroutine(vis.BurstAnimation());
+
         // Kiểm tra tiếp nếu vừa tạo ra quân đủ bộ 3 ở cấp mới
         StartCoroutine(CheckMergeNextFrame(keeper.currentInstance.Data.cardID, keeper.currentInstance.mergeLevel));
     }

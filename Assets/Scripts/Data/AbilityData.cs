@@ -31,6 +31,7 @@ public enum TargetType
     AllNilesAllies = 9,   // Toàn bộ đồng minh thuộc bộ tộc Niles (Đặc biệt, chỉ áp dụng cho thẻ có bộ tộc Niles)
     AllBabylonAllies = 10, // Toàn bộ đồng minh thuộc bộ tộc Babylon (Đặc biệt, chỉ áp dụng cho thẻ có bộ tộc Babylon)
     TriggerSubject = 11,  // Đơn vị gây ra sự kiện (VD: unit vừa được triệu hồi trong OnAllySummon, đồng minh vừa chết trong OnAllyDeath)
+    AllAlliesExceptSelf = 12, // Toàn bộ đồng minh trừ bản thân — dùng cho Aura
 }
 
 

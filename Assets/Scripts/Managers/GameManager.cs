@@ -9,9 +9,16 @@ public class GameManager : MonoBehaviour
 
     [Header("Chỉ số Người chơi")]
     public int playerHP = 7;
-    public int playerCoins = 10;
     public int playerCups = 0;
     public int currentTurn = 1;
+
+    private readonly EconomyManager economy = new EconomyManager();
+    public int playerCoins => economy.CurrentCoin;
+
+    // Dùng bởi AbilityEngine khi kỹ năng cộng coin ngay lập tức
+    public void AddCoin(int amount) { economy.Earn(amount); UpdateCoinUI(); }
+    // Dùng bởi AbilityEngine khi phép cộng coin vào đầu lượt sau
+    public void AddBonusCoin(int amount) => economy.AddBonus(amount);
 
     [Header("Điều kiện Thắng/Thua")]
     public int maxTurns = 20;
@@ -34,7 +41,11 @@ public class GameManager : MonoBehaviour
 
     [Header("Trạng thái Game")]
     public bool isCombatActive = false;
-    public int bonusCoinNextTurn = 0; // Coin từ magic kinh tế, cộng vào đầu turn sau
+    private bool isGameEnded   = false;
+
+    [Header("AI Difficulty")]
+    public string selectedDifficulty = "Medium";
+    private BotAgent enemyBot;
 
     public CombatResolver resolver = new CombatResolver();
 
@@ -44,10 +55,20 @@ public class GameManager : MonoBehaviour
 
     private void Awake() => Instance = this;
 
+    public void SetDifficulty(string difficulty)
+    {
+        selectedDifficulty = difficulty;
+        if (AIManager.Instance != null && AIManager.Instance.loadedLibrary != null)
+            enemyBot = new BotAgent(AIManager.Instance.GetBrain(difficulty));
+        Debug.Log($"<color=cyan>[AI]</color> Độ khó đặt thành: {difficulty}");
+    }
+
     void Start()
     {
         currentTurn = 1;
         playerCups = 0;
+        economy.ResetEconomy();
+        SetDifficulty(selectedDifficulty);
         UIManager.Instance.UpdateStats(playerHP, playerCups, playerCoins);
         UIManager.Instance.UpdateUIState(false);
         RefreshShop();
@@ -57,9 +78,8 @@ public class GameManager : MonoBehaviour
 
     public void RollShop()
     {
-        if (playerCoins >= rollCost)
+        if (economy.TrySpend(rollCost))
         {
-            playerCoins -= rollCost;
             isShopFrozen = false;
             RefreshShop();
             UIManager.Instance.UpdateStats(playerHP, playerCups, playerCoins);
@@ -112,7 +132,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < slots.Length; i++)
         {
             CardInstance unit = (i < board.Count) ? board[i] : null;
-            if (unit == null || unit.IsDead) continue;
+            if (unit == null) continue;
 
             CardUI existing = slots[i].GetComponentInChildren<CardUI>();
             if (existing != null)
@@ -134,18 +154,14 @@ public class GameManager : MonoBehaviour
 
     public bool TryBuyCard(int cost)
     {
-        if (playerCoins >= cost)
-        {
-            playerCoins -= cost;
-            UIManager.Instance.UpdateStats(playerHP, playerCups, playerCoins);
-            return true;
-        }
-        return false;
+        if (!economy.TrySpend(cost)) return false;
+        UIManager.Instance.UpdateStats(playerHP, playerCups, playerCoins);
+        return true;
     }
 
     public void SellCard()
     {
-        playerCoins += 1;
+        economy.Sell();
         UIManager.Instance.UpdateStats(playerHP, playerCups, playerCoins);
     }
 
@@ -172,7 +188,7 @@ public class GameManager : MonoBehaviour
 
     public void StartCombatPhase()
     {
-        if (isCombatActive) return;
+        if (isCombatActive || isGameEnded) return;
 
         // 1. Triệu hồi đối thủ trước
         SummonEnemyTeam();
@@ -325,32 +341,56 @@ public class GameManager : MonoBehaviour
         foreach (var slot in enemySlots)
             foreach (Transform child in slot) Destroy(child.gameObject);
 
+        if (enemyBot != null)
+        {
+            // Reset board của bot cho turn này, để bot mua mới từ đầu
+            for (int i = 0; i < enemyBot.board.Count; i++) enemyBot.board[i] = null;
+            enemyBot.DecidePrepPhase(CardDatabase.Instance.GetRandomShop(5, GetCurrentShopTier()));
+            SpawnBotBoard();
+        }
+        else
+        {
+            SpawnRandomEnemyTeam();
+        }
+    }
+
+    private void SpawnBotBoard()
+    {
+        for (int i = 0; i < enemyBot.board.Count && i < enemySlots.Length; i++)
+        {
+            CardInstance unit = enemyBot.board[i];
+            if (unit == null) continue;
+            GameObject cardObj = Instantiate(cardPrefab, enemySlots[i]);
+            cardObj.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            cardObj.transform.localScale = Vector3.one;
+            if (cardObj.TryGetComponent<CardDraggable>(out var drg)) drg.enabled = false;
+            cardObj.GetComponent<CardUI>().Setup(new CardInstance(unit.Data, i));
+        }
+    }
+
+    private void SpawnRandomEnemyTeam()
+    {
         List<CardDefinition> allUnits = CardDatabase.Instance.GetAllCards().FindAll(c => c.cardType == CardType.Unit);
         if (allUnits.Count == 0) return;
-
-        int count = 3;
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < 3 && i < enemySlots.Length; i++)
         {
-            if (i >= enemySlots.Length) break;
             CardDefinition data = allUnits[Random.Range(0, allUnits.Count)];
             GameObject cardObj = Instantiate(cardPrefab, enemySlots[i]);
             cardObj.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
             cardObj.transform.localScale = Vector3.one;
             if (cardObj.TryGetComponent<CardDraggable>(out var drg)) drg.enabled = false;
-
-            CardInstance instance = new CardInstance(data, i);
-            cardObj.GetComponent<CardUI>().Setup(instance);
+            cardObj.GetComponent<CardUI>().Setup(new CardInstance(data, i));
         }
     }
 
     public void ExecuteNextTurn()
     {
+        if (isGameEnded) return;
         currentTurn++;
         if (currentTurn > maxTurns) { WinGame(); return; }
         isCombatActive = false;
         // 1. Reset về đúng 10 Coin cố định + bonus coin từ magic lượt trước
-        playerCoins = 10 + bonusCoinNextTurn;
-        bonusCoinNextTurn = 0;
+        economy.ResetEconomy();
 
         // 2. Tính Coin từ các Unit Kinh tế đang có trên bàn cờ (kích hoạt ở cuối Shop Phase)
         foreach (var unit in playerBoard)
@@ -361,7 +401,7 @@ public class GameManager : MonoBehaviour
                 if (ab != null && ab.trigger == TriggerType.EndTurnShop && ab.effect == EffectType.GainCoin)
                 {
                     int coinGain = ab.effectValue1 * (unit.mergeLevel + 1);
-                    playerCoins += coinGain;
+                    economy.Earn(coinGain);
                     Debug.Log($"<color=yellow>[ECONOMY]</color> {unit.Data.cardName} (Lv{unit.mergeLevel}) đào được {coinGain} Coin!");
                 }
             }
@@ -374,6 +414,23 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.UpdateUIState(false);
     }
 
-    void WinGame() { Debug.Log("BẠN ĐÃ CHIẾN THẮNG!"); }
-    void GameOver() { Debug.Log("GAME OVER!"); }
+    void WinGame()
+    {
+        if (isGameEnded) return;
+        isGameEnded    = true;
+        isCombatActive = false;
+        StopAllCoroutines();
+        Debug.Log("<color=yellow>BẠN ĐÃ CHIẾN THẮNG!</color>");
+        UIManager.Instance.ShowVictory();
+    }
+
+    void GameOver()
+    {
+        if (isGameEnded) return;
+        isGameEnded    = true;
+        isCombatActive = false;
+        StopAllCoroutines();
+        Debug.Log("<color=red>GAME OVER!</color>");
+        UIManager.Instance.ShowGameOver();
+    }
 }

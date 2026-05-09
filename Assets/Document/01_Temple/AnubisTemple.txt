@@ -1,0 +1,20 @@
+ 
+"""
+1. Hình ảnh chủ đạo (Artwork): Phải là điểm nhấn chính, chiếm không gian hiển thị lớn nhất trên bề mặt lá bài.
+2. Khung viền lá bài (Card Frame): Khung viền này sẽ bao trọn lá bài và đóng vai trò báo hiệu Cấp độ (Level). Sẽ có 3 biến thể màu sắc khác nhau (nhưng chung 1 form thiết kế) tương ứng với Level 0, Level 1, và Level 2.
+3. Biểu tượng Bậc (Tier Icon): Sẽ được neo (anchor) tại vị trí chính giữa của cạnh đáy lá bài. Game hiện tại hỗ trợ hiển thị lên đến 6 Tier.
+4. Chỉ số chiến đấu (Stats - ATK & HP): Thiết kế tối giản: Xóa bỏ các icon vũ khí/trái tim thừa thãi. Chỉ sử dụng 2 hình tròn có viền mỏng để chứa các con số:
+
+Hình tròn Đỏ: Thể hiện sức mạnh Tấn công (ATK).
+Hình tròn Xanh: Thể hiện Máu (HP).
+5. Biểu tượng Tộc/Hệ (Tribe Icon): Một thành phần mới hoàn toàn sẽ được bổ sung vào bề mặt lá bài để người chơi dễ dàng nhận biết synergy (Babylon, Niles,...).
+6. Khu vực Mô tả (Description): Được khôi phục lại. Do số lượng lá bài tạo ra đa dạng và phức tạp, cần một khu vực Text riêng để giải thích chi tiết cơ chế hoạt động của lá bài đó cho người chơi đọc.
+7. Tên lá bài (Card Name): Sẽ được neo ở khu vực cạnh trên của lá bài (tọa độ chính xác sẽ được căn chỉnh sau cho thuận mắt).
+8. Danh sách Kỹ năng Cố định (Abilities): Sử dụng một dải danh sách (List) để hiển thị các Icon kỹ năng nhỏ (1 hoặc nhiều Icon tùy lá bài). Chi tiết của các icon này sẽ được giải thích bằng chữ ở mục Mô tả (Description).
+9. Nhóm Nội tại/Trạng thái Động (Passives): Đây là điểm đặc biệt nhất trong thiết kế. Chúng là các buff có thể được cấp thêm trong quá trình chơi, nên sẽ có thiết kế UI to lớn, độc lập và có thể xuất hiện đồng thời cả 3 hiệu ứng trên cùng 1 lá bài:
+
+Taunt (Khiêu khích): Một chiếc khiên lớn tông màu tím, bao bọc bên ngoài nhưng được đặt ở layer nằm dưới (phía sau) lá bài.
+Reborn (Hồi sinh): Hiển thị dưới dạng một bình thuốc màu đỏ, thiết kế giống như đang được treo bên thắt lưng.
+Safeguard (Bảo hộ): Một lớp hiệu ứng ánh sáng bảo vệ bao bọc với tông màu vàng.
+10. Hiệu ứng Tương tác (Hover Feedback): Cần tích hợp một lớp viền sáng (Outline). Viền này sẽ tự động bật sáng lên khi người chơi đưa chuột (hover) vào lá bài.
+"""

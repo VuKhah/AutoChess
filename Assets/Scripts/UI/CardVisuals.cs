@@ -86,6 +86,30 @@ public class CardVisuals : MonoBehaviour
         // Sau khi diễn xong thì ẩn hẳn đi
         gameObject.SetActive(false);
     }
+    // Hiệu ứng nảy to rồi thu về — dùng khi merge thành công
+    public IEnumerator BurstAnimation()
+    {
+        Vector3 normal = Vector3.one;
+        Vector3 big    = Vector3.one * 1.35f;
+        float half = 0.12f;
+        float elapsed = 0f;
+
+        while (elapsed < half)
+        {
+            elapsed += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(normal, big, elapsed / half);
+            yield return null;
+        }
+        elapsed = 0f;
+        while (elapsed < half)
+        {
+            elapsed += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(big, normal, elapsed / half);
+            yield return null;
+        }
+        transform.localScale = normal;
+    }
+
     public void ResetVisuals()
     {
         // 1. Hiện lại object
