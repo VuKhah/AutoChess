@@ -9,15 +9,14 @@
             "baseATK": 10,
             "baseHP": 10,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 7,
-                    "target": 1,
-                    "effect": 1,
-                    "triggerLimit": 3,
-                    "isPermanent": true
-                }
-            ]
+            "ability": {
+                "trigger": 7,
+                "target": 1,
+                "effect": 1,
+                "triggerLimit": 3,
+                "isPermanent": true
+            },
+            "description": "OnSell (tối đa 3 lần): Tăng vĩnh viễn +0/+0 cho bản thân."
         },
         {
             "cardID": "U_02_Babylon",
@@ -27,16 +26,15 @@
             "baseATK": 9,
             "baseHP": 9,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 1,
-                    "effect": 6,
-                    "effectValue1": 1,
-                    "conditionCount": 3,
-                    "isPermanent": false
-                }
-            ]
+            "ability": {
+                "trigger": 6,
+                "target": 1,
+                "effect": 6,
+                "effectValue1": 1,
+                "conditionCount": 3,
+                "isPermanent": false
+            },
+            "description": "OnDeploy (mỗi 3 lần): Nhận 1 Coin."
         },
         {
             "cardID": "U_03_Babylon",
@@ -46,16 +44,15 @@
             "baseATK": 8,
             "baseHP": 8,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 10,
-                    "effect": 1,
-                    "effectValue1": 1,
-                    "effectValue2": 1,
-                    "isPermanent": true
-                }
-            ]
+            "ability": {
+                "trigger": 6,
+                "target": 10,
+                "effect": 1,
+                "effectValue1": 1,
+                "effectValue2": 1,
+                "isPermanent": true
+            },
+            "description": "OnDeploy: Tăng vĩnh viễn +1/+1 cho toàn bộ đồng minh Babylon."
         },
         {
             "cardID": "U_04_Babylon",
@@ -65,16 +62,15 @@
             "baseATK": 6,
             "baseHP": 6,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 2,
-                    "effect": 1,
-                    "effectValue1": 3,
-                    "effectValue2": 3,
-                    "isPermanent": true
-                }
-            ]
+            "ability": {
+                "trigger": 6,
+                "target": 2,
+                "effect": 1,
+                "effectValue1": 3,
+                "effectValue2": 3,
+                "isPermanent": true
+            },
+            "description": "OnDeploy: Tăng vĩnh viễn +3/+3 cho 1 đồng minh ngẫu nhiên."
         },
         {
             "cardID": "U_05_Babylon",
@@ -84,15 +80,14 @@
             "baseATK": 15,
             "baseHP": 15,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 7,
-                    "target": 10,
-                    "targetCount": 2,
-                    "effect": 1,
-                    "isPermanent": true
-                }
-            ]
+            "ability": {
+                "trigger": 7,
+                "target": 10,
+                "targetCount": 2,
+                "effect": 1,
+                "isPermanent": true
+            },
+            "description": "OnSell: Tăng vĩnh viễn +0/+0 cho 2 đồng minh Babylon."
         },
         {
             "cardID": "U_06_Babylon",
@@ -102,16 +97,15 @@
             "baseATK": 6,
             "baseHP": 6,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 7,
-                    "target": 3,
-                    "effect": 1,
-                    "effectValue1": 5,
-                    "effectValue2": 5,
-                    "isPermanent": true
-                }
-            ]
+            "ability": {
+                "trigger": 7,
+                "target": 3,
+                "effect": 1,
+                "effectValue1": 5,
+                "effectValue2": 5,
+                "isPermanent": true
+            },
+            "description": "OnSell: Tăng vĩnh viễn +5/+5 cho toàn bộ đồng minh."
         },
         {
             "cardID": "U_07_Babylon",
@@ -121,15 +115,14 @@
             "baseATK": 2,
             "baseHP": 15,
             "cost": 3,
-            "hasTaunt": true,
-            "abilities": [
-                {
-                    "trigger": 1,
-                    "target": 5,
-                    "effect": 2,
-                    "isPermanent": false
-                }
-            ]
+            "ability": {
+                "isTaunt": true,
+                "trigger": 1,
+                "target": 5,
+                "effect": 2,
+                "isPermanent": false
+            },
+            "description": "Taunt. Khi bị đánh: Gây 0 sát thương cho kẻ địch trực tiếp."
         },
         {
             "cardID": "U_08_Babylon",
@@ -139,17 +132,16 @@
             "baseATK": 10,
             "baseHP": 10,
             "cost": 3,
-            "hasTaunt": true,
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 1,
-                    "effect": 1,
-                    "effectValue1": 20,
-                    "effectValue2": 20,
-                    "isPermanent": true
-                }
-            ]
+            "ability": {
+                "isTaunt": true,
+                "trigger": 6,
+                "target": 1,
+                "effect": 1,
+                "effectValue1": 20,
+                "effectValue2": 20,
+                "isPermanent": true
+            },
+            "description": "Taunt. OnDeploy: Tăng vĩnh viễn +20/+20 cho bản thân."
         },
         {
             "cardID": "U_09_Babylon",
@@ -159,15 +151,14 @@
             "baseATK": 5,
             "baseHP": 5,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 1,
-                    "effect": 4,
-                    "effectValue1": 2,
-                    "isPermanent": false
-                }
-            ]
+            "ability": {
+                "trigger": 6,
+                "target": 1,
+                "effect": 4,
+                "effectValue1": 2,
+                "isPermanent": false
+            },
+            "description": "OnDeploy: Triệu hồi 2 đơn vị."
         },
         {
             "cardID": "U_10_Babylon",
@@ -177,16 +168,15 @@
             "baseATK": 5,
             "baseHP": 5,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 8,
-                    "effect": 1,
-                    "effectValue1": 3,
-                    "effectValue2": 3,
-                    "isPermanent": true
-                }
-            ]
+            "ability": {
+                "trigger": 6,
+                "target": 8,
+                "effect": 1,
+                "effectValue1": 3,
+                "effectValue2": 3,
+                "isPermanent": true
+            },
+            "description": "OnDeploy: Tăng vĩnh viễn +3/+3 cho đồng minh bên phải."
         },
         {
             "cardID": "U_11_Babylon",
@@ -196,16 +186,15 @@
             "baseATK": 8,
             "baseHP": 8,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 11,
-                    "target": 1,
-                    "effect": 1,
-                    "effectValue1": 3,
-                    "effectValue2": 2,
-                    "isPermanent": true
-                }
-            ]
+            "ability": {
+                "trigger": 11,
+                "target": 1,
+                "effect": 1,
+                "effectValue1": 3,
+                "effectValue2": 2,
+                "isPermanent": true
+            },
+            "description": "Aura: Tăng vĩnh viễn +3/+2 cho bản thân."
         },
         {
             "cardID": "U_12_Babylon",
@@ -215,15 +204,14 @@
             "baseATK": 7,
             "baseHP": 1,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 2,
-                    "target": 1,
-                    "effect": 6,
-                    "effectValue1": 2,
-                    "isPermanent": false
-                }
-            ]
+            "ability": {
+                "trigger": 2,
+                "target": 1,
+                "effect": 6,
+                "effectValue1": 2,
+                "isPermanent": false
+            },
+            "description": "Khi tấn công: Nhận 2 Coin."
         },
         {
             "cardID": "U_13_Babylon",
@@ -233,14 +221,13 @@
             "baseATK": 8,
             "baseHP": 8,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 2,
-                    "effect": 1,
-                    "isPermanent": true
-                }
-            ]
+            "ability": {
+                "trigger": 6,
+                "target": 2,
+                "effect": 1,
+                "isPermanent": true
+            },
+            "description": "OnDeploy: Tăng vĩnh viễn +0/+0 cho 1 đồng minh ngẫu nhiên."
         },
         {
             "cardID": "U_14_Babylon",
@@ -250,17 +237,16 @@
             "baseATK": 3,
             "baseHP": 3,
             "cost": 3,
-            "hasTaunt": true,
-            "abilities": [
-                {
-                    "trigger": 1,
-                    "target": 10,
-                    "effect": 1,
-                    "effectValue1": 1,
-                    "effectValue2": 2,
-                    "isPermanent": false
-                }
-            ]
+            "ability": {
+                "isTaunt": true,
+                "trigger": 1,
+                "target": 10,
+                "effect": 1,
+                "effectValue1": 1,
+                "effectValue2": 2,
+                "isPermanent": false
+            },
+            "description": "Taunt. Khi bị đánh: Tăng +1/+2 cho toàn bộ đồng minh Babylon trong trận đấu này."
         },
         {
             "cardID": "U_15_Babylon",
@@ -270,15 +256,14 @@
             "baseATK": 1,
             "baseHP": 5,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 11,
-                    "target": 10,
-                    "effect": 1,
-                    "effectValue1": 1,
-                    "isPermanent": true
-                }
-            ]
+            "ability": {
+                "trigger": 12,
+                "target": 10,
+                "effect": 1,
+                "effectValue1": 1,
+                "isPermanent": true
+            },
+            "description": "Trigger 12: Tăng vĩnh viễn +1/+0 cho toàn bộ đồng minh Babylon."
         },
         {
             "cardID": "U_16_Babylon",
@@ -288,15 +273,14 @@
             "baseATK": 1,
             "baseHP": 2,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 1,
-                    "effect": 6,
-                    "effectValue1": 2,
-                    "isPermanent": false
-                }
-            ]
+            "ability": {
+                "trigger": 6,
+                "target": 1,
+                "effect": 6,
+                "effectValue1": 2,
+                "isPermanent": false
+            },
+            "description": "OnDeploy: Nhận 2 Coin."
         },
         {
             "cardID": "U_17_Babylon",
@@ -306,9 +290,11 @@
             "baseATK": 2,
             "baseHP": 2,
             "cost": 3,
-            "hasTaunt": true,
-            "hasReborn": true,
-            "abilities": []
+            "ability": {
+                "isTaunt": true,
+                "isReborn": true
+            },
+            "description": "Taunt. Reborn."
         },
         {
             "cardID": "U_18_Babylon",
@@ -318,15 +304,14 @@
             "baseATK": 5,
             "baseHP": 1,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 11,
-                    "target": 10,
-                    "effect": 1,
-                    "effectValue2": 1,
-                    "isPermanent": true
-                }
-            ]
+            "ability": {
+                "trigger": 12,
+                "target": 10,
+                "effect": 1,
+                "effectValue2": 1,
+                "isPermanent": true
+            },
+            "description": "Trigger 12: Tăng vĩnh viễn +0/+1 cho toàn bộ đồng minh Babylon."
         },
         {
             "cardID": "U_19_Babylon",
@@ -336,15 +321,14 @@
             "baseATK": 3,
             "baseHP": 3,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 7,
-                    "target": 1,
-                    "effect": 4,
-                    "effectValue1": 1,
-                    "isPermanent": false
-                }
-            ]
+            "ability": {
+                "trigger": 7,
+                "target": 1,
+                "effect": 4,
+                "effectValue1": 1,
+                "isPermanent": false
+            },
+            "description": "OnSell: Triệu hồi 1 đơn vị."
         },
         {
             "cardID": "U_20_Babylon",
@@ -354,16 +338,15 @@
             "baseATK": 3,
             "baseHP": 3,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 7,
-                    "target": 1,
-                    "effect": 1,
-                    "effectValue1": 1,
-                    "effectValue2": 1,
-                    "isPermanent": true
-                }
-            ]
+            "ability": {
+                "trigger": 7,
+                "target": 1,
+                "effect": 1,
+                "effectValue1": 1,
+                "effectValue2": 1,
+                "isPermanent": true
+            },
+            "description": "OnSell: Tăng vĩnh viễn +1/+1 cho bản thân."
         },
         {
             "cardID": "U_21_Babylon",
@@ -373,15 +356,14 @@
             "baseATK": 2,
             "baseHP": 4,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 1,
-                    "effect": 1,
-                    "effectValue2": 1,
-                    "isPermanent": true
-                }
-            ]
+            "ability": {
+                "trigger": 6,
+                "target": 1,
+                "effect": 1,
+                "effectValue2": 1,
+                "isPermanent": true
+            },
+            "description": "OnDeploy: Tăng vĩnh viễn +0/+1 cho bản thân."
         },
         {
             "cardID": "U_22_Babylon",
@@ -391,16 +373,14 @@
             "baseATK": 3,
             "baseHP": 2,
             "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 1,
-                    "effect": 6,
-                    "effectValue1": 1,
-                    "isPermanent": false
-                }
-            ],
-            "description": "Deploy: +1 coin "
+            "ability": {
+                "trigger": 6,
+                "target": 1,
+                "effect": 6,
+                "effectValue1": 1,
+                "isPermanent": false
+            },
+            "description": "OnDeploy: Nhận 1 Coin."
         },
         {
             "_comment": "// ================= NILES =================",
@@ -464,11 +444,12 @@
                     "trigger": 10,
                     "target": 11,
                     "effect": 1,
-                    "effectValue1": 3,
-                    "effectValue2": 3,
-                    "isPermanent": false
+                    "effectValue1": 30,
+                    "effectValue2": 30,
+                    "isPermanent": true
                 }
-            ]
+            ],
+            "description": "OnAllyReborn: Tăng +30/+30 cho đồng minh đó."
         },
         {
             "cardID": "U_04_Niles",
@@ -480,14 +461,15 @@
             "cost": 3,
             "abilities": [
                 {
-                    "trigger": 11,
+                    "trigger": 9,
                     "target": 1,
                     "effect": 1,
                     "effectValue1": 1,
-                    "effectValue2": 1,
+                    "effectValue2": 2,
                     "isPermanent": true
                 }
-            ]
+            ],
+            "description": "OnAllySummon: Tăng vĩnh viễn +1/+2 cho bản thân."
         },
         {
             "cardID": "U_05_Niles",
@@ -505,9 +487,11 @@
                     "effectValue1": 1,
                     "effectValue2": 1,
                     "conditionCount": 2,
-                    "isPermanent": false
+                    "isPermanent": false,
+                    "isEscalating": true
                 }
-            ]
+            ],
+            "description": "OnAllySummon (mỗi 2 lần): Tăng +1/+1 (tăng dần +1/+1 mỗi lần) cho toàn bộ đồng minh Niles trong trận đấu này."
         },
         {
             "cardID": "U_06_Niles",
@@ -527,7 +511,8 @@
                     "effectValue2": 0,
                     "isPermanent": true
                 }
-            ]
+            ],
+            "description": "Slain: Tăng vĩnh viễn +2/+0 cho toàn bộ đồng minh Niles."
         },
         {
             "cardID": "U_07_Niles",
@@ -546,7 +531,8 @@
                     "effectValue2": 3,
                     "isPermanent": true
                 }
-            ]
+            ],
+            "description": "OnAllyReborn: Tăng vĩnh viễn +3/+3 cho toàn bộ đồng minh."
         },
         {
             "cardID": "U_08_Niles",
@@ -565,7 +551,8 @@
                     "effectValue2": 4,
                     "isPermanent": false
                 }
-            ]
+            ],
+            "description": "OnAllySummon: Tăng +4/+4 cho đồng minh đó trong trận đấu này."
         },
         {
             "cardID": "U_09_Niles",
@@ -584,7 +571,8 @@
                     "isPermanent": false,
                     "isReborn": true
                 }
-            ]
+            ],
+            "description": "Slain: Ban Reborn cho 1 đồng minh ngẫu nhiên."
         },
         {
             "cardID": "U_10_Niles",
@@ -603,7 +591,8 @@
                     "summonCardID": "U_20_Niles",
                     "isPermanent": false
                 }
-            ]
+            ],
+            "description": "Slain: Triệu hồi 2 Niles Warrior."
         },
         {
             "cardID": "U_11_Niles",
@@ -627,7 +616,8 @@
                     "effect": 9,
                     "isPermanent": false
                 }
-            ]
+            ],
+            "description": "OnDeploy: Consume đồng minh bên trái. Slain: Triệu hồi lại tất cả unit đã bị Consume."
         },
         {
             "cardID": "U_12_Niles",
@@ -644,7 +634,8 @@
                     "effect": 8,
                     "isPermanent": false
                 }
-            ]
+            ],
+            "description": "Đầu trận: Kích hoạt kỹ năng của đồng minh bên trái."
         },
         {
             "cardID": "U_13_Niles",
@@ -664,7 +655,8 @@
                     "conditionCount": 3,
                     "isPermanent": true
                 }
-            ]
+            ],
+            "description": "OnAllyDeath (mỗi 3 lần): Tăng vĩnh viễn +1/+0 cho toàn bộ đồng minh Niles."
         },
         {
             "cardID": "U_14_Niles",
@@ -682,7 +674,8 @@
                     "effectValue1": 5,
                     "isPermanent": false
                 }
-            ]
+            ],
+            "description": "Khi tấn công: Gây 5 sát thương cho kẻ địch trực tiếp."
         },
         {
             "cardID": "U_15_Niles",
@@ -701,7 +694,8 @@
                     "effectValue2": 1,
                     "isPermanent": true
                 }
-            ]
+            ],
+            "description": "OnAllyDeath: Tăng vĩnh viễn +1/+1 cho bản thân."
         },
         {
             "cardID": "U_16_Niles",
@@ -719,7 +713,8 @@
                     "effectValue1": 1,
                     "isPermanent": false
                 }
-            ]
+            ],
+            "description": "OnDeploy: Nhận 1 Coin."
         },
         {
             "cardID": "U_17_Niles",
@@ -733,12 +728,13 @@
             "abilities": [
                 {
                     "trigger": 11,
-                    "target": 1,
+                    "target": 2,
                     "effect": 1,
-                    "effectValue1": 1,
+                    "effectValue1": 2,
                     "isPermanent": true
                 }
-            ]
+            ],
+            "description": "Aura: Tăng vĩnh viễn +2/+0 cho đồng minh ngẫu nhiên."
         },
         {
             "cardID": "U_18_Niles",
@@ -757,7 +753,8 @@
                     "effectValue2": 1,
                     "isPermanent": false
                 }
-            ]
+            ],
+            "description": "OnAllySummon: Tăng +1/+1 cho bản thân trong trận đấu này."
         },
         {
             "cardID": "U_19_Niles",
@@ -776,7 +773,8 @@
                     "summonCardID": "U_23_Niles",
                     "isPermanent": false
                 }
-            ]
+            ],
+            "description": "Slain: Triệu hồi 2 Medjed."
         },
         {
             "cardID": "U_20_Niles",
@@ -795,7 +793,8 @@
                     "summonCardID": "U_22_Niles",
                     "isPermanent": false
                 }
-            ]
+            ],
+            "description": "Slain: Triệu hồi 1 Mummy."
         },
         {
             "cardID": "U_21_Niles",
@@ -807,7 +806,8 @@
             "cost": 3,
             "hasTaunt": true,
             "hasReborn": true,
-            "abilities": []
+            "abilities": [],
+            "description": "Taunt. Reborn."
         },
         {
             "cardID": "U_22_Niles",
@@ -880,16 +880,15 @@
             "cardType": 1,
             "tribe": 0,
             "magicGroup": "Economy",
-            "abilities": [
-                {
-                    "trigger": 0,
-                    "target": 0,
-                    "targetCount": 0,
-                    "effect": 5,
-                    "effectValue1": 2,
-                    "effectValue2": 0
-                }
-            ],
+            "ability": {
+                "trigger": 0,
+                "target": 0,
+                "targetCount": 0,
+                "effect": 5,
+                "effectValue1": 2,
+                "effectValue2": 0,
+                "isTaunt": false
+            },
             "cost": 2,
             "tier": 1,
             "description": "Nhận 1 Coin vào lượt sau"

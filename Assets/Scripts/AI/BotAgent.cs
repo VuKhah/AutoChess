@@ -16,14 +16,17 @@ public class BotAgent
     {
         economy.ResetEconomy();
 
-        // Mua cho đến khi hết tiền (Giả sử thẻ giá 3) hoặc hết chỗ
-        while (economy.CurrentCoin >= 3)
+        // Mua cho đến khi hết tiền hoặc hết chỗ
+        bool bought = true;
+        while (bought)
         {
+            bought = false;
             CardDefinition bestCard = null;
             float bestScore = -1f;
 
             foreach (var card in shop)
             {
+                if (card.cost > economy.CurrentCoin) continue;
                 float score = Evaluate(card);
                 if (score > bestScore)
                 {
@@ -35,8 +38,8 @@ public class BotAgent
             if (bestCard != null && HasEmptySlot())
             {
                 BuyAndPlace(bestCard);
+                bought = true;
             }
-            else break;
         }
     }
 
@@ -73,9 +76,9 @@ public class BotAgent
     {
         int idx = board.FindIndex(slot => slot == null);
         if (idx != -1)
-        { // Thêm check an toàn
+        {
             board[idx] = new CardInstance(c, idx);
-            economy.Buy();
+            economy.TryBuy(c.cost);
         }
     }
 }

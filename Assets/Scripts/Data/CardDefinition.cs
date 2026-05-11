@@ -28,6 +28,15 @@ public class CardDefinition
     public string magicGroup;
     public int statBonusATK;
     public int statBonusHP;
+
+    // BUG FIX: Mỗi CardInstance phải có bản sao abilities riêng,
+    // tránh AddAbility magic mutate CardDefinition chung trong database.
+    public CardDefinition Clone()
+    {
+        var c = (CardDefinition)MemberwiseClone();
+        c.abilities = abilities != null ? new List<AbilityData>(abilities) : null;
+        return c;
+    }
 }
 
 [System.Serializable]

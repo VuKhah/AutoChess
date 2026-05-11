@@ -40,7 +40,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
         if (targetUnitUI != null && targetUnitUI.currentInstance.Data.cardType == CardType.Unit)
         {
             // Nếu mua từ Shop thì phải trừ tiền trước
-            if (sourceSlot.slotType == SlotType.Shop)
+            if (sourceSlot != null && sourceSlot.slotType == SlotType.Shop)
             {
                 if (!GameManager.Instance.TryBuyCard(magicUI.currentInstance.Data.cost)) return;
             }
@@ -58,7 +58,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
         // TH 2: Thả bài phép vào ô Hand (để mua về cất túi hoặc sắp xếp túi)
         else if (this.slotType == SlotType.Hand && this.transform.childCount == 0)
         {
-            if (sourceSlot.slotType == SlotType.Shop)
+            if (sourceSlot != null && sourceSlot.slotType == SlotType.Shop)
             {
                 if (GameManager.Instance.TryBuyCard(magicUI.currentInstance.Data.cost))
                 {
@@ -95,7 +95,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
                         unitUI.currentInstance,
                         null,
                         GameManager.Instance.playerBoard,
-                        null
+                        GameManager.Instance.enemyBoard  // BUG FIX: enemyBoard luôn là list 6-null, không bao giờ null
                     );
                 }
 
@@ -174,13 +174,17 @@ public class CardSlot : MonoBehaviour, IDropHandler
         foreach (var slot in GameManager.Instance.playerSlots)
         {
             CardUI ui = slot.GetComponentInChildren<CardUI>();
-            if (ui != null && ui.currentInstance.Data.cardID == cardID && ui.currentInstance.mergeLevel == mergeLevel)
+            if (ui != null && ui.currentInstance.Data.cardID == cardID
+                && ui.currentInstance.mergeLevel == mergeLevel
+                && !ui.currentInstance.isBattleSpawned)
                 matches.Add(ui);
         }
         foreach (var slot in GameManager.Instance.handSlots)
         {
             CardUI ui = slot.GetComponentInChildren<CardUI>();
-            if (ui != null && ui.currentInstance.Data.cardID == cardID && ui.currentInstance.mergeLevel == mergeLevel)
+            if (ui != null && ui.currentInstance.Data.cardID == cardID
+                && ui.currentInstance.mergeLevel == mergeLevel
+                && !ui.currentInstance.isBattleSpawned)
                 matches.Add(ui);
         }
 
@@ -190,18 +194,37 @@ public class CardSlot : MonoBehaviour, IDropHandler
 
     private void PerformMerge(List<CardUI> cards)
     {
-        CardUI keeper = cards[0];
+        // BUG FIX: Chọn keeper là lá bài có tổng bonus cao nhất thay vì luôn lấy cards[0].
+        // Đảm bảo: merged unit luôn mạnh hơn bất kỳ nguyên liệu nào (không bao giờ stat regression).
+        // Công thức: currentATK = baseATK × tier + 0.7 × (permanent + growth)
+        // Khi tier tăng 1 (mergeLevel++), phần base tăng nhưng phần bonus giữ nguyên.
+        // Nếu keeper có bonus thấp hơn một nguyên liệu khác → merged < nguyên liệu đó.
+        int keeperIdx = 0;
+        int bestBonus = int.MinValue;
+        for (int i = 0; i < 3; i++)
+        {
+            var inst = cards[i].currentInstance;
+            int totalBonus = inst.permanentATKBonus + inst.permanentHPBonus
+                           + inst.growthATKBonus    + inst.growthHPBonus;
+            if (totalBonus > bestBonus) { bestBonus = totalBonus; keeperIdx = i; }
+        }
+
+        CardUI keeper = cards[keeperIdx];
         keeper.currentInstance.mergeLevel++;
         keeper.currentInstance.ResetStats();
         keeper.Setup(keeper.currentInstance);
 
-        for (int i = 1; i < 3; i++)
-            Destroy(cards[i].gameObject);
+        for (int i = 0; i < 3; i++)
+        {
+            if (i != keeperIdx) Destroy(cards[i].gameObject);
+        }
 
-        Debug.Log($"<color=gold>[MERGE]</color> 3x {keeper.currentInstance.Data.cardName} hợp nhất thành cấp {keeper.currentInstance.mergeLevel + 1}!");
+        Debug.Log($"<color=gold>[MERGE]</color> 3x {keeper.currentInstance.Data.cardName} hợp nhất thành cấp {keeper.currentInstance.mergeLevel + 1}! (keeper: slot bonus={bestBonus})");
 
         CardVisuals vis = keeper.GetComponent<CardVisuals>();
         if (vis != null) StartCoroutine(vis.BurstAnimation());
+
+        GameManager.Instance.SyncBoards();
 
         // Kiểm tra tiếp nếu vừa tạo ra quân đủ bộ 3 ở cấp mới
         StartCoroutine(CheckMergeNextFrame(keeper.currentInstance.Data.cardID, keeper.currentInstance.mergeLevel));

@@ -16,6 +16,7 @@ using UnityEngine;
     // 3. Chỉ số thực tế (Dùng để trừ máu, buff tạm thời combat sẽ cộng thẳng vào đây)
     public int currentATK;
     public int currentHP;
+    public int maxHP;       // HP tối đa tính theo tier + bonus, set bởi ResetStats
     public int slotIndex;
     public bool hasRebornUsed = false;
 
@@ -27,15 +28,25 @@ using UnityEngine;
     public bool isReborn;
     public bool safeguardActive;
 
-    // 6. Đếm số lần mỗi ability đã kích hoạt trong combat này (cho triggerLimit)
+    // 6. Đếm số lần mỗi trigger kích hoạt trong combat này (cho triggerLimit + conditionCount)
     public List<int> abilityTriggerCounts = new List<int>();
+    // Cộng thêm vào effectValue1/2 mỗi lần fire (cho isEscalating — reset mỗi combat)
+    public List<int> abilityEscalationBonuses = new List<int>();
 
     // 7. Danh sách cardID của các unit đã bị Consume (Sekhmet mechanic)
     public List<string> consumedCardIDs = new List<string>();
 
+    // 8. Tracking cái chết cho Death Stack — reset mỗi combat
+    public bool onDeathProcessed = false;   // Đã được đưa vào death stack chưa
+    public CardInstance lastAttacker = null; // Kẻ gây đòn chết cuối cùng (cho OnDeath directEnemy)
+
+    // 9. Đánh dấu unit được tạo ra bởi SummonUnit trong Battle — không được phép Merge
+    public bool isBattleSpawned = false;
+
     public CardInstance(CardDefinition data, int slot)
     {
-        this.Data = data;
+        // BUG FIX: Clone abilities list để tránh AddAbility magic mutate CardDefinition chung
+        this.Data = data.Clone();
         ResetStats();
         this.slotIndex = slot;
     }
@@ -46,24 +57,30 @@ using UnityEngine;
         int tier = mergeLevel + 1;
         currentATK = Mathf.RoundToInt(Data.baseATK * tier
                 + keepRatio * (growthATKBonus + permanentATKBonus));
-        currentHP  = Mathf.RoundToInt(Data.baseHP  * tier
+        maxHP      = Mathf.RoundToInt(Data.baseHP  * tier
                  + keepRatio * (growthHPBonus  + permanentHPBonus));
+        currentHP  = maxHP;
         // Reset passives từ data gốc (mỗi combat bắt đầu lại từ đầu)
         isTaunt         = Data.hasTaunt;
         isReborn        = Data.hasReborn;
         safeguardActive = Data.hasSafeguard;
         hasRebornUsed   = false;
+        onDeathProcessed = false;
+        lastAttacker     = null;
         int abCount = Data.abilities != null ? Data.abilities.Count : 0;
-        abilityTriggerCounts = new List<int>(new int[abCount]);
+        abilityTriggerCounts      = new List<int>(new int[abCount]);
+        abilityEscalationBonuses  = new List<int>(new int[abCount]);
         consumedCardIDs = new List<string>();
     }
 
     public void Revive(int hp)
     {
         currentHP = hp;
-        hasRebornUsed = true;
+        hasRebornUsed    = true;
+        onDeathProcessed = false; // Reset để có thể chết lại lần nữa sau Reborn
+        lastAttacker     = null;
     }
 
-    public bool IsDead => currentHP <= 0;
-    public bool IsDamaged => currentHP < Data.baseHP;
+    public bool IsDead    => currentHP <= 0;
+    public bool IsDamaged => currentHP < maxHP;
 }

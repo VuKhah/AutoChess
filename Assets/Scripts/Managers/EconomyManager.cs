@@ -20,7 +20,7 @@ public class EconomyManager
     public void Earn(int amount) => CurrentCoin += amount;
     public void AddBonus(int amt) => bonusNextTurn += amt;
 
-    // Dùng cho BotAgent: giá cố định 3
-    public void Buy() => CurrentCoin -= 3;
+    // Dùng cho BotAgent
+    public bool TryBuy(int cost) => TrySpend(cost);
     public void Sell() => CurrentCoin += 1;
 }

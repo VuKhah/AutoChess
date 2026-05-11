@@ -15,7 +15,8 @@
                 "effect": 1,
                 "triggerLimit": 3,
                 "isPermanent": true
-            }
+            },
+            "description": "OnSell (tối đa 3 lần): Tăng vĩnh viễn +0/+0 cho bản thân."
         },
         {
             "cardID": "U_02_Babylon",
@@ -32,7 +33,8 @@
                 "effectValue1": 1,
                 "conditionCount": 3,
                 "isPermanent": false
-            }
+            },
+            "description": "OnDeploy (mỗi 3 lần): Nhận 1 Coin."
         },
         {
             "cardID": "U_03_Babylon",
@@ -49,7 +51,8 @@
                 "effectValue1": 1,
                 "effectValue2": 1,
                 "isPermanent": true
-            }
+            },
+            "description": "OnDeploy: Tăng vĩnh viễn +1/+1 cho toàn bộ đồng minh Babylon."
         },
         {
             "cardID": "U_04_Babylon",
@@ -66,7 +69,8 @@
                 "effectValue1": 3,
                 "effectValue2": 3,
                 "isPermanent": true
-            }
+            },
+            "description": "OnDeploy: Tăng vĩnh viễn +3/+3 cho 1 đồng minh ngẫu nhiên."
         },
         {
             "cardID": "U_05_Babylon",
@@ -82,7 +86,8 @@
                 "targetCount": 2,
                 "effect": 1,
                 "isPermanent": true
-            }
+            },
+            "description": "OnSell: Tăng vĩnh viễn +0/+0 cho 2 đồng minh Babylon."
         },
         {
             "cardID": "U_06_Babylon",
@@ -99,7 +104,8 @@
                 "effectValue1": 5,
                 "effectValue2": 5,
                 "isPermanent": true
-            }
+            },
+            "description": "OnSell: Tăng vĩnh viễn +5/+5 cho toàn bộ đồng minh."
         },
         {
             "cardID": "U_07_Babylon",
@@ -115,7 +121,8 @@
                 "target": 5,
                 "effect": 2,
                 "isPermanent": false
-            }
+            },
+            "description": "Taunt. Khi bị đánh: Gây 0 sát thương cho kẻ địch trực tiếp."
         },
         {
             "cardID": "U_08_Babylon",
@@ -133,7 +140,8 @@
                 "effectValue1": 20,
                 "effectValue2": 20,
                 "isPermanent": true
-            }
+            },
+            "description": "Taunt. OnDeploy: Tăng vĩnh viễn +20/+20 cho bản thân."
         },
         {
             "cardID": "U_09_Babylon",
@@ -149,7 +157,8 @@
                 "effect": 4,
                 "effectValue1": 2,
                 "isPermanent": false
-            }
+            },
+            "description": "OnDeploy: Triệu hồi 2 đơn vị."
         },
         {
             "cardID": "U_10_Babylon",
@@ -166,7 +175,8 @@
                 "effectValue1": 3,
                 "effectValue2": 3,
                 "isPermanent": true
-            }
+            },
+            "description": "OnDeploy: Tăng vĩnh viễn +3/+3 cho đồng minh bên phải."
         },
         {
             "cardID": "U_11_Babylon",
@@ -183,7 +193,8 @@
                 "effectValue1": 3,
                 "effectValue2": 2,
                 "isPermanent": true
-            }
+            },
+            "description": "Aura: Tăng vĩnh viễn +3/+2 cho bản thân."
         },
         {
             "cardID": "U_12_Babylon",
@@ -199,7 +210,8 @@
                 "effect": 6,
                 "effectValue1": 2,
                 "isPermanent": false
-            }
+            },
+            "description": "Khi tấn công: Nhận 2 Coin."
         },
         {
             "cardID": "U_13_Babylon",
@@ -214,7 +226,8 @@
                 "target": 2,
                 "effect": 1,
                 "isPermanent": true
-            }
+            },
+            "description": "OnDeploy: Tăng vĩnh viễn +0/+0 cho 1 đồng minh ngẫu nhiên."
         },
         {
             "cardID": "U_14_Babylon",
@@ -232,7 +245,8 @@
                 "effectValue1": 1,
                 "effectValue2": 2,
                 "isPermanent": false
-            }
+            },
+            "description": "Taunt. Khi bị đánh: Tăng +1/+2 cho toàn bộ đồng minh Babylon trong trận đấu này."
         },
         {
             "cardID": "U_15_Babylon",
@@ -248,7 +262,8 @@
                 "effect": 1,
                 "effectValue1": 1,
                 "isPermanent": true
-            }
+            },
+            "description": "Trigger 12: Tăng vĩnh viễn +1/+0 cho toàn bộ đồng minh Babylon."
         },
         {
             "cardID": "U_16_Babylon",
@@ -264,7 +279,8 @@
                 "effect": 6,
                 "effectValue1": 2,
                 "isPermanent": false
-            }
+            },
+            "description": "OnDeploy: Nhận 2 Coin."
         },
         {
             "cardID": "U_17_Babylon",
@@ -277,7 +293,8 @@
             "ability": {
                 "isTaunt": true,
                 "isReborn": true
-            }
+            },
+            "description": "Taunt. Reborn."
         },
         {
             "cardID": "U_18_Babylon",
@@ -293,7 +310,8 @@
                 "effect": 1,
                 "effectValue2": 1,
                 "isPermanent": true
-            }
+            },
+            "description": "Trigger 12: Tăng vĩnh viễn +0/+1 cho toàn bộ đồng minh Babylon."
         },
         {
             "cardID": "U_19_Babylon",
@@ -309,7 +327,8 @@
                 "effect": 4,
                 "effectValue1": 1,
                 "isPermanent": false
-            }
+            },
+            "description": "OnSell: Triệu hồi 1 đơn vị."
         },
         {
             "cardID": "U_20_Babylon",
@@ -326,7 +345,8 @@
                 "effectValue1": 1,
                 "effectValue2": 1,
                 "isPermanent": true
-            }
+            },
+            "description": "OnSell: Tăng vĩnh viễn +1/+1 cho bản thân."
         },
         {
             "cardID": "U_21_Babylon",
@@ -342,7 +362,8 @@
                 "effect": 1,
                 "effectValue2": 1,
                 "isPermanent": true
-            }
+            },
+            "description": "OnDeploy: Tăng vĩnh viễn +0/+1 cho bản thân."
         },
         {
             "cardID": "U_22_Babylon",
@@ -358,7 +379,8 @@
                 "effect": 6,
                 "effectValue1": 1,
                 "isPermanent": false
-            }
+            },
+            "description": "OnDeploy: Nhận 1 Coin."
         }
     ]
 }

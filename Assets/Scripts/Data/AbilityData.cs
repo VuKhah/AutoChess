@@ -46,7 +46,7 @@ public enum EffectType
     Destroy = 5,         // Hủy diệt tức thì (Banish) — set HP về 0, trigger OnDeath bình thường
     GainCoin = 6,       // Thêm Coin (Kinh tế)
     Reborn = 7,         // Hồi sinh (Đặc biệt)
-    TriggerAbility = 8,   // Kích hoạt ability của target (copy battlecry/deathrattle đồng minh) — không chain nếu target cũng là TriggerAbility
+    TriggerAbility = 8,   // Kích hoạt ability của target
     SummonConsumed = 9,   // Triệu hồi lại tất cả unit đã bị Consume bởi source (dùng với OnDeath)
 }
 
@@ -66,7 +66,8 @@ public class AbilityData
     [Header("Conditions & Limits")]
     public bool isPermanent;    // Buff có giữ lại sau trận đấu không?
     public int triggerLimit;    // Giới hạn số lần kích hoạt (VD: Chỉ kích hoạt 3 lần)
-    public int conditionCount;   // Số lần điều kiện đã được đáp ứng (VD: Đã bị đánh 2 lần)
+    public int conditionCount;   // Kích hoạt mỗi N lần trigger (0 = mỗi lần; 3 = lần 3, 6, 9...)
+    public bool isEscalating;   // Sau mỗi lần kích hoạt, effectValue1/2 tăng +1 (nhân scaleFactor)
 
 
     [Header("Special Flags — chỉ dùng cho GiveBuff effect")]
