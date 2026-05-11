@@ -85,7 +85,7 @@ public partial class GameManager : MonoBehaviour
         currentTurn++;
         if (currentTurn > maxTurns) { WinGame(); return; }
         isCombatActive = false;
-        // Reset về đúng 10 Coin cố định + bonus coin từ magic lượt trước
+        // Reset về đúng 10 Coin cố định + bonus coin từ spell lượt trước
         economy.ResetEconomy();
 
         // Kích EndTurnShop cho tất cả unit trên sân qua TTE engine

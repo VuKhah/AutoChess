@@ -6,8 +6,8 @@ public class CardDatabase : MonoBehaviour
 {
     public static CardDatabase Instance;
 
-    private List<CardDefinition> unitList = new List<CardDefinition>();
-    private List<CardDefinition> magicList = new List<CardDefinition>();
+    private List<CardDefinition> unitList  = new List<CardDefinition>();
+    private List<CardDefinition> spellList = new List<CardDefinition>();
 
     // ==========================================
     // BẢNG TRỌNG SỐ TỶ LỆ XUẤT HIỆN THEO TIER (DROP RATES)
@@ -43,20 +43,20 @@ public class CardDatabase : MonoBehaviour
 
         CardDataWrapper data = JsonUtility.FromJson<CardDataWrapper>(jsonFile.text);
         unitList.Clear();
-        magicList.Clear();
+        spellList.Clear();
         foreach (var card in data.cards)
         {
             if (card.cardType == CardType.Unit)
                 unitList.Add(card);
-            else if (card.cardType == CardType.Magic)
-                magicList.Add(card);
+            else if (card.cardType == CardType.Spell)
+                spellList.Add(card);
         }
-        Debug.Log($"<color=green>[DATABASE]</color> Đã nạp thành công {unitList.Count + magicList.Count} lá bài.");
+        Debug.Log($"<color=green>[DATABASE]</color> Đã nạp thành công {unitList.Count + spellList.Count} lá bài.");
     }
 
     public List<CardDefinition> GetAllCards()
     {
-        return unitList.Concat(magicList).ToList();
+        return unitList.Concat(spellList).ToList();
     }
 
     // ==========================================
@@ -117,12 +117,12 @@ public class CardDatabase : MonoBehaviour
         var unit = unitList.FirstOrDefault(card => card.cardID == id);
         if (unit != null) return unit;
 
-        var magic = magicList.FirstOrDefault(card => card.cardID == id);
-        if (magic != null) return magic;
+        var spell = spellList.FirstOrDefault(card => card.cardID == id);
+        if (spell != null) return spell;
 
         return null;
     }
 
-    public List<CardDefinition> GetAllUnits() => unitList;
-    public List<CardDefinition> GetAllMagics() => magicList;
+    public List<CardDefinition> GetAllUnits()  => unitList;
+    public List<CardDefinition> GetAllSpells() => spellList;
 }

@@ -1,0 +1,370 @@
+{
+    "_legend": {
+        "_comment": "Bảng mã dùng riêng cho Spells",
+        "effect": {
+            "1":  "BuffStats         — effectValue1=ATK, effectValue2=HP",
+            "6":  "GainCoin          — effectValue1=số đồng",
+            "10": "GetRandomUnit     — effectValue1=Tier của đơn vị, targetCount=số lượng",
+            "11": "StealFromShop     — lấy 1 đơn vị ngẫu nhiên từ Shop hiện tại",
+            "12": "GainIncome        — effectValue1=lượng tăng, isPermanent=vĩnh viễn hay chỉ lượt này",
+            "13": "GetSameRealmUnit  — chọn 1 đơn vị, nhận 1 đơn vị khác cùng Tộc (không trùng)",
+            "14": "LoseLife          — effectValue1=số mạng bị mất",
+            "15": "TransferStats     — loại bỏ đơn vị được chọn, chuyển toàn bộ chỉ số cho 1 đồng minh ngẫu nhiên",
+            "16": "ConditionalCoinGain — nếu thắng trận kế tiếp, nhận effectValue1 đồng",
+            "17": "UpgradeTierUnit   — chọn 1 đơn vị tham chiếu, nâng cấp 1 đơn vị khác cùng Tộc lên +1 Tier",
+            "18": "GiveDoubleAtkAndSafeguard — nhân đôi ATK và ban Safeguard cho đơn vị được chọn",
+            "19": "ToggleTaunt       — nếu chưa có Taunt: ban Taunt + effectValue2 HP; nếu đã có Taunt: xóa Taunt + effectValue1 ATK",
+            "20": "BuffByShopTier    — ban cho đơn vị ATK và HP bằng Tier hiện tại của Shop",
+            "21": "GiveEndTurnBuff   — ban cho đơn vị khả năng nhận +effectValue1/+effectValue2 vào cuối mỗi lượt Shop"
+        },
+        "target": {
+            "2":  "RandomAlly        — 1 đồng minh ngẫu nhiên (hiện có trong đội)",
+            "3":  "AllAllies         — toàn bộ đồng minh hiện có trong đội",
+            "9":  "TribeAlliesInBattle — đồng minh cùng Tộc đang trên bàn chiến",
+            "10": "TribeAllies       — toàn bộ đồng minh cùng Tộc trong đội",
+            "12": "ChosenAlly        — đồng minh do người chơi chọn khi đánh bài",
+            "13": "RandomAlliesInBattle — targetCount đồng minh ngẫu nhiên đang trên bàn chiến"
+        },
+        "tribe": {
+            "0": "Neutral",
+            "1": "Babylon",
+            "2": "Olympus (chưa triển khai)",
+            "3": "Niles"
+        }
+    },
+    "cards": [
+        {
+            "_comment": "// ===== NEUTRAL (Tribe 0) =====",
+            "cardID": "S_01",
+            "cardName": "Ancient Coin",
+            "tribe": 0,
+            "tier": 1,
+            "cost": 1,
+            "fileName": "spell-art_01",
+            "spellEffects": [
+                {
+                    "effect": 6,
+                    "effectValue1": 1
+                }
+            ],
+            "description": "Nhận 1 đồng."
+        },
+        {
+            "cardID": "S_02",
+            "cardName": "Sharpen Blade",
+            "tribe": 0,
+            "tier": 1,
+            "cost": 1,
+            "fileName": "spell-art_02",
+            "spellEffects": [
+                {
+                    "effect": 1,
+                    "target": 12,
+                    "effectValue1": 3,
+                    "effectValue2": 0,
+                    "isPermanent": true
+                }
+            ],
+            "description": "Ban vĩnh viễn +3/+0 cho 1 đồng minh."
+        },
+        {
+            "cardID": "S_03",
+            "cardName": "Plated Armor",
+            "tribe": 0,
+            "tier": 1,
+            "cost": 1,
+            "fileName": "spell-art_03",
+            "spellEffects": [
+                {
+                    "effect": 1,
+                    "target": 12,
+                    "effectValue1": 0,
+                    "effectValue2": 3,
+                    "isTaunt": true,
+                    "isPermanent": true
+                }
+            ],
+            "description": "Ban vĩnh viễn +0/+3 và Taunt cho 1 đồng minh."
+        },
+        {
+            "cardID": "S_04",
+            "cardName": "Quick Recruit",
+            "tribe": 0,
+            "tier": 1,
+            "cost": 2,
+            "fileName": "spell-art_04",
+            "spellEffects": [
+                {
+                    "effect": 10,
+                    "effectValue1": 1,
+                    "targetCount": 1
+                }
+            ],
+            "description": "Nhận 1 đơn vị ngẫu nhiên Tier 1."
+        },
+        {
+            "cardID": "S_05",
+            "cardName": "Sanctum Heist",
+            "tribe": 0,
+            "tier": 1,
+            "cost": 2,
+            "fileName": "spell-art_05",
+            "spellEffects": [
+                {
+                    "effect": 11,
+                    "targetCount": 1
+                }
+            ],
+            "description": "Lấy 1 đơn vị ngẫu nhiên từ Shop hiện tại."
+        },
+        {
+            "cardID": "S_06",
+            "cardName": "Let's Feast",
+            "tribe": 0,
+            "tier": 1,
+            "cost": 2,
+            "fileName": "spell-art_06",
+            "spellEffects": [
+                {
+                    "effect": 1,
+                    "target": 13,
+                    "targetCount": 3,
+                    "effectValue1": 0,
+                    "effectValue2": 2,
+                    "isPermanent": false
+                }
+            ],
+            "description": "Ban +0/+2 cho 3 đồng minh ngẫu nhiên đang trên bàn chiến (chỉ trận này)."
+        },
+        {
+            "cardID": "S_07",
+            "cardName": "Balance Stance",
+            "tribe": 0,
+            "tier": 1,
+            "cost": 2,
+            "fileName": "spell-art_07",
+            "spellEffects": [
+                {
+                    "effect": 1,
+                    "target": 12,
+                    "effectValue1": 3,
+                    "effectValue2": 3,
+                    "isPermanent": true
+                }
+            ],
+            "description": "Ban vĩnh viễn +3/+3 cho 1 đồng minh."
+        },
+        {
+            "cardID": "S_08",
+            "cardName": "Trader's Trick",
+            "tribe": 0,
+            "tier": 2,
+            "cost": 1,
+            "fileName": "spell-art_08",
+            "spellEffects": [
+                {
+                    "effect": 12,
+                    "effectValue1": 2,
+                    "isPermanent": false
+                }
+            ],
+            "description": "Tăng Thu Nhập thêm 2 đến hết lượt này."
+        },
+        {
+            "cardID": "S_17",
+            "cardName": "Wager",
+            "tribe": 0,
+            "tier": 2,
+            "cost": 1,
+            "fileName": "spell-art_17",
+            "spellEffects": [
+                {
+                    "effect": 16,
+                    "effectValue1": 3
+                }
+            ],
+            "description": "Nếu thắng trận kế tiếp, nhận 3 đồng."
+        },
+        {
+            "_comment": "// ===== BABYLON (Tribe 1) =====",
+            "cardID": "S_13",
+            "cardName": "Strengthen Bond",
+            "tribe": 1,
+            "tier": 2,
+            "cost": 1,
+            "fileName": "spell-art_13",
+            "spellEffects": [
+                {
+                    "effect": 1,
+                    "target": 3,
+                    "effectValue1": 1,
+                    "effectValue2": 1,
+                    "isPermanent": true
+                }
+            ],
+            "description": "Ban vĩnh viễn +1/+1 cho toàn bộ đồng minh."
+        },
+        {
+            "cardID": "S_12",
+            "cardName": "Caishen's Knock",
+            "tribe": 1,
+            "tier": 2,
+            "cost": 2,
+            "fileName": "spell-art_12",
+            "spellEffects": [
+                {
+                    "effect": 12,
+                    "effectValue1": 1,
+                    "isPermanent": true
+                }
+            ],
+            "description": "Tăng vĩnh viễn Thu Nhập thêm 1."
+        },
+        {
+            "cardID": "S_09",
+            "cardName": "Tailored Recruit",
+            "tribe": 1,
+            "tier": 2,
+            "cost": 3,
+            "fileName": "spell-art_09",
+            "spellEffects": [
+                {
+                    "effect": 13,
+                    "target": 12
+                }
+            ],
+            "description": "Chọn 1 đơn vị, nhận 1 đơn vị khác cùng Tộc (không trùng đơn vị đã chọn)."
+        },
+        {
+            "cardID": "S_14",
+            "cardName": "Rising Spirit",
+            "tribe": 1,
+            "tier": 3,
+            "cost": 2,
+            "fileName": "spell-art_14",
+            "spellEffects": [
+                {
+                    "effect": 21,
+                    "target": 12,
+                    "effectValue1": 2,
+                    "effectValue2": 2
+                }
+            ],
+            "description": "Ban cho 1 đồng minh khả năng: cuối mỗi lượt Shop, nhận +2/+2."
+        },
+        {
+            "cardID": "S_16",
+            "cardName": "Gate of Destruction",
+            "tribe": 1,
+            "tier": 4,
+            "cost": 3,
+            "fileName": "spell-art_16",
+            "spellEffects": [
+                {
+                    "effect": 15,
+                    "target": 12
+                }
+            ],
+            "description": "Loại bỏ 1 đồng minh, chuyển toàn bộ chỉ số của nó cho 1 đồng minh ngẫu nhiên."
+        },
+        {
+            "cardID": "S_15",
+            "cardName": "Military Support",
+            "tribe": 1,
+            "tier": 5,
+            "cost": 5,
+            "fileName": "spell-art_15",
+            "spellEffects": [
+                {
+                    "effect": 10,
+                    "effectValue1": 5,
+                    "targetCount": 3
+                }
+            ],
+            "description": "Nhận 3 đơn vị ngẫu nhiên Tier 5."
+        },
+        {
+            "_comment": "// ===== OLYMPUS (Tribe 2) =====",
+            "cardID": "S_10",
+            "cardName": "Devil's Deal",
+            "tribe": 2,
+            "tier": 4,
+            "cost": 1,
+            "fileName": "spell-art_10",
+            "spellEffects": [
+                {
+                    "effect": 14,
+                    "effectValue1": 1
+                },
+                {
+                    "effect": 6,
+                    "effectValue1": 6
+                }
+            ],
+            "description": "Mất 1 Mạng, nhận 6 đồng."
+        },
+        {
+            "cardID": "S_18",
+            "cardName": "Ritual of the Realm",
+            "tribe": 2,
+            "tier": 3,
+            "cost": 3,
+            "fileName": "spell-art_18",
+            "spellEffects": [
+                {
+                    "effect": 17,
+                    "target": 12
+                }
+            ],
+            "description": "Chọn 1 đơn vị tham chiếu, nâng cấp 1 đơn vị khác cùng Tộc lên +1 Tier."
+        },
+        {
+            "cardID": "S_19",
+            "cardName": "Olympic Flame",
+            "tribe": 2,
+            "tier": 4,
+            "cost": 3,
+            "fileName": "spell-art_19",
+            "spellEffects": [
+                {
+                    "effect": 18,
+                    "target": 12
+                }
+            ],
+            "description": "Ban Nhân Đôi ATK và Safeguard cho 1 đồng minh."
+        },
+        {
+            "_comment": "// ===== NILES (Tribe 3) =====",
+            "cardID": "S_20",
+            "cardName": "Change of Heart",
+            "tribe": 3,
+            "tier": 2,
+            "cost": 2,
+            "fileName": "spell-art_20",
+            "spellEffects": [
+                {
+                    "effect": 19,
+                    "target": 12,
+                    "effectValue1": 3,
+                    "effectValue2": 5
+                }
+            ],
+            "description": "Nếu đơn vị chưa có Taunt: ban Taunt và +0/+5. Nếu đã có Taunt: xóa Taunt và ban +3/+0."
+        },
+        {
+            "cardID": "S_11",
+            "cardName": "Divine Inspiration",
+            "tribe": 3,
+            "tier": 3,
+            "cost": 2,
+            "fileName": "spell-art_11",
+            "spellEffects": [
+                {
+                    "effect": 20,
+                    "target": 12
+                }
+            ],
+            "description": "Ban cho 1 đồng minh ATK và HP bằng Tier hiện tại của Shop."
+        }
+    ]
+}

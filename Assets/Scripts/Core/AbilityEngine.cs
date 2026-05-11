@@ -283,45 +283,119 @@ public partial class AbilityEngine
         return null;
     }
 
-    public void ApplyMagicToUnit(CardInstance magic, CardInstance unit)
+    public void ApplySpellToUnit(CardInstance spell, CardInstance targetUnit)
     {
-        if (magic == null || unit == null) return;
-
-        switch (magic.Data.magicGroup)
+        if (spell == null) return;
+        if (spell.Data.spellEffects == null || spell.Data.spellEffects.Count == 0)
         {
-            case "StatBoost":
-                unit.permanentATKBonus += magic.Data.statBonusATK;
-                unit.permanentHPBonus  += magic.Data.statBonusHP;
-                break;
-
-            case "AddAbility":
-                if (magic.Data.abilities != null && magic.Data.abilities.Count > 0)
-                {
-                    if (unit.Data.abilities == null) unit.Data.abilities = new List<AbilityData>();
-                    foreach (var ab in magic.Data.abilities)
-                        if (ab != null) unit.Data.abilities.Add(ab);
-                }
-                break;
-
-            case "AddTaunt":
-                unit.isTaunt = true;
-                break;
-
-            case "RemoveTaunt":
-                unit.isTaunt = false;
-                break;
-
-            case "Economy":
-                GameManager.Instance.AddBonusCoin(1);
-                Debug.Log($"<color=yellow>[ECONOMY]</color> Đã nhận 1 vàng từ phép {magic.Data.cardName}");
-                break;
-
-            default:
-                Debug.LogWarning($"Chưa có logic xử lý cho magicGroup: {magic.Data.magicGroup}");
-                break;
+            Debug.LogWarning($"[SPELL] {spell.Data.cardName} không có spellEffects.");
+            return;
         }
 
-        unit.ResetStats();
-        Debug.Log($"<color=cyan>[MAGIC]</color> Áp dụng phép {magic.Data.cardName} lên {unit.Data.cardName}. ATK/HP mới: {unit.currentATK}/{unit.currentHP}");
+        foreach (var fx in spell.Data.spellEffects)
+            ApplySpellEffect(fx, targetUnit, spell);
+
+        if (targetUnit != null) targetUnit.ResetStats();
+        Debug.Log($"<color=cyan>[SPELL]</color> Đã dùng phép {spell.Data.cardName}{(targetUnit != null ? " lên " + targetUnit.Data.cardName : "")}.");
+    }
+
+    private void ApplySpellEffect(SpellEffectData fx, CardInstance targetUnit, CardInstance spell)
+    {
+        switch (fx.effect)
+        {
+            case 1: // BuffStats
+            {
+                var targets = ResolveSpellTargets(fx.target, fx.targetCount, targetUnit);
+                foreach (var t in targets)
+                {
+                    t.currentATK += fx.effectValue1;
+                    t.currentHP  += fx.effectValue2;
+                    if (fx.isPermanent)
+                    {
+                        t.permanentATKBonus += fx.effectValue1;
+                        t.permanentHPBonus  += fx.effectValue2;
+                        if (fx.effectValue2 > 0) t.maxHP += fx.effectValue2;
+                        if (fx.isTaunt) t.isTaunt = true;
+                    }
+                    Debug.Log($"<color=cyan>[SPELL]</color> {t.Data.cardName} nhận +{fx.effectValue1}/+{fx.effectValue2}{(fx.isTaunt ? " + Taunt" : "")}");
+                }
+                break;
+            }
+
+            case 6: // GainCoin
+                GameManager.Instance.AddCoin(fx.effectValue1);
+                Debug.Log($"<color=yellow>[SPELL]</color> Nhận {fx.effectValue1} đồng.");
+                break;
+
+            case 14: // LoseLife
+                Debug.LogWarning($"[SPELL] LoseLife chưa triển khai (effect 14): {spell.Data.cardName}");
+                break;
+
+            case 19: // ToggleTaunt
+            {
+                if (targetUnit == null) break;
+                if (targetUnit.isTaunt)
+                {
+                    targetUnit.isTaunt = false;
+                    targetUnit.currentATK           += fx.effectValue1;
+                    targetUnit.permanentATKBonus    += fx.effectValue1;
+                    Debug.Log($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: xóa Taunt + +{fx.effectValue1} ATK.");
+                }
+                else
+                {
+                    targetUnit.isTaunt = true;
+                    targetUnit.currentHP            += fx.effectValue2;
+                    targetUnit.permanentHPBonus     += fx.effectValue2;
+                    targetUnit.maxHP                += fx.effectValue2;
+                    Debug.Log($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: nhận Taunt + +{fx.effectValue2} HP.");
+                }
+                break;
+            }
+
+            default:
+                Debug.LogWarning($"[SPELL] Effect {fx.effect} của '{spell.Data.cardName}' chưa được triển khai.");
+                break;
+        }
+    }
+
+    private List<CardInstance> ResolveSpellTargets(int targetCode, int targetCount, CardInstance chosenUnit)
+    {
+        var list = new List<CardInstance>();
+        int n = Mathf.Max(targetCount, 1);
+
+        switch (targetCode)
+        {
+            case 12: // ChosenAlly
+                if (chosenUnit != null) list.Add(chosenUnit);
+                break;
+
+            case 3: // AllAllies
+            {
+                var board = GameManager.Instance?.playerBoard;
+                if (board != null) list.AddRange(board.FindAll(u => u != null && !u.IsDead));
+                break;
+            }
+
+            case 2:  // RandomAlly
+            case 13: // RandomAlliesInBattle (N ngẫu nhiên)
+            {
+                var board = GameManager.Instance?.playerBoard;
+                if (board == null) break;
+                var alive = board.FindAll(u => u != null && !u.IsDead);
+                // Fisher-Yates shuffle rồi lấy n đầu
+                for (int i = alive.Count - 1; i > 0; i--)
+                {
+                    int j = Random.Range(0, i + 1);
+                    (alive[i], alive[j]) = (alive[j], alive[i]);
+                }
+                list.AddRange(alive.GetRange(0, Mathf.Min(n, alive.Count)));
+                break;
+            }
+
+            default:
+                if (chosenUnit != null) list.Add(chosenUnit);
+                break;
+        }
+        return list;
     }
 }

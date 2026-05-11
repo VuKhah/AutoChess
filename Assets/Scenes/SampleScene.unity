@@ -1449,7 +1449,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1339451275}
-  - {fileID: 1934322732}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &663235122
@@ -2727,15 +2726,15 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
-      magicGroup: 
-      statBonusATK: 0
-      statBonusHP: 0
+      fileName: 
+      spellEffects: []
     permanentATKBonus: 0
     permanentHPBonus: 0
     growthATKBonus: 0
     growthHPBonus: 0
     currentATK: 0
     currentHP: 0
+    maxHP: 0
     slotIndex: 0
     hasRebornUsed: 0
     mergeLevel: 0
@@ -2743,7 +2742,10 @@ MonoBehaviour:
     isReborn: 0
     safeguardActive: 0
     abilityTriggerCounts: 
+    abilityEscalationBonuses: 
     consumedCardIDs: []
+    onDeathProcessed: 0
+    isBattleSpawned: 0
   - Data:
       cardID: 
       cardName: 
@@ -2758,15 +2760,15 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
-      magicGroup: 
-      statBonusATK: 0
-      statBonusHP: 0
+      fileName: 
+      spellEffects: []
     permanentATKBonus: 0
     permanentHPBonus: 0
     growthATKBonus: 0
     growthHPBonus: 0
     currentATK: 0
     currentHP: 0
+    maxHP: 0
     slotIndex: 0
     hasRebornUsed: 0
     mergeLevel: 0
@@ -2774,7 +2776,10 @@ MonoBehaviour:
     isReborn: 0
     safeguardActive: 0
     abilityTriggerCounts: 
+    abilityEscalationBonuses: 
     consumedCardIDs: []
+    onDeathProcessed: 0
+    isBattleSpawned: 0
   - Data:
       cardID: 
       cardName: 
@@ -2789,15 +2794,15 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
-      magicGroup: 
-      statBonusATK: 0
-      statBonusHP: 0
+      fileName: 
+      spellEffects: []
     permanentATKBonus: 0
     permanentHPBonus: 0
     growthATKBonus: 0
     growthHPBonus: 0
     currentATK: 0
     currentHP: 0
+    maxHP: 0
     slotIndex: 0
     hasRebornUsed: 0
     mergeLevel: 0
@@ -2805,7 +2810,10 @@ MonoBehaviour:
     isReborn: 0
     safeguardActive: 0
     abilityTriggerCounts: 
+    abilityEscalationBonuses: 
     consumedCardIDs: []
+    onDeathProcessed: 0
+    isBattleSpawned: 0
   - Data:
       cardID: 
       cardName: 
@@ -2820,15 +2828,15 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
-      magicGroup: 
-      statBonusATK: 0
-      statBonusHP: 0
+      fileName: 
+      spellEffects: []
     permanentATKBonus: 0
     permanentHPBonus: 0
     growthATKBonus: 0
     growthHPBonus: 0
     currentATK: 0
     currentHP: 0
+    maxHP: 0
     slotIndex: 0
     hasRebornUsed: 0
     mergeLevel: 0
@@ -2836,7 +2844,10 @@ MonoBehaviour:
     isReborn: 0
     safeguardActive: 0
     abilityTriggerCounts: 
+    abilityEscalationBonuses: 
     consumedCardIDs: []
+    onDeathProcessed: 0
+    isBattleSpawned: 0
   - Data:
       cardID: 
       cardName: 
@@ -2851,15 +2862,15 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
-      magicGroup: 
-      statBonusATK: 0
-      statBonusHP: 0
+      fileName: 
+      spellEffects: []
     permanentATKBonus: 0
     permanentHPBonus: 0
     growthATKBonus: 0
     growthHPBonus: 0
     currentATK: 0
     currentHP: 0
+    maxHP: 0
     slotIndex: 0
     hasRebornUsed: 0
     mergeLevel: 0
@@ -2867,7 +2878,10 @@ MonoBehaviour:
     isReborn: 0
     safeguardActive: 0
     abilityTriggerCounts: 
+    abilityEscalationBonuses: 
     consumedCardIDs: []
+    onDeathProcessed: 0
+    isBattleSpawned: 0
   - Data:
       cardID: 
       cardName: 
@@ -2882,15 +2896,15 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
-      magicGroup: 
-      statBonusATK: 0
-      statBonusHP: 0
+      fileName: 
+      spellEffects: []
     permanentATKBonus: 0
     permanentHPBonus: 0
     growthATKBonus: 0
     growthHPBonus: 0
     currentATK: 0
     currentHP: 0
+    maxHP: 0
     slotIndex: 0
     hasRebornUsed: 0
     mergeLevel: 0
@@ -2898,7 +2912,10 @@ MonoBehaviour:
     isReborn: 0
     safeguardActive: 0
     abilityTriggerCounts: 
+    abilityEscalationBonuses: 
     consumedCardIDs: []
+    onDeathProcessed: 0
+    isBattleSpawned: 0
   enemyBoard:
   - Data:
       cardID: 
@@ -2914,15 +2931,15 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
-      magicGroup: 
-      statBonusATK: 0
-      statBonusHP: 0
+      fileName: 
+      spellEffects: []
     permanentATKBonus: 0
     permanentHPBonus: 0
     growthATKBonus: 0
     growthHPBonus: 0
     currentATK: 0
     currentHP: 0
+    maxHP: 0
     slotIndex: 0
     hasRebornUsed: 0
     mergeLevel: 0
@@ -2930,7 +2947,10 @@ MonoBehaviour:
     isReborn: 0
     safeguardActive: 0
     abilityTriggerCounts: 
+    abilityEscalationBonuses: 
     consumedCardIDs: []
+    onDeathProcessed: 0
+    isBattleSpawned: 0
   - Data:
       cardID: 
       cardName: 
@@ -2945,15 +2965,15 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
-      magicGroup: 
-      statBonusATK: 0
-      statBonusHP: 0
+      fileName: 
+      spellEffects: []
     permanentATKBonus: 0
     permanentHPBonus: 0
     growthATKBonus: 0
     growthHPBonus: 0
     currentATK: 0
     currentHP: 0
+    maxHP: 0
     slotIndex: 0
     hasRebornUsed: 0
     mergeLevel: 0
@@ -2961,7 +2981,10 @@ MonoBehaviour:
     isReborn: 0
     safeguardActive: 0
     abilityTriggerCounts: 
+    abilityEscalationBonuses: 
     consumedCardIDs: []
+    onDeathProcessed: 0
+    isBattleSpawned: 0
   - Data:
       cardID: 
       cardName: 
@@ -2976,15 +2999,15 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
-      magicGroup: 
-      statBonusATK: 0
-      statBonusHP: 0
+      fileName: 
+      spellEffects: []
     permanentATKBonus: 0
     permanentHPBonus: 0
     growthATKBonus: 0
     growthHPBonus: 0
     currentATK: 0
     currentHP: 0
+    maxHP: 0
     slotIndex: 0
     hasRebornUsed: 0
     mergeLevel: 0
@@ -2992,7 +3015,10 @@ MonoBehaviour:
     isReborn: 0
     safeguardActive: 0
     abilityTriggerCounts: 
+    abilityEscalationBonuses: 
     consumedCardIDs: []
+    onDeathProcessed: 0
+    isBattleSpawned: 0
   - Data:
       cardID: 
       cardName: 
@@ -3007,15 +3033,15 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
-      magicGroup: 
-      statBonusATK: 0
-      statBonusHP: 0
+      fileName: 
+      spellEffects: []
     permanentATKBonus: 0
     permanentHPBonus: 0
     growthATKBonus: 0
     growthHPBonus: 0
     currentATK: 0
     currentHP: 0
+    maxHP: 0
     slotIndex: 0
     hasRebornUsed: 0
     mergeLevel: 0
@@ -3023,7 +3049,10 @@ MonoBehaviour:
     isReborn: 0
     safeguardActive: 0
     abilityTriggerCounts: 
+    abilityEscalationBonuses: 
     consumedCardIDs: []
+    onDeathProcessed: 0
+    isBattleSpawned: 0
   - Data:
       cardID: 
       cardName: 
@@ -3038,15 +3067,15 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
-      magicGroup: 
-      statBonusATK: 0
-      statBonusHP: 0
+      fileName: 
+      spellEffects: []
     permanentATKBonus: 0
     permanentHPBonus: 0
     growthATKBonus: 0
     growthHPBonus: 0
     currentATK: 0
     currentHP: 0
+    maxHP: 0
     slotIndex: 0
     hasRebornUsed: 0
     mergeLevel: 0
@@ -3054,7 +3083,10 @@ MonoBehaviour:
     isReborn: 0
     safeguardActive: 0
     abilityTriggerCounts: 
+    abilityEscalationBonuses: 
     consumedCardIDs: []
+    onDeathProcessed: 0
+    isBattleSpawned: 0
   - Data:
       cardID: 
       cardName: 
@@ -3069,15 +3101,15 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
-      magicGroup: 
-      statBonusATK: 0
-      statBonusHP: 0
+      fileName: 
+      spellEffects: []
     permanentATKBonus: 0
     permanentHPBonus: 0
     growthATKBonus: 0
     growthHPBonus: 0
     currentATK: 0
     currentHP: 0
+    maxHP: 0
     slotIndex: 0
     hasRebornUsed: 0
     mergeLevel: 0
@@ -3085,7 +3117,10 @@ MonoBehaviour:
     isReborn: 0
     safeguardActive: 0
     abilityTriggerCounts: 
+    abilityEscalationBonuses: 
     consumedCardIDs: []
+    onDeathProcessed: 0
+    isBattleSpawned: 0
 --- !u!224 &1032976629 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3045163549536598338, guid: 2b45526df71e4704c9ef16feffe2e617, type: 3}
@@ -5777,50 +5812,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b45526df71e4704c9ef16feffe2e617, type: 3}
---- !u!1 &1934322731
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1934322732}
-  - component: {fileID: 1934322733}
-  m_Layer: 0
-  m_Name: SanityChecker
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1934322732
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1934322731}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 654252332}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1934322733
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1934322731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 720fee8617481fc4cb541612bed05a62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectSanityChecker
 --- !u!1 &1947745234
 GameObject:
   m_ObjectHideFlags: 0

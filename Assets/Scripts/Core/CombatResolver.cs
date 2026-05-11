@@ -42,8 +42,8 @@ public class CombatResolver
         List<CardInstance> allyBoard, List<CardInstance> enemyBoard)
         => engine.TriggerAbility(trigger, source, directEnemy, allyBoard, enemyBoard);
 
-    public void ApplyMagicToUnit(CardInstance magic, CardInstance unit)
-        => engine.ApplyMagicToUnit(magic, unit);
+    public void ApplySpellToUnit(CardInstance spell, CardInstance targetUnit)
+        => engine.ApplySpellToUnit(spell, targetUnit);
 
     // ==========================================
     // COMBAT FLOW

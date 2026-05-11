@@ -45,7 +45,7 @@ using UnityEngine;
 
     public CardInstance(CardDefinition data, int slot)
     {
-        // BUG FIX: Clone abilities list để tránh AddAbility magic mutate CardDefinition chung
+        // BUG FIX: Clone abilities list để tránh AddAbility spell mutate CardDefinition chung
         this.Data = data.Clone();
         ResetStats();
         this.slotIndex = slot;

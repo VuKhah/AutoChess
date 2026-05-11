@@ -39,14 +39,29 @@ public class CardUI : MonoBehaviour
         currentInstance = instance;
 
         // --- Art ---
-        string folder  = instance.Data.cardType == CardType.Magic ? "Magic" : "Units";
-        Sprite art = Resources.Load<Sprite>($"Sprites/Cards/{folder}/{instance.Data.cardID}");
+        // Spell dùng fileName (spell-art_XX); Unit dùng cardID (U_01_Babylon)
+        bool isSpell = instance.Data.cardType == CardType.Spell;
+        string folder  = isSpell ? "Spells" : "Units";
+        string artFile = isSpell && !string.IsNullOrEmpty(instance.Data.fileName)
+                         ? instance.Data.fileName
+                         : instance.Data.cardID;
+        Sprite art = Resources.Load<Sprite>($"Sprites/Cards/{folder}/{artFile}");
         if (art != null) characterArt.sprite = art;
 
         // --- Stats ---
-        atkText.text  = instance.currentATK.ToString();
-        hpText.text   = instance.currentHP.ToString();
-        hpText.color  = instance.IsDamaged ? damagedHealthColor : normalHealthColor;
+        if (isSpell)
+        {
+            // Spell không có ATK/HP — hiện cost thay vào ô ATK, ẩn HP
+            atkText.text  = instance.Data.cost.ToString();
+            hpText.text   = "";
+            hpText.color  = normalHealthColor;
+        }
+        else
+        {
+            atkText.text  = instance.currentATK.ToString();
+            hpText.text   = instance.currentHP.ToString();
+            hpText.color  = instance.IsDamaged ? damagedHealthColor : normalHealthColor;
+        }
 
         // --- TTE Ability icon (chỉ effect của TTE, không lẫn passive) ---
         if (abilityIcon != null)

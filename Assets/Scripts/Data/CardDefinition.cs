@@ -1,7 +1,21 @@
 using System.Collections.Generic;
 
-public enum CardType { Unit, Magic }
+public enum CardType { Unit, Spell }
 public enum Tribe { None, Babylon, Olympus, Niles }
+
+[System.Serializable]
+public class SpellEffectData
+{
+    public int effect;        // 1=BuffStats, 6=GainCoin, 10-21: xem _legend trong CardsSpells.json
+    public int target;        // 2=RandomAlly, 3=AllAllies, 12=ChosenAlly, 13=RandomAlliesInBattle
+    public int targetCount;
+    public int effectValue1;
+    public int effectValue2;
+    public bool isPermanent;
+    public bool isTaunt;
+    public bool isReborn;
+    public bool isSafeguard;
+}
 
 [System.Serializable]
 public class CardDefinition
@@ -24,17 +38,17 @@ public class CardDefinition
 
     public string description;
 
-    // Magic fields — magicGroup là string để JSON dùng tên trực tiếp (StatBoost, AddAbility, AddTaunt, Economy)
-    public string magicGroup;
-    public int statBonusATK;
-    public int statBonusHP;
+    // Spell fields
+    public string fileName;
+    public List<SpellEffectData> spellEffects;
 
     // BUG FIX: Mỗi CardInstance phải có bản sao abilities riêng,
-    // tránh AddAbility magic mutate CardDefinition chung trong database.
+    // tránh AddAbility spell mutate CardDefinition chung trong database.
     public CardDefinition Clone()
     {
         var c = (CardDefinition)MemberwiseClone();
-        c.abilities = abilities != null ? new List<AbilityData>(abilities) : null;
+        c.abilities     = abilities     != null ? new List<AbilityData>(abilities)         : null;
+        c.spellEffects  = spellEffects  != null ? new List<SpellEffectData>(spellEffects)  : null;
         return c;
     }
 }

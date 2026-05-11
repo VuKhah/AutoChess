@@ -20,10 +20,10 @@ public class CardSlot : MonoBehaviour, IDropHandler
         // 2. Kiểm tra an ninh: Không cho phép tương tác với sân đối thủ
         if (this.slotType == SlotType.EnemyBoard) return;
 
-        // 3. XỬ LÝ RIÊNG CHO BÀI PHÉP (MAGIC)
-        if (draggedUI.currentInstance.Data.cardType == CardType.Magic) // 1 là Magic
+        // 3. XỬ LÝ RIÊNG CHO BÀI PHÉP (SPELL)
+        if (draggedUI.currentInstance.Data.cardType == CardType.Spell)
         {
-            HandleMagicDrop(draggedCard, draggedUI, sourceSlot);
+            HandleSpellDrop(draggedCard, draggedUI, sourceSlot);
             return;
         }
 
@@ -31,7 +31,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
         HandleUnitDrop(draggedCard, draggedUI, sourceSlot);
     }
 
-    private void HandleMagicDrop(CardDraggable magicCard, CardUI magicUI, CardSlot sourceSlot)
+    private void HandleSpellDrop(CardDraggable spellCard, CardUI spellUI, CardSlot sourceSlot)
     {
         // Tìm xem ô này có lính (Unit) nào đang đứng không
         CardUI targetUnitUI = GetComponentInChildren<CardUI>();
@@ -42,32 +42,32 @@ public class CardSlot : MonoBehaviour, IDropHandler
             // Nếu mua từ Shop thì phải trừ tiền trước
             if (sourceSlot != null && sourceSlot.slotType == SlotType.Shop)
             {
-                if (!GameManager.Instance.TryBuyCard(magicUI.currentInstance.Data.cost)) return;
+                if (!GameManager.Instance.TryBuyCard(spellUI.currentInstance.Data.cost)) return;
             }
 
             // Kích hoạt hiệu ứng
-            GameManager.Instance.resolver.ApplyMagicToUnit(magicUI.currentInstance, targetUnitUI.currentInstance);
+            GameManager.Instance.resolver.ApplySpellToUnit(spellUI.currentInstance, targetUnitUI.currentInstance);
 
             // Cập nhật lại hiển thị cho Unit (để nhảy số ATK/HP mới)
             targetUnitUI.Setup(targetUnitUI.currentInstance);
 
             // Xóa lá bài phép sau khi dùng
-            Destroy(magicCard.gameObject);
-            Debug.Log("<color=purple>Magic:</color> Đã sử dụng phép lên " + targetUnitUI.currentInstance.Data.cardName);
+            Destroy(spellCard.gameObject);
+            Debug.Log("<color=purple>Spell:</color> Đã sử dụng phép lên " + targetUnitUI.currentInstance.Data.cardName);
         }
         // TH 2: Thả bài phép vào ô Hand (để mua về cất túi hoặc sắp xếp túi)
         else if (this.slotType == SlotType.Hand && this.transform.childCount == 0)
         {
             if (sourceSlot != null && sourceSlot.slotType == SlotType.Shop)
             {
-                if (GameManager.Instance.TryBuyCard(magicUI.currentInstance.Data.cost))
+                if (GameManager.Instance.TryBuyCard(spellUI.currentInstance.Data.cost))
                 {
-                    magicCard.parentReturnTo = this.transform;
+                    spellCard.parentReturnTo = this.transform;
                 }
             }
             else
             {
-                magicCard.parentReturnTo = this.transform;
+                spellCard.parentReturnTo = this.transform;
             }
         }
         // TH 3: Thả bài phép vào ô Board trống -> KHÔNG CHO PHÉP

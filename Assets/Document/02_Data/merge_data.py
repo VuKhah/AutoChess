@@ -21,6 +21,29 @@ def load_cards_from_file(path: Path):
     return []
 
 
+def normalize_card(card: dict) -> dict:
+    """
+    Chuẩn hóa card trước khi merge:
+    1. Xóa key _xxx (metadata nội bộ, không cần trong production JSON).
+    2. "ability": {...}  →  "abilities": [{...}]
+       Unity JsonUtility chỉ deserialize List<AbilityData> abilities (plural array).
+       File nguồn Babylon dùng singular object → abilities = null → ability không fire.
+    3. Card có spellEffects mà thiếu cardType → gán cardType = 1 (Spell).
+       Đảm bảo CardDatabase phân loại đúng dù file nguồn không khai báo tường minh.
+    """
+    result = {k: v for k, v in card.items() if not k.startswith("_")}
+
+    if "ability" in result and "abilities" not in result:
+        ability = result.pop("ability")
+        if isinstance(ability, dict):
+            result["abilities"] = [ability]
+
+    if "spellEffects" in result and "cardType" not in result:
+        result["cardType"] = 1
+
+    return result
+
+
 def merge_files(input_files, output_file: Path):
     all_cards = []
     duplicates = []
@@ -32,16 +55,16 @@ def merge_files(input_files, output_file: Path):
             print(f"[WARN] Input file not found: {p}")
             continue
         cards = load_cards_from_file(p)
-        for c in cards:
-            cid = c.get("cardID")
+        for raw in cards:
+            cid = raw.get("cardID")
             if cid is None:
-                print(f"[WARN] Card without cardID in {p}: {c}")
+                print(f"[WARN] Card without cardID in {p}: {raw}")
                 continue
             if cid in seen:
                 duplicates.append((cid, p))
                 continue
             seen.add(cid)
-            all_cards.append(c)
+            all_cards.append(normalize_card(raw))
 
     if duplicates:
         print(f"Found {len(duplicates)} duplicate cardID(s). First occurrences kept, duplicates skipped:")
@@ -57,7 +80,7 @@ def merge_files(input_files, output_file: Path):
 
 
 def main():
-    # merge CardsBabylons.json CardsNiles.json CardsMagic.json -o CardsData.json
+    # merge CardsBabylons.json CardsNiles.json CardsSpells.json -o ../../Resources/CardsData.json
     parser = argparse.ArgumentParser(description="Merge JSON card files into a single CardsData.json")
     parser.add_argument("input_files", nargs="+", help="Input JSON files to merge")
     parser.add_argument("-o", "--output", required=True, help="Output file path (e.g., CardsData.json)")
@@ -69,4 +92,4 @@ if __name__ == '__main__':
     main()
 
 
-#python merge_data.py CardsBabylons.json CardsNiles.json CardsMagic.json -o CardsData.json
+#python merge_data.py CardsBabylons.json CardsNiles.json CardsSpells.json -o ../../Resources/CardsData.json
