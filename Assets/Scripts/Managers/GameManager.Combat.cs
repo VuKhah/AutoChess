@@ -114,9 +114,11 @@ public partial class GameManager
             else
             {
                 GameObject go = Instantiate(cardPrefab, slots[i]);
-                go.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-                go.transform.localScale = Vector3.one;
+                RectTransform cardRect = go.GetComponent<RectTransform>();
+                CardSlotFitter.FitToSlot(cardRect, slots[i]);
+                StartCoroutine(FitCardAfterLayout(cardRect, slots[i]));
                 go.GetComponent<CardUI>().Setup(unit);
+                go.GetComponent<CardVisuals>()?.SetBoardPose();
                 Debug.Log($"<color=green>[UI]</color> Spawn UI cho unit triệu hồi: {unit.Data.cardName} tại slot {i}");
             }
         }

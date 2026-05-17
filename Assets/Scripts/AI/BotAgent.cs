@@ -4,7 +4,7 @@ public class BotAgent
 {
     public Chromosome brain;
     public EconomyManager economy;
-    public List<CardInstance> board = new List<CardInstance>(new CardInstance[6]);
+    public List<CardInstance> board = new List<CardInstance>(new CardInstance[GameManager.BoardSlotCount]);
 
     public BotAgent(Chromosome brain)
     {

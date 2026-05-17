@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,9 +40,18 @@ public partial class GameManager
     private void CreateCardInSlot(CardDefinition data, Transform slot)
     {
         GameObject cardObj = Instantiate(cardPrefab, slot);
-        cardObj.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-        cardObj.transform.localScale = Vector3.one;
+        RectTransform cardRect = cardObj.GetComponent<RectTransform>();
+        CardSlotFitter.FitToSlot(cardRect, slot);
+        StartCoroutine(FitCardAfterLayout(cardRect, slot));
         cardObj.GetComponent<CardUI>().Setup(new CardInstance(data, 0));
+        cardObj.GetComponent<CardVisuals>()?.SetUprightPose();
+    }
+
+    private IEnumerator FitCardAfterLayout(RectTransform cardRect, Transform slot)
+    {
+        yield return null;
+        CardSlotFitter.FitToSlot(cardRect, slot);
+        cardRect.GetComponent<CardVisuals>()?.RefreshSettledScale();
     }
 
     public bool TryBuyCard(int cost)

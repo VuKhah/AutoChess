@@ -40,9 +40,11 @@ public partial class GameManager
             unit.ResetStats();
 
             GameObject go = Instantiate(cardPrefab, playerSlots[slotIdx]);
-            go.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-            go.transform.localScale = Vector3.one;
+            RectTransform cardRect = go.GetComponent<RectTransform>();
+            CardSlotFitter.FitToSlot(cardRect, playerSlots[slotIdx]);
+            StartCoroutine(FitCardAfterLayout(cardRect, playerSlots[slotIdx]));
             go.GetComponent<CardUI>().Setup(unit);
+            go.GetComponent<CardVisuals>()?.SetBoardPose();
         }
     }
 
@@ -91,10 +93,12 @@ public partial class GameManager
             CardInstance unit = enemyBot.board[i];
             if (unit == null) continue;
             GameObject cardObj = Instantiate(cardPrefab, enemySlots[i]);
-            cardObj.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-            cardObj.transform.localScale = Vector3.one;
+            RectTransform cardRect = cardObj.GetComponent<RectTransform>();
+            CardSlotFitter.FitToSlot(cardRect, enemySlots[i]);
+            StartCoroutine(FitCardAfterLayout(cardRect, enemySlots[i]));
             if (cardObj.TryGetComponent<CardDraggable>(out var drg)) drg.enabled = false;
             cardObj.GetComponent<CardUI>().Setup(new CardInstance(unit.Data, i));
+            cardObj.GetComponent<CardVisuals>()?.SetBoardPose();
         }
     }
 
@@ -106,10 +110,12 @@ public partial class GameManager
         {
             CardDefinition data = allUnits[Random.Range(0, allUnits.Count)];
             GameObject cardObj = Instantiate(cardPrefab, enemySlots[i]);
-            cardObj.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-            cardObj.transform.localScale = Vector3.one;
+            RectTransform cardRect = cardObj.GetComponent<RectTransform>();
+            CardSlotFitter.FitToSlot(cardRect, enemySlots[i]);
+            StartCoroutine(FitCardAfterLayout(cardRect, enemySlots[i]));
             if (cardObj.TryGetComponent<CardDraggable>(out var drg)) drg.enabled = false;
             cardObj.GetComponent<CardUI>().Setup(new CardInstance(data, i));
+            cardObj.GetComponent<CardVisuals>()?.SetBoardPose();
         }
     }
 }

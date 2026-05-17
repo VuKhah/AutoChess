@@ -3,6 +3,8 @@ using UnityEngine;
 
 public partial class GameManager : MonoBehaviour
 {
+    public const int BoardSlotCount = 7;
+
     public static GameManager Instance;
 
     [Header("Chỉ số Người chơi")]
@@ -50,10 +52,23 @@ public partial class GameManager : MonoBehaviour
 
     public CombatResolver resolver = new CombatResolver();
 
-    public List<CardInstance> playerBoard = new List<CardInstance>(new CardInstance[6]);
-    public List<CardInstance> enemyBoard  = new List<CardInstance>(new CardInstance[6]);
+    public List<CardInstance> playerBoard = new List<CardInstance>(new CardInstance[BoardSlotCount]);
+    public List<CardInstance> enemyBoard  = new List<CardInstance>(new CardInstance[BoardSlotCount]);
 
-    private void Awake() => Instance = this;
+    private void Awake()
+    {
+        Instance = this;
+        EnsureBoardCapacity(playerBoard);
+        EnsureBoardCapacity(enemyBoard);
+    }
+
+    private static void EnsureBoardCapacity(List<CardInstance> board)
+    {
+        while (board.Count < BoardSlotCount)
+            board.Add(null);
+        while (board.Count > BoardSlotCount)
+            board.RemoveAt(board.Count - 1);
+    }
 
     public void SetDifficulty(string difficulty)
     {

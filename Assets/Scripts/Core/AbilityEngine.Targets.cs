@@ -67,7 +67,7 @@ public partial class AbilityEngine
 
             case TargetType.RightAlly:
                 int rightIndex = source.slotIndex + 1;
-                if (rightIndex < 6)
+                if (rightIndex < allyBoard.Count)
                 {
                     CardInstance rightUnit = allyBoard[rightIndex];
                     if (rightUnit != null && !rightUnit.IsDead) validTargets.Add(rightUnit);

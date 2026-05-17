@@ -10,6 +10,10 @@ public class UIManager : MonoBehaviour
     [Header("Các Panel chính")]
     public GameObject shopPanel;
     public GameObject enemyBoardPanel;
+    public GameObject handPanel;
+    public Image backgroundImage;
+    public Sprite shopPhaseBackground;
+    public Sprite combatPhaseBackground;
 
     [Header("Chỉ số hiển thị")]
     public TextMeshProUGUI playerHPText;
@@ -47,9 +51,9 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         // Gán sự kiện cho các nút bấm
-        actionButton.onClick.AddListener(OnActionPressed);
-        rollButton.onClick.AddListener(OnRollPressed);
-        lockButton.onClick.AddListener(OnLockPressed);
+        actionButton?.onClick.AddListener(OnActionPressed);
+        rollButton?.onClick.AddListener(OnRollPressed);
+        lockButton?.onClick.AddListener(OnLockPressed);
         if (restartButton != null)
             restartButton.onClick.AddListener(() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex));
         if (endGamePanel != null)
@@ -66,9 +70,13 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void UpdateStats(int hp, int cups, int coins)
     {
-        playerHPText.text = hp.ToString();
+        if (playerHPText != null)
+            playerHPText.text = hp.ToString();
 
         // Nếu đang trong trận đấu thì hiện Cup, nếu ở Shop thì hiện Coin
+        if (resourceText == null)
+            return;
+
         if (GameManager.Instance.isCombatActive)
         {
             resourceText.text = cups.ToString();
@@ -87,17 +95,26 @@ public class UIManager : MonoBehaviour
         // 1. Chuyển đổi Panel
         shopPanel.SetActive(!isCombat);
         enemyBoardPanel.SetActive(isCombat);
+        if (handPanel != null)
+            handPanel.SetActive(!isCombat);
+        if (backgroundImage != null)
+            backgroundImage.sprite = isCombat ? combatPhaseBackground : shopPhaseBackground;
+
+        BattlePhaseLayout.Instance?.ApplyPhase(isCombat);
 
         // 2. Chuyển đổi Icon và Text tài nguyên
         if (resourceIcon != null)
             resourceIcon.sprite = isCombat ? GameManager.Instance.cupIcon : GameManager.Instance.coinIcon;
 
         // 3. Ẩn/Hiện các nút chức năng Shop
-        rollButton.gameObject.SetActive(!isCombat);
-        lockButton.gameObject.SetActive(!isCombat);
+        if (rollButton != null)
+            rollButton.gameObject.SetActive(!isCombat);
+        if (lockButton != null)
+            lockButton.gameObject.SetActive(!isCombat);
 
         // 4. Thay đổi nội dung nút hành động chính
-        actionText.text = isCombat ? "LƯỢT TIẾP" : "BẮT ĐẦU";
+        if (actionText != null)
+            actionText.text = isCombat ? "LƯỢT TIẾP" : "BẮT ĐẦU";
 
         // Cập nhật lại chỉ số ngay lập tức để tránh bị trễ hiển thị
         UpdateStats(GameManager.Instance.playerHP, GameManager.Instance.playerCups, GameManager.Instance.playerCoins);
@@ -147,9 +164,9 @@ public class UIManager : MonoBehaviour
     {
         if (endGamePanel != null) endGamePanel.SetActive(true);
         if (endGameText  != null) endGameText.text = message;
-        actionButton.interactable = false;
-        rollButton.interactable   = false;
-        lockButton.interactable   = false;
+        if (actionButton != null) actionButton.interactable = false;
+        if (rollButton != null) rollButton.interactable = false;
+        if (lockButton != null) lockButton.interactable = false;
     }
 
     public void ShowVictory()  => ShowEndGame("CHIẾN THẮNG!");
