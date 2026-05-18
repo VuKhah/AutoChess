@@ -58,7 +58,8 @@ public class CombatResolver
         ApplyTribeSynergies(pBoard);
         ApplyTribeSynergies(eBoard);
 
-        for (int i = 0; i < 6; i++)
+        int setupSlotCount = Mathf.Min(pBoard.Count, eBoard.Count);
+        for (int i = 0; i < setupSlotCount; i++)
         {
             if (pBoard[i] != null && !pBoard[i].IsDead)
             {
@@ -129,14 +130,15 @@ public class CombatResolver
 
     // ==========================================
     // ATTACK STACK BUILDER
-    // Push ngược (slot 5→0), enemy trước player mỗi slot
+    // Push ngược (slot cuối→0), enemy trước player mỗi slot
     // → Pop ra thứ tự xen kẽ: P[0], E[0], P[1], E[1], ... (công bằng giữa 2 phe)
     // ==========================================
 
     private Stack<AttackIntent> BuildAttackStack(List<CardInstance> pBoard, List<CardInstance> eBoard)
     {
         var stack = new Stack<AttackIntent>();
-        for (int i = 5; i >= 0; i--)
+        int slotCount = Mathf.Min(pBoard.Count, eBoard.Count);
+        for (int i = slotCount - 1; i >= 0; i--)
         {
             if (eBoard[i] != null && !eBoard[i].IsDead && eBoard[i].currentATK > 0)
             {
@@ -222,7 +224,8 @@ public class CombatResolver
 
     private void ScanAllBoardsForNewDeaths(List<CardInstance> pBoard, List<CardInstance> eBoard)
     {
-        for (int i = 0; i < 6; i++)
+        int slotCount = Mathf.Min(pBoard.Count, eBoard.Count);
+        for (int i = 0; i < slotCount; i++)
         {
             if (pBoard[i] != null && pBoard[i].IsDead && !pBoard[i].onDeathProcessed)
                 RegisterDeath(pBoard[i], pBoard, eBoard);
@@ -362,31 +365,60 @@ public class CombatResolver
 
     private CardInstance FindTarget(List<CardInstance> board, int prefSlot)
     {
-        // Kiểm tra xem bên địch có unit nào đang Taunt không
-        bool hasTaunt = board.Exists(u => u != null && !u.IsDead && u.isTaunt);
+        // Chỉ unit "lộ ra" mới có thể bị chọn làm mục tiêu.
+        // Slot sau (index lẻ: 1,3,5) bị che bởi 2 slot trước kề bên.
+        bool hasTaunt = false;
+        for (int i = 0; i < board.Count; i++)
+        {
+            if (IsAttackableTarget(board, i) && board[i].isTaunt)
+            {
+                hasTaunt = true;
+                break;
+            }
+        }
 
-        // Ripple Search: loang từ prefSlot ra 2 bên
-        // Nếu có Taunt → chỉ xét Taunt units (tìm Taunt GẦN NHẤT, không phải đầu list)
-        // Không có Taunt → xét tất cả unit còn sống
-        for (int d = 0; d < 6; d++)
+        // Ripple Search: loang từ prefSlot ra 2 bên trên các mục tiêu đang lộ ra.
+        // Nếu có Taunt hợp lệ -> chỉ xét Taunt; nếu không -> xét mọi unit hợp lệ còn sống.
+        for (int d = 0; d < board.Count; d++)
         {
             int left  = prefSlot - d;
             int right = prefSlot + d;
 
-            if (left >= 0 && left < board.Count)
+            if (IsAttackableTarget(board, left))
             {
                 var u = board[left];
-                if (u != null && !u.IsDead && (!hasTaunt || u.isTaunt)) return u;
+                if (!hasTaunt || u.isTaunt) return u;
             }
 
             // d > 0: tránh check prefSlot lần 2 (left == right khi d=0)
-            if (d > 0 && right >= 0 && right < board.Count)
+            if (d > 0 && IsAttackableTarget(board, right))
             {
                 var u = board[right];
-                if (u != null && !u.IsDead && (!hasTaunt || u.isTaunt)) return u;
+                if (!hasTaunt || u.isTaunt) return u;
             }
         }
         return null;
+    }
+
+    private bool IsAttackableTarget(List<CardInstance> board, int slot)
+    {
+        if (slot < 0 || slot >= board.Count) return false;
+
+        var unit = board[slot];
+        if (unit == null || unit.IsDead) return false;
+
+        // Hàng trước: 1,3,5,7 theo cách người chơi nhìn (index chẵn trong code).
+        if (slot % 2 == 0) return true;
+
+        // Hàng sau: chỉ lộ ra khi cả 2 unit hàng trước kề bên đã chết hoặc trống.
+        return !IsAlive(board, slot - 1) && !IsAlive(board, slot + 1);
+    }
+
+    private bool IsAlive(List<CardInstance> board, int slot)
+    {
+        if (slot < 0 || slot >= board.Count) return false;
+        var unit = board[slot];
+        return unit != null && !unit.IsDead;
     }
 
     // ==========================================

@@ -89,7 +89,8 @@ public class CardUI : MonoBehaviour
         // --- Tier icon ---
         if (tierIcon != null)
         {
-            Sprite tSprite = Resources.Load<Sprite>("Sprites/Icons/Tiers/Tier_" + instance.Data.tier);
+            int currentTier = Mathf.Clamp(instance.mergeLevel + 1, 1, 6);
+            Sprite tSprite = Resources.Load<Sprite>("Sprites/Icons/Tiers/Tier_" + currentTier);
             tierIcon.sprite = tSprite;
             tierIcon.gameObject.SetActive(tSprite != null);
         }
