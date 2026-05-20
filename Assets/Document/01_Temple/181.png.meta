@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f919f5ff96439d44c95281a76dccac1e
+guid: 5deb2ed4443f65d41bb2376ab8d7c429
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1124395868389791864
-    second: Shop Phase (Back)_0
+      213: 8019849068057471754
+    second: 181_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,12 +100,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Shop Phase (Back)_0
+      name: 181_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1536
+        width: 789
         height: 1024
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 887a5bd3ae75560f0800000000000000
-      internalID: -1124395868389791864
+      spriteID: a0b20d58c3a3c4f60800000000000000
+      internalID: 8019849068057471754
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Shop Phase (Back)_0: -1124395868389791864
+      181_0: 8019849068057471754
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

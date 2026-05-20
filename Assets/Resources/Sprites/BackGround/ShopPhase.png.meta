@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 70285b52c0398dd47b7b16df33c1c231
+guid: ca1d8887aebf1234d8866f142d7aed64
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2700869425407883955
-    second: Safeguard_0
+      213: -7178717042424286819
+    second: ShopPhase_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Safeguard_0
+      name: ShopPhase_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 190
-        height: 190
+        width: 1536
+        height: 1024
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3ba762ebe6a6b7520800000000000000
-      internalID: 2700869425407883955
+      spriteID: d91f14762e2106c90800000000000000
+      internalID: -7178717042424286819
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Safeguard_0: 2700869425407883955
+      ShopPhase_0: -7178717042424286819
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
