@@ -130,16 +130,19 @@ public class CombatResolver
 
     // ==========================================
     // ATTACK STACK BUILDER
-    // Push ngược (slot cuối→0), enemy trước player mỗi slot
-    // → Pop ra thứ tự xen kẽ: P[0], E[0], P[1], E[1], ... (công bằng giữa 2 phe)
+    // Thứ tự tấn công: frontline (slot 1,3,5,7 = index 0,2,4,6) trước, backline (slot 2,4,6 = index 1,3,5) sau
+    // Push ngược attackOrder để khi pop ra đúng thứ tự: P[0],E[0], P[2],E[2], P[4],E[4], P[6],E[6], P[1],E[1], P[3],E[3], P[5],E[5]
     // ==========================================
 
     private Stack<AttackIntent> BuildAttackStack(List<CardInstance> pBoard, List<CardInstance> eBoard)
     {
         var stack = new Stack<AttackIntent>();
         int slotCount = Mathf.Min(pBoard.Count, eBoard.Count);
-        for (int i = slotCount - 1; i >= 0; i--)
+        int[] attackOrder = { 0, 2, 4, 6, 1, 3, 5 };
+        for (int j = attackOrder.Length - 1; j >= 0; j--)
         {
+            int i = attackOrder[j];
+            if (i >= slotCount) continue;
             if (eBoard[i] != null && !eBoard[i].IsDead && eBoard[i].currentATK > 0)
             {
                 CardInstance target = FindTarget(pBoard, i);
