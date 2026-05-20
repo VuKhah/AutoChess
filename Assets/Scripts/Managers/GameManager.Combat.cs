@@ -70,24 +70,37 @@ public partial class GameManager
     private IEnumerator VisualizeAction(CombatAction action)
     {
         CardVisuals attackerVis = (action.isPlayerAttacking ? playerSlots : enemySlots)[action.attackerIdx].GetComponentInChildren<CardVisuals>(true);
-        CardVisuals targetVis   = (action.isPlayerAttacking ? enemySlots  : playerSlots)[action.targetIdx].GetComponentInChildren<CardVisuals>(true);
+        CardVisuals targetVis = (action.isPlayerAttacking ? enemySlots : playerSlots)[action.targetIdx].GetComponentInChildren<CardVisuals>(true);
 
         if (attackerVis == null || targetVis == null) yield break;
-
-        Vector3 impactPos = (attackerVis.transform.position + targetVis.transform.position) / 2;
-        yield return StartCoroutine(attackerVis.AttackAnimation(impactPos, 0.12f));
 
         CardUI atkUI = attackerVis.GetComponent<CardUI>();
         CardUI tarUI = targetVis.GetComponent<CardUI>();
 
-        atkUI.currentInstance.currentHP = action.atkHPAfter;
-        tarUI.currentInstance.currentHP = action.defHPAfter;
+        // Kiểm tra unit ở slot có đúng là unit trong action không.
+        // Nếu unit triệu hồi đã thế chỗ unit gốc (SpawnMissingBoardUI gán trước visualization),
+        // bỏ qua HP update + DieAnimation cho phía đó để tránh ẩn card unit triệu hồi.
+        bool atkMatch = atkUI.currentInstance?.Data?.cardName == action.attackerName;
+        bool defMatch = tarUI.currentInstance?.Data?.cardName == action.targetName;
 
-        atkUI.Setup(atkUI.currentInstance);
-        tarUI.Setup(tarUI.currentInstance);
+        if (atkMatch)
+        {
+            Vector3 impactPos = (attackerVis.transform.position + targetVis.transform.position) / 2;
+            yield return StartCoroutine(attackerVis.AttackAnimation(impactPos, 0.12f));
+        }
 
-        if (atkUI.currentInstance.IsDead) StartCoroutine(attackerVis.DieAnimation());
-        if (tarUI.currentInstance.IsDead) StartCoroutine(targetVis.DieAnimation());
+        if (atkMatch)
+        {
+            atkUI.currentInstance.currentHP = action.atkHPAfter;
+            atkUI.Setup(atkUI.currentInstance);
+            if (atkUI.currentInstance.IsDead) StartCoroutine(attackerVis.DieAnimation());
+        }
+        if (defMatch)
+        {
+            tarUI.currentInstance.currentHP = action.defHPAfter;
+            tarUI.Setup(tarUI.currentInstance);
+            if (tarUI.currentInstance.IsDead) StartCoroutine(targetVis.DieAnimation());
+        }
 
         yield return new WaitForSeconds(0.2f);
     }
@@ -96,7 +109,7 @@ public partial class GameManager
     private void SpawnMissingBoardUI()
     {
         SpawnMissingOnSide(playerBoard, playerSlots);
-        SpawnMissingOnSide(enemyBoard,  enemySlots);
+        SpawnMissingOnSide(enemyBoard, enemySlots);
     }
 
     private void SpawnMissingOnSide(List<CardInstance> board, Transform[] slots)
