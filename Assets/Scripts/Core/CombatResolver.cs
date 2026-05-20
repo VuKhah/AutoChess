@@ -365,39 +365,30 @@ public class CombatResolver
 
     private CardInstance FindTarget(List<CardInstance> board, int prefSlot)
     {
-        // Chỉ unit "lộ ra" mới có thể bị chọn làm mục tiêu.
-        // Slot sau (index lẻ: 1,3,5) bị che bởi 2 slot trước kề bên.
-        bool hasTaunt = false;
-        for (int i = 0; i < board.Count; i++)
-        {
-            if (IsAttackableTarget(board, i) && board[i].isTaunt)
-            {
-                hasTaunt = true;
-                break;
-            }
-        }
+        // Taunt bỏ qua bảo vệ frontline — bất kỳ unit Taunt nào còn sống đều kéo toàn bộ fire.
+        // (Frontline trống hay không không quan trọng khi địch có Taunt.)
+        bool hasTaunt = board.Exists(u => u != null && !u.IsDead && u.isTaunt);
 
-        // Ripple Search: loang từ prefSlot ra 2 bên trên các mục tiêu đang lộ ra.
-        // Nếu có Taunt hợp lệ -> chỉ xét Taunt; nếu không -> xét mọi unit hợp lệ còn sống.
+        // Ripple search từ prefSlot ra 2 bên:
+        // - Taunt mode : nhắm unit Taunt gần nhất (bỏ qua frontline shield)
+        // - Normal mode: nhắm unit exposed gần nhất (frontline phải quang trước)
         for (int d = 0; d < board.Count; d++)
         {
             int left  = prefSlot - d;
             int right = prefSlot + d;
 
-            if (IsAttackableTarget(board, left))
-            {
-                var u = board[left];
-                if (!hasTaunt || u.isTaunt) return u;
-            }
-
-            // d > 0: tránh check prefSlot lần 2 (left == right khi d=0)
-            if (d > 0 && IsAttackableTarget(board, right))
-            {
-                var u = board[right];
-                if (!hasTaunt || u.isTaunt) return u;
-            }
+            if (IsValidTarget(board, left,  hasTaunt)) return board[left];
+            if (d > 0 && IsValidTarget(board, right, hasTaunt)) return board[right];
         }
         return null;
+    }
+
+    private bool IsValidTarget(List<CardInstance> board, int slot, bool tauntMode)
+    {
+        if (slot < 0 || slot >= board.Count) return false;
+        var u = board[slot];
+        if (u == null || u.IsDead) return false;
+        return tauntMode ? u.isTaunt : IsAttackableTarget(board, slot);
     }
 
     private bool IsAttackableTarget(List<CardInstance> board, int slot)

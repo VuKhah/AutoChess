@@ -4,26 +4,28 @@ public class BattlePhaseLayout : MonoBehaviour
 {
     public static BattlePhaseLayout Instance;
 
+    // Index chẵn (0,2,4,6) = frontline (slot 1,3,5,7 theo cách người chơi nhìn)
+    // Index lẻ  (1,3,5)   = backline  (slot 2,4,6)  — lùi ra sau, nằm giữa 2 frontline kề bên
     private readonly Vector2[] playerCombatAnchors =
     {
-        new Vector2(0.342f, 0.494f),
-        new Vector2(0.445f, 0.494f),
-        new Vector2(0.552f, 0.494f),
-        new Vector2(0.662f, 0.494f),
-        new Vector2(0.390f, 0.370f),
-        new Vector2(0.500f, 0.370f),
-        new Vector2(0.607f, 0.370f),
+        new Vector2(0.342f, 0.494f),  // [0] frontline
+        new Vector2(0.394f, 0.370f),  // [1] backline  (giữa [0] và [2])
+        new Vector2(0.445f, 0.494f),  // [2] frontline
+        new Vector2(0.499f, 0.370f),  // [3] backline  (giữa [2] và [4])
+        new Vector2(0.552f, 0.494f),  // [4] frontline
+        new Vector2(0.607f, 0.370f),  // [5] backline  (giữa [4] và [6])
+        new Vector2(0.662f, 0.494f),  // [6] frontline
     };
 
     private readonly Vector2[] enemyCombatAnchors =
     {
-        new Vector2(0.342f, 0.714f),
-        new Vector2(0.445f, 0.714f),
-        new Vector2(0.552f, 0.714f),
-        new Vector2(0.662f, 0.714f),
-        new Vector2(0.396f, 0.846f),
-        new Vector2(0.500f, 0.846f),
-        new Vector2(0.604f, 0.846f),
+        new Vector2(0.342f, 0.714f),  // [0] frontline
+        new Vector2(0.394f, 0.846f),  // [1] backline  (giữa [0] và [2])
+        new Vector2(0.445f, 0.714f),  // [2] frontline
+        new Vector2(0.499f, 0.846f),  // [3] backline  (giữa [2] và [4])
+        new Vector2(0.552f, 0.714f),  // [4] frontline
+        new Vector2(0.607f, 0.846f),  // [5] backline  (giữa [4] và [6])
+        new Vector2(0.662f, 0.714f),  // [6] frontline
     };
 
     private RectTransform[] playerSlots;
