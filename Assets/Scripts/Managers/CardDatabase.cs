@@ -62,31 +62,35 @@ public class CardDatabase : MonoBehaviour
     // ==========================================
     // LOGIC SHOP: ROLL THEO TRỌNG SỐ (WEIGHTED RANDOM)
     // ==========================================
-    public List<CardDefinition> GetRandomShop(int count, int currentShopLevel)
+    public List<CardDefinition> GetRandomUnitShop(int count, int currentShopLevel)
     {
         List<CardDefinition> shop = new List<CardDefinition>();
-        var allCards = GetAllCards();
-
         for (int i = 0; i < count; i++)
         {
-            // 1. Roll xem slot này sẽ ra bài Tier mấy
             int rolledTier = RollTier(currentShopLevel);
-
-            // 2. Lọc danh sách bài để chỉ lấy đúng Tier vừa roll
-            List<CardDefinition> tierPool = allCards.Where(c => c.tier == rolledTier).ToList();
-
-            // FALLBACK AN TOÀN: Nếu lỡ bạn chưa tạo data bài cho Tier này, hệ thống tự động giáng cấp xuống để tránh lỗi rỗng
+            List<CardDefinition> tierPool = unitList.Where(c => c.tier == rolledTier).ToList();
             if (tierPool.Count == 0)
             {
-                Debug.LogWarning($"[DATABASE] Không có bài nào ở Tier {rolledTier}. Đang lấy bài Tier thấp hơn bù vào!");
-                tierPool = allCards.Where(c => c.tier <= rolledTier).ToList();
+                Debug.LogWarning($"[DATABASE] Không có unit nào ở Tier {rolledTier}. Đang lấy unit Tier thấp hơn bù vào!");
+                tierPool = unitList.Where(c => c.tier <= rolledTier).ToList();
             }
-
-            // 3. Bốc 1 lá ngẫu nhiên từ Pool vừa lọc
             if (tierPool.Count > 0)
-            {
                 shop.Add(tierPool[Random.Range(0, tierPool.Count)]);
-            }
+        }
+        return shop;
+    }
+
+    public List<CardDefinition> GetRandomSpellShop(int count, int currentShopLevel)
+    {
+        List<CardDefinition> shop = new List<CardDefinition>();
+        for (int i = 0; i < count; i++)
+        {
+            int rolledTier = RollTier(currentShopLevel);
+            List<CardDefinition> tierPool = spellList.Where(c => c.tier == rolledTier).ToList();
+            if (tierPool.Count == 0)
+                tierPool = spellList.ToList(); // fallback: lấy bất kỳ spell nào
+            if (tierPool.Count > 0)
+                shop.Add(tierPool[Random.Range(0, tierPool.Count)]);
         }
         return shop;
     }

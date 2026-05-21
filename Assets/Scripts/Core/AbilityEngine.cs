@@ -5,11 +5,13 @@ using UnityEngine;
 public partial class AbilityEngine
 {
     private System.Action<CardInstance, List<CardInstance>> onUnitSummoned;
+    private System.Action<CardInstance, List<CardInstance>, FlashType> onStatChanged;
 
     public void SetSummonObserver(System.Action<CardInstance, List<CardInstance>> observer)
-    {
-        onUnitSummoned = observer;
-    }
+        => onUnitSummoned = observer;
+
+    public void SetStatChangeObserver(System.Action<CardInstance, List<CardInstance>, FlashType> observer)
+        => onStatChanged = observer;
 
     // Stack-based summon queue: mỗi unit chỉ summon 1 lần ngay lập tức,
     // các unit còn lại trong batch đợi CombatResolver.FlushDeathStack pop ra
@@ -79,7 +81,7 @@ public partial class AbilityEngine
 
             foreach (var target in targets)
             {
-                if (isGrowth) ApplyGrowth(ability, target, scaleFactor, esc);
+                if (isGrowth) ApplyGrowth(ability, target, scaleFactor, esc, allyBoard);
                 else ExecuteEffect(ability, target, source, allyBoard, enemyBoard, scaleFactor, directEnemy, esc);
             }
 
@@ -89,7 +91,7 @@ public partial class AbilityEngine
         }
     }
 
-    private void ApplyGrowth(AbilityData ability, CardInstance target, int scaleFactor, int escalationBonus = 0)
+    private void ApplyGrowth(AbilityData ability, CardInstance target, int scaleFactor, int escalationBonus = 0, List<CardInstance> allyBoard = null)
     {
         if (target == null || target.IsDead) return;
         int atkGain = (ability.effectValue1 + escalationBonus) * scaleFactor;
@@ -101,6 +103,7 @@ public partial class AbilityEngine
         target.currentATK += atkGain;
         target.currentHP  += hpGain;
         Debug.Log($"<color=lime>[GROWTH]</color> {target.Data.cardName} tăng trưởng +{atkGain}ATK/+{hpGain}HP (tổng: +{target.growthATKBonus}/+{target.growthHPBonus})");
+        onStatChanged?.Invoke(target, allyBoard, FlashType.Buff);
     }
 
     private void ExecuteEffect(AbilityData ability, CardInstance target, CardInstance source,
@@ -134,6 +137,7 @@ public partial class AbilityEngine
                     if (hp > 0) target.maxHP += hp;
                 }
                 Debug.Log($"<color=cyan>[ABILITY]</color> {target.Data.cardName} được buff +{atk}ATK / +{hp}HP");
+                onStatChanged?.Invoke(target, allyBoard, (atk > 0 || hp > 0) ? FlashType.Buff : FlashType.Debuff);
                 break;
             }
 
@@ -142,6 +146,7 @@ public partial class AbilityEngine
                 if (ability.isTaunt)      { target.isTaunt = true;         Debug.Log($"<color=cyan>[BUFF]</color> {target.Data.cardName} nhận Taunt!"); }
                 if (ability.isReborn)     { target.isReborn = true; target.hasRebornUsed = false; Debug.Log($"<color=cyan>[BUFF]</color> {target.Data.cardName} nhận Reborn!"); }
                 if (ability.isSafeguard)  { target.safeguardActive = true; Debug.Log($"<color=cyan>[BUFF]</color> {target.Data.cardName} nhận Safeguard!"); }
+                onStatChanged?.Invoke(target, allyBoard, FlashType.Status);
                 break;
             }
 
@@ -151,6 +156,7 @@ public partial class AbilityEngine
                 {
                     target.safeguardActive = false;
                     Debug.Log($"<color=cyan>[SAFEGUARD]</color> {target.Data.cardName} chặn sát thương kỹ năng!");
+                    onStatChanged?.Invoke(target, allyBoard, FlashType.Status);
                     break;
                 }
                 int dmg = ability.effectValue1 * scaleFactor;
@@ -158,6 +164,7 @@ public partial class AbilityEngine
                 // Track kẻ gây đòn chết để death stack dùng làm directEnemy trong OnDeath
                 if (target.IsDead) target.lastAttacker = source;
                 Debug.Log($"<color=orange>[ABILITY]</color> {target.Data.cardName} chịu {dmg} sát thương kỹ năng");
+                onStatChanged?.Invoke(target, allyBoard, FlashType.Debuff);
                 break;
             }
 
@@ -324,7 +331,7 @@ public partial class AbilityEngine
                         t.permanentATKBonus += fx.effectValue1;
                         t.permanentHPBonus  += fx.effectValue2;
                         if (fx.effectValue2 > 0) t.maxHP += fx.effectValue2;
-                        if (fx.isTaunt) t.isTaunt = true;
+                        if (fx.isTaunt) { t.isTaunt = true; t.Data.hasTaunt = true; }
                     }
                     Debug.Log($"<color=cyan>[SPELL]</color> {t.Data.cardName} nhận +{fx.effectValue1}/+{fx.effectValue2}{(fx.isTaunt ? " + Taunt" : "")}");
                 }
@@ -336,28 +343,119 @@ public partial class AbilityEngine
                 Debug.Log($"<color=yellow>[SPELL]</color> Nhận {fx.effectValue1} đồng.");
                 break;
 
-            case 14: // LoseLife
-                Debug.LogWarning($"[SPELL] LoseLife chưa triển khai (effect 14): {spell.Data.cardName}");
+            case 10: // GetRandomUnit — nhận N unit ngẫu nhiên Tier X vào Hand
+            {
+                int tier  = fx.effectValue1;
+                int count = Mathf.Max(fx.targetCount, 1);
+                var pool  = CardDatabase.Instance.GetAllUnits().FindAll(c => c.tier == tier);
+                if (pool.Count == 0)
+                    pool = CardDatabase.Instance.GetAllUnits().FindAll(c => c.tier <= Mathf.Max(tier, 1));
+                for (int i = 0; i < count; i++)
+                    if (pool.Count > 0)
+                        GameManager.Instance.AddUnitToHand(pool[Random.Range(0, pool.Count)]);
                 break;
+            }
+
+            case 11: // StealFromShop — lấy unit ngẫu nhiên từ Shop hiện tại
+                GameManager.Instance.StealRandomUnitFromShop();
+                break;
+
+            case 12: // GainIncome — tăng thu nhập (vĩnh viễn hoặc tạm thời)
+                if (fx.isPermanent)
+                    GameManager.Instance.AddPermanentIncome(fx.effectValue1);
+                else
+                    GameManager.Instance.AddCoin(fx.effectValue1);
+                Debug.Log($"<color=yellow>[SPELL]</color> Thu nhập {(fx.isPermanent ? "vĩnh viễn" : "tạm thời")} +{fx.effectValue1}.");
+                break;
+
+            case 13: // GetSameRealmUnit — nhận unit cùng Tộc với unit đã chọn
+            {
+                if (targetUnit == null) break;
+                Tribe tribe = targetUnit.Data.tribe;
+                var pool = CardDatabase.Instance.GetAllUnits()
+                    .FindAll(c => c.tribe == tribe && c.cardID != targetUnit.Data.cardID);
+                if (pool.Count > 0)
+                    GameManager.Instance.AddUnitToHand(pool[Random.Range(0, pool.Count)]);
+                else
+                    Debug.LogWarning($"[SPELL] Không tìm thấy unit cùng Tộc {tribe} để thêm vào Hand.");
+                break;
+            }
+
+            case 14: // LoseLife
+                GameManager.Instance.LoseLife(fx.effectValue1);
+                break;
+
+            case 15: // TransferStats — hủy unit đã chọn, chuyển chỉ số cho đồng minh ngẫu nhiên
+                GameManager.Instance.TransferStatsToRandom(targetUnit);
+                break;
+
+            case 16: // ConditionalCoinGain — thắng trận kế tiếp nhận coin
+                GameManager.Instance.RegisterWagerReward(fx.effectValue1);
+                break;
+
+            case 17: // UpgradeTierUnit — nâng cấp 1 unit cùng Tộc lên +1 sao
+                GameManager.Instance.UpgradeSameTribeUnit(targetUnit);
+                break;
+
+            case 18: // GiveDoubleAtkAndSafeguard — nhân đôi ATK + Safeguard
+            {
+                if (targetUnit == null) break;
+                targetUnit.permanentATKBonus += targetUnit.currentATK;
+                targetUnit.Data.hasSafeguard  = true; // tồn tại qua ResetStats (Data đã clone)
+                Debug.Log($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: ATK x2 + Safeguard.");
+                break;
+            }
 
             case 19: // ToggleTaunt
             {
                 if (targetUnit == null) break;
                 if (targetUnit.isTaunt)
                 {
-                    targetUnit.isTaunt = false;
-                    targetUnit.currentATK           += fx.effectValue1;
-                    targetUnit.permanentATKBonus    += fx.effectValue1;
+                    targetUnit.isTaunt       = false;
+                    targetUnit.Data.hasTaunt = false;
+                    targetUnit.currentATK        += fx.effectValue1;
+                    targetUnit.permanentATKBonus += fx.effectValue1;
                     Debug.Log($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: xóa Taunt + +{fx.effectValue1} ATK.");
                 }
                 else
                 {
-                    targetUnit.isTaunt = true;
-                    targetUnit.currentHP            += fx.effectValue2;
-                    targetUnit.permanentHPBonus     += fx.effectValue2;
-                    targetUnit.maxHP                += fx.effectValue2;
+                    targetUnit.isTaunt       = true;
+                    targetUnit.Data.hasTaunt = true;
+                    targetUnit.currentHP         += fx.effectValue2;
+                    targetUnit.permanentHPBonus  += fx.effectValue2;
+                    targetUnit.maxHP             += fx.effectValue2;
                     Debug.Log($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: nhận Taunt + +{fx.effectValue2} HP.");
                 }
+                break;
+            }
+
+            case 20: // BuffByShopTier — ATK và HP = Tier Shop hiện tại
+            {
+                if (targetUnit == null) break;
+                int shopTier = GameManager.Instance.GetCurrentShopTier();
+                targetUnit.permanentATKBonus += shopTier;
+                targetUnit.permanentHPBonus  += shopTier;
+                Debug.Log($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: +{shopTier}/+{shopTier} (Shop Tier {shopTier}).");
+                break;
+            }
+
+            case 21: // GiveEndTurnBuff — ban khả năng nhận buff cuối mỗi lượt Shop
+            {
+                if (targetUnit == null) break;
+                if (targetUnit.Data.abilities == null)
+                    targetUnit.Data.abilities = new System.Collections.Generic.List<AbilityData>();
+                targetUnit.Data.abilities.Add(new AbilityData
+                {
+                    trigger      = TriggerType.EndTurnShop,
+                    target       = TargetType.Self,
+                    effect       = EffectType.AddStats,
+                    effectValue1 = fx.effectValue1,
+                    effectValue2 = fx.effectValue2,
+                    isPermanent  = true
+                });
+                targetUnit.abilityTriggerCounts.Add(0);
+                targetUnit.abilityEscalationBonuses.Add(0);
+                Debug.Log($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: nhận buff +{fx.effectValue1}/+{fx.effectValue2} mỗi cuối lượt Shop.");
                 break;
             }
 

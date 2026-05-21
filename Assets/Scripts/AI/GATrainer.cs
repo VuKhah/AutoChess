@@ -7,8 +7,13 @@ using System.IO;
 public class GATrainer : MonoBehaviour
 {
     [Header("Cấu hình huấn luyện")]
-    public int populationSize = 50;
-    public int generations = 100;
+    public int populationSize  = 100;  // lớn hơn cho không gian 24 chiều
+    public int generations     = 150;
+    public int matchesPerChrom = 15;   // đủ để đánh giá ổn định
+    [Range(0.05f, 0.25f)]
+    public float mutationRate  = 0.08f;
+    [Range(0.05f, 0.2f)]
+    public float mutationMag   = 0.12f; // biên độ đột biến Gaussian
 
     private List<Chromosome> population = new List<Chromosome>();
     private GameSimulator sim = new GameSimulator();
@@ -16,95 +21,101 @@ public class GATrainer : MonoBehaviour
 
     void Start()
     {
-        // 1. Khởi tạo quần thể F0 với các gene ngẫu nhiên
         for (int i = 0; i < populationSize; i++)
-        {
             population.Add(new Chromosome());
-        }
 
-        // Bắt đầu tiến trình huấn luyện
         StartCoroutine(TrainRoutine());
     }
 
     IEnumerator TrainRoutine()
     {
-        Debug.Log("=== BẮT ĐẦU TIẾN TRÌNH HUẤN LUYỆN AI ===");
+        Debug.Log($"=== HUẤN LUYỆN AI === Genes: {Chromosome.GeneCount} | Pop: {populationSize} | Gen: {generations} ===");
 
         for (int g = 0; g < generations; g++)
         {
-            // 2. Đánh giá Fitness (Mỗi cá thể đấu với 10 đối thủ ngẫu nhiên trong quần thể)
+            // ── Đánh giá Fitness ─────────────────────────────────────────────
             foreach (var chromo in population)
             {
-                chromo.fitness = 0;
-                for (int i = 0; i < 10; i++)
+                chromo.fitness = 0f;
+                for (int m = 0; m < matchesPerChrom; m++)
                 {
-                    BotAgent me = new BotAgent(chromo);
-                    // Chọn đối thủ ngẫu nhiên từ quần thể hiện tại
-                    BotAgent opponent = new BotAgent(population[Random.Range(0, populationSize)]);
-
+                    BotAgent me       = new BotAgent(chromo);
+                    BotAgent opponent = new BotAgent(population[Random.Range(0, population.Count)]);
                     int result = sim.SimulateMatch(me, opponent);
 
-                    if (result == 1) chromo.fitness += 10;      // Thắng
-                    else if (result == 0) chromo.fitness += 2;  // Hòa
+                    if (result ==  1) chromo.fitness += 10f;
+                    else if (result == 0) chromo.fitness +=  2f;
                 }
             }
 
-            // 3. Sắp xếp quần thể theo Fitness giảm dần (Thằng giỏi nhất lên đầu)
+            // ── Sắp xếp ─────────────────────────────────────────────────────
             population = population.OrderByDescending(c => c.fitness).ToList();
 
-            // 4. CHỤP SNAPSHOT (Lưu lại trí tuệ tại các mốc thời gian)
-            if (g == 10)
-            {
-                library.easyBot = population[0].Clone();
-                Debug.Log("<color=green>Đã lưu snapshot: Easy Bot (Gen 10)</color>");
-            }
-            if (g == 50)
-            {
-                library.mediumBot = population[0].Clone();
-                Debug.Log("<color=yellow>Đã lưu snapshot: Medium Bot (Gen 50)</color>");
-            }
+            float best = population[0].fitness;
+            float avg  = population.Average(c => c.fitness);
+            float worst = population[population.Count - 1].fitness;
+            Debug.Log($"Gen {g,3}/{generations}  Best={best,5:F0}  Avg={avg,5:F1}  Worst={worst,5:F0}");
 
-            // 5. Chọn lọc & Tiến hóa (Elitism: Giữ lại 10% cá thể tốt nhất)
-            List<Chromosome> nextGen = population.Take(populationSize / 10).ToList();
+            // ── Snapshots ─────────────────────────────────────────────────────
+            if (g == 10)  { library.easyBot  = population[0].Clone(); Debug.Log("<color=green>► Easy Bot snapshot (Gen 10)</color>"); }
+            if (g == 50)  { library.mediumBot = population[0].Clone(); Debug.Log("<color=yellow>► Medium Bot snapshot (Gen 50)</color>"); }
+            if (g == 100) Debug.Log("<color=cyan>── Halfway checkpoint (Gen 100) ──</color>");
 
-            // 6. Lai ghép & Đột biến để lấp đầy số lượng quần thể mới
+            // ── Elitism: clone top 10%, breed phần còn lại ───────────────────
+            int eliteCount = Mathf.Max(2, populationSize / 10);
+            List<Chromosome> elite = population.Take(eliteCount)
+                                               .Select(c => c.Clone())
+                                               .ToList();
+
+            List<Chromosome> nextGen = new List<Chromosome>(elite);
             while (nextGen.Count < populationSize)
             {
-                Chromosome parentA = nextGen[Random.Range(0, nextGen.Count)];
-                Chromosome parentB = nextGen[Random.Range(0, nextGen.Count)];
-
+                // Tournament selection trong elite để có diversity
+                Chromosome parentA = TournamentSelect(elite, 3);
+                Chromosome parentB = TournamentSelect(elite, 3);
                 nextGen.Add(CrossoverAndMutate(parentA, parentB));
             }
 
             population = nextGen;
-            Debug.Log($"Thế hệ {g}: Fitness cao nhất = {population[0].fitness}");
-
-            // Tạm dừng một frame để Unity không bị treo máy khi xử lý hàng nghìn trận đấu
-            yield return null;
+            yield return null; // nhường frame
         }
 
-        // 7. Kết thúc: Lưu Hard Bot và xuất file JSON
+        // ── Hard Bot: kết quả sau training đầy đủ ────────────────────────────
+        population = population.OrderByDescending(c => c.fitness).ToList();
         library.hardBot = population[0].Clone();
-        Debug.Log("<color=red>Huấn luyện hoàn tất! Đã lưu snapshot: Hard Bot (Gen Final)</color>");
+
+        string geneStr = string.Join(", ", library.hardBot.genes.Select(g2 => g2.ToString("F3")));
+        Debug.Log($"<color=red>► Hard Bot snapshot (Gen Final)</color>\nGenes: [{geneStr}]");
 
         SaveLibrary();
+        Debug.Log("=== HUẤN LUYỆN HOÀN TẤT ===");
+    }
+
+    // Tournament selection: chọn 1 winner từ k đấu thủ ngẫu nhiên
+    private Chromosome TournamentSelect(List<Chromosome> pool, int k)
+    {
+        Chromosome best = null;
+        for (int i = 0; i < k; i++)
+        {
+            Chromosome candidate = pool[Random.Range(0, pool.Count)];
+            if (best == null || candidate.fitness > best.fitness)
+                best = candidate;
+        }
+        return best;
     }
 
     private Chromosome CrossoverAndMutate(Chromosome a, Chromosome b)
     {
         Chromosome child = new Chromosome();
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < Chromosome.GeneCount; i++)
         {
-            // Lai ghép đồng nhất (Uniform Crossover)
+            // Uniform crossover
             child.genes[i] = Random.value > 0.5f ? a.genes[i] : b.genes[i];
 
-            // Đột biến Gaussian (5% cơ hội thay đổi giá trị gene)
-            if (Random.value < 0.05f)
-            {
-                child.genes[i] += Random.Range(-0.1f, 0.1f);
-            }
+            // Gaussian mutation
+            if (Random.value < mutationRate)
+                child.genes[i] += Random.Range(-mutationMag, mutationMag);
 
-            // Đảm bảo gene luôn nằm trong khoảng [0, 1]
             child.genes[i] = Mathf.Clamp01(child.genes[i]);
         }
         return child;
@@ -112,20 +123,14 @@ public class GATrainer : MonoBehaviour
 
     void SaveLibrary()
     {
-        // Đảm bảo thư mục Resources tồn tại
         string dirPath = Path.Combine(Application.dataPath, "Resources");
-        if (!Directory.Exists(dirPath))
-        {
-            Directory.CreateDirectory(dirPath);
-        }
+        if (!Directory.Exists(dirPath)) Directory.CreateDirectory(dirPath);
 
         string json = JsonUtility.ToJson(library, true);
         string path = Path.Combine(dirPath, "AI_Library.json");
-
         File.WriteAllText(path, json);
-        Debug.Log("<b>LƯU THÀNH CÔNG:</b> " + path);
+        Debug.Log("<b>Đã lưu AI_Library.json:</b> " + path);
 
-        // Refresh AssetDatabase để Unity thấy file mới ngay lập tức (chỉ dùng trong Editor)
 #if UNITY_EDITOR
         UnityEditor.AssetDatabase.Refresh();
 #endif

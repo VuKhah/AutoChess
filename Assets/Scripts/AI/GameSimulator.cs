@@ -1,4 +1,4 @@
-using UnityEngine; // Thêm UnityEngine để dùng Mathf.Clamp
+using UnityEngine;
 
 public class GameSimulator
 {
@@ -11,31 +11,30 @@ public class GameSimulator
 
         for (int i = 0; i < maxTurns; i++)
         {
-            // Trong vòng lặp i chạy từ 0 -> 19, Turn thực tế sẽ là i + 1
             int currentTurn = i + 1;
-
-            // Công thức tính Tier y hệt như GameManager (Cứ 2 Turn lên 1 Tier, tối đa 6)
             int currentTier = Mathf.Clamp((currentTurn + 1) / 2, 1, 6);
 
-            // Pha chuẩn bị: Shop roll ra bài phải tuân thủ maxTier của Turn hiện tại
-            botA.DecidePrepPhase(CardDatabase.Instance.GetRandomShop(3, currentTier));
-            botB.DecidePrepPhase(CardDatabase.Instance.GetRandomShop(3, currentTier));
+            // Shop 5 unit — khớp với game thật (shopUnitCount = 5)
+            botA.DecidePrepPhase(CardDatabase.Instance.GetRandomUnitShop(5, currentTier));
+            botB.DecidePrepPhase(CardDatabase.Instance.GetRandomUnitShop(5, currentTier));
 
-            // Pha chiến đấu
             resolver.ResolveTurn(botA.board, botB.board, new TurnRecord());
 
-            // Trừ HP
-            bool aAlive = botA.board.Exists(u => u != null && !u.IsDead); // [HOTFIX] Thêm !u.IsDead để kiểm tra chính xác lính còn sống
-            bool bAlive = botB.board.Exists(u => u != null && !u.IsDead); // [HOTFIX] Thêm !u.IsDead
+            bool aAlive = botA.board.Exists(u => u != null && !u.IsDead);
+            bool bAlive = botB.board.Exists(u => u != null && !u.IsDead);
 
             if (!aAlive && bAlive) hpA--;
             else if (aAlive && !bAlive) hpB--;
 
             if (hpA <= 0 || hpB <= 0) break;
+
+            // Reset HP của các unit còn sống cho turn tiếp theo (khớp với RestorePreCombatPlayerBoard)
+            foreach (var u in botA.board) { if (u != null && !u.IsDead) u.ResetStats(); }
+            foreach (var u in botB.board) { if (u != null && !u.IsDead) u.ResetStats(); }
         }
 
-        if (hpA > hpB) return 1; // A thắng
-        if (hpB > hpA) return -1; // B thắng
-        return 0; // Hòa
+        if (hpA > hpB) return 1;
+        if (hpB > hpA) return -1;
+        return 0;
     }
 }

@@ -2,12 +2,15 @@ public class EconomyManager
 {
     public int CurrentCoin { get; private set; }
     private int bonusNextTurn = 0;
+    private int permanentIncomeBonus = 0;
 
     public void ResetEconomy()
     {
-        CurrentCoin = 10 + bonusNextTurn;
+        CurrentCoin = 10 + bonusNextTurn + permanentIncomeBonus;
         bonusNextTurn = 0;
     }
+
+    public void AddPermanentIncome(int amt) => permanentIncomeBonus += amt;
 
     // Dùng cho GameManager: mua/bán với giá biến đổi, cộng coin trực tiếp
     public bool TrySpend(int cost)

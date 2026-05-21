@@ -70,11 +70,12 @@ public class CardDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (visuals != null && destinationSlot != null)
         {
             visuals.RefreshSettledScale();
-            bool deployedFromShop = sourceSlot != null
-                && sourceSlot.slotType == CardSlot.SlotType.Shop
-                && destinationSlot.slotType == CardSlot.SlotType.PlayerBoard;
+            // Animation deploy khi kéo từ Shop hoặc Hand vào Board (không kéo trong Board)
+            bool deployingToBoard = destinationSlot.slotType == CardSlot.SlotType.PlayerBoard
+                && sourceSlot != null
+                && sourceSlot.slotType != CardSlot.SlotType.PlayerBoard;
 
-            if (deployedFromShop)
+            if (deployingToBoard)
                 visuals.PlayDeployToBoard();
             else if (destinationSlot.slotType == CardSlot.SlotType.PlayerBoard)
                 visuals.SetBoardPose();

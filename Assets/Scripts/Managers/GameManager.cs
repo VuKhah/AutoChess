@@ -27,6 +27,8 @@ public partial class GameManager : MonoBehaviour
     [Header("Cấu hình Shop")]
     public int rollCost = 1;
     public bool isShopFrozen = false;
+    public int shopUnitCount = 5;   // Số slot unit trong shop (các slot còn lại là spell)
+    [HideInInspector] public int pendingWagerCoins = 0;
 
     [Header("Cấu hình UI & Prefabs")]
     public GameObject cardPrefab;

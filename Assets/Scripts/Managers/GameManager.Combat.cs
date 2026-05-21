@@ -12,14 +12,28 @@ public partial class GameManager
         {
             CardUI ui = playerSlots[i].GetComponentInChildren<CardUI>();
             playerBoard[i] = (ui != null) ? ui.currentInstance : null;
+            if (playerBoard[i] != null) playerBoard[i].slotIndex = i; // giữ slotIndex đồng bộ với vị trí thực
         }
         for (int i = 0; i < enemySlots.Length; i++)
         {
             CardUI ui = enemySlots[i].GetComponentInChildren<CardUI>();
             enemyBoard[i] = (ui != null) ? ui.currentInstance : null;
+            if (enemyBoard[i] != null) enemyBoard[i].slotIndex = i;
         }
         // Cập nhật nhấp nháy shop theo trạng thái board+hand vừa sync.
         UpdateShopMergeHints();
+    }
+
+    // Xóa UI của các unit đã chết trên sân player (dùng sau OnDeploy Consume trong shop phase)
+    public void CleanupDeadBoardUnitsUI()
+    {
+        foreach (var slot in playerSlots)
+        {
+            CardUI ui = slot.GetComponentInChildren<CardUI>();
+            if (ui?.currentInstance != null && ui.currentInstance.IsDead)
+                Destroy(ui.gameObject);
+        }
+        SyncBoards();
     }
 
     public void StartCombatPhase()
@@ -53,7 +67,9 @@ public partial class GameManager
         foreach (var action in combatLog.actions)
         {
             yield return StartCoroutine(VisualizeAction(action));
-            yield return new WaitForSeconds(0.1f);
+            // StatChange không cần delay — cập nhật chỉ số tức thì không làm gián đoạn battle
+            if (action.actionType != CombatActionType.StatChange)
+                yield return new WaitForSeconds(0.1f);
         }
 
         // Giai đoạn D: Chờ người chơi nhìn kết quả
@@ -68,6 +84,12 @@ public partial class GameManager
 
     private IEnumerator VisualizeAction(CombatAction action)
     {
+        if (action.actionType == CombatActionType.StatChange)
+        {
+            VisualizeStatChange(action);
+            yield break;
+        }
+
         if (action.actionType == CombatActionType.Summon)
         {
             yield return StartCoroutine(VisualizeSummon(action));
@@ -111,6 +133,38 @@ public partial class GameManager
         if (tarDeathOrReborn != null) yield return tarDeathOrReborn;
 
         yield return new WaitForSeconds(0.2f);
+    }
+
+    private void VisualizeStatChange(CombatAction action)
+    {
+        Transform[] slots = action.statIsPlayerSide ? playerSlots : enemySlots;
+        if (action.statSlotIdx < 0 || action.statSlotIdx >= slots.Length) return;
+        CardUI ui = slots[action.statSlotIdx].GetComponentInChildren<CardUI>(true);
+        if (ui?.currentInstance == null) return;
+        ui.currentInstance.currentATK = action.statNewATK;
+        ui.currentInstance.currentHP  = action.statNewHP;
+        ui.Setup(ui.currentInstance);
+
+        if (action.flashType != FlashType.None)
+        {
+            CardVisuals vis = ui.GetComponent<CardVisuals>();
+            if (vis != null)
+                StartCoroutine(vis.FlashEffect(GetFlashColor(action.flashType)));
+        }
+    }
+
+    private static Color GetFlashColor(FlashType type)
+    {
+        switch (type)
+        {
+            case FlashType.Buff:            return new Color(0.2f, 1f,    0.2f, 0.85f); // xanh lá
+            case FlashType.Debuff:          return new Color(1f,   0.15f, 0.15f, 0.85f); // đỏ
+            case FlashType.Status:          return new Color(0.3f, 0.6f,  1f,   0.85f); // xanh dương
+            case FlashType.SynergyBabylon:  return new Color(1f,   0.85f, 0.05f, 0.9f); // vàng
+            case FlashType.SynergyOlympus:  return new Color(0.1f, 0.85f, 1f,   0.9f); // cyan
+            case FlashType.SynergyNiles:    return new Color(0.1f, 1f,    0.45f, 0.9f); // lục
+            default:                        return Color.white;
+        }
     }
 
     private IEnumerator VisualizeSummon(CombatAction action)
@@ -210,11 +264,18 @@ public partial class GameManager
         {
             playerCups++;
             AudioManager.Instance?.Win();
+            if (pendingWagerCoins > 0)
+            {
+                economy.Earn(pendingWagerCoins);
+                Debug.Log($"<color=yellow>[WAGER]</color> Thắng! Nhận {pendingWagerCoins} đồng.");
+                pendingWagerCoins = 0;
+            }
         }
         else if (!pAlive && eAlive)
         {
             playerHP--;
             AudioManager.Instance?.Lose();
+            pendingWagerCoins = 0; // thua → hủy wager
         }
 
         UIManager.Instance.UpdateStats(playerHP, playerCups, playerCoins);

@@ -70,6 +70,7 @@ public class CardUI : MonoBehaviour
                          : instance.Data.cardID;
         Sprite art = Resources.Load<Sprite>($"Sprites/Cards/{folder}/{artFile}");
         if (art != null) characterArt.sprite = art;
+        else Debug.LogWarning($"[CardUI] Không tìm thấy art: Sprites/Cards/{folder}/{artFile} — kiểm tra Texture Type = Sprite trong Unity.");
 
         // --- Stats ---
         if (isSpell)
@@ -117,8 +118,11 @@ public class CardUI : MonoBehaviour
             tierIcon.gameObject.SetActive(tSprite != null);
         }
 
-        // --- Star icons theo mergeLevel (0/1/2 → 1/2/3 sao) ---
-        UpdateStarIcons(instance.mergeLevel);
+        // --- Star icons: chỉ hiện cho Unit, spell không có sao ---
+        if (!isSpell)
+            UpdateStarIcons(instance.mergeLevel);
+        else if (starIcons != null)
+            foreach (var s in starIcons) { if (s != null) s.gameObject.SetActive(false); }
     }
 
     private void UpdateStarIcons(int mergeLevel)

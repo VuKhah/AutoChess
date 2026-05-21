@@ -162,9 +162,11 @@ public class CardSlot : MonoBehaviour, IDropHandler
         yield return null; // Chờ OnEndDrag reparent lá bài vào slot mới
         if (shouldDeploy && deployedUI != null)
         {
-            // Sync board từ UI hiện tại (lá bài đã ở slot mới sau yield)
+            // Sync board từ UI hiện tại (lá bài đã ở slot mới sau yield) — cập nhật slotIndex
             GameManager.Instance.SyncBoards();
             TriggerOnDeploy(deployedUI);
+            // Xóa UI của unit bị Consume/Destroy bởi OnDeploy ability (ví dụ: Upamaki)
+            GameManager.Instance.CleanupDeadBoardUnitsUI();
         }
         CheckForMerge(cardID, mergeLevel);
         // Đảm bảo shop blink hint luôn cập nhật sau buy/move (kể cả khi vào Hand)

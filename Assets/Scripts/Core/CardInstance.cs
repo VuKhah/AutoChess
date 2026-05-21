@@ -70,7 +70,8 @@ using UnityEngine;
         int abCount = Data.abilities != null ? Data.abilities.Count : 0;
         abilityTriggerCounts      = new List<int>(new int[abCount]);
         abilityEscalationBonuses  = new List<int>(new int[abCount]);
-        consumedCardIDs = new List<string>();
+        // consumedCardIDs KHÔNG reset — phải tồn tại qua các turn để SummonConsumed hoạt động đúng.
+        // Chỉ bị clear khi SummonConsumed thực sự kích hoạt (trong AbilityEngine.ExecuteEffect).
     }
 
     public void Revive(int hp)

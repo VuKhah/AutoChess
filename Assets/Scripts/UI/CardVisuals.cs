@@ -191,6 +191,32 @@ public class CardVisuals : MonoBehaviour
         RefreshSettledScale();
     }
 
+    // Flash màu trên characterArt — dùng cho ability buff/debuff/status và synergy
+    public IEnumerator FlashEffect(Color flashColor, float duration = 0.35f)
+    {
+        CardUI ui = GetComponent<CardUI>();
+        if (ui == null || ui.characterArt == null) yield break;
+
+        Color original = ui.characterArt.color;
+        float half = duration * 0.5f;
+        float elapsed = 0f;
+
+        while (elapsed < half)
+        {
+            elapsed += Time.deltaTime;
+            ui.characterArt.color = Color.Lerp(original, flashColor, elapsed / half);
+            yield return null;
+        }
+        elapsed = 0f;
+        while (elapsed < half)
+        {
+            elapsed += Time.deltaTime;
+            ui.characterArt.color = Color.Lerp(flashColor, original, elapsed / half);
+            yield return null;
+        }
+        ui.characterArt.color = original;
+    }
+
     public void ResetVisuals()
     {
         // 1. Hiện lại object

@@ -25,7 +25,19 @@ public class CardSnapshot
 public enum CombatActionType
 {
     Clash,
-    Summon
+    Summon,
+    StatChange  // Cập nhật chỉ số từ ability (buff/debuff/growth) — không có delay khi visualize
+}
+
+public enum FlashType
+{
+    None,
+    Buff,             // xanh lá — tăng chỉ số
+    Debuff,           // đỏ — nhận sát thương / giảm chỉ số
+    Status,           // xanh dương — nhận status (Taunt, Safeguard, Reborn)
+    SynergyBabylon,   // vàng — synergy Babylon
+    SynergyOlympus,   // cyan — synergy Olympus
+    SynergyNiles,     // lục — synergy Niles
 }
 
 [System.Serializable]
@@ -55,6 +67,13 @@ public class CombatAction
     public int summonHP;
     public int summonATK;
 
+    // StatChange fields
+    public int       statSlotIdx;
+    public bool      statIsPlayerSide;
+    public int       statNewATK;
+    public int       statNewHP;
+    public FlashType flashType;
+
     public CombatAction(int atk, int target, bool isPlayer, string aName, string tName, int aBefore, int aAfter, int dBefore, int dAfter)
     {
         actionType = CombatActionType.Clash;
@@ -79,6 +98,20 @@ public class CombatAction
             summonCardID = unit.Data.cardID,
             summonHP = unit.currentHP,
             summonATK = unit.currentATK
+        };
+    }
+
+    public static CombatAction StatChange(int slotIdx, bool isPlayerSide, int newATK, int newHP,
+                                          FlashType flash = FlashType.None)
+    {
+        return new CombatAction(-1, -1, isPlayerSide, null, null, 0, 0, 0, 0)
+        {
+            actionType       = CombatActionType.StatChange,
+            statSlotIdx      = slotIdx,
+            statIsPlayerSide = isPlayerSide,
+            statNewATK       = newATK,
+            statNewHP        = newHP,
+            flashType        = flash
         };
     }
 }

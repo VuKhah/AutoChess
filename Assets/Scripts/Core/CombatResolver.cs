@@ -59,10 +59,18 @@ public class CombatResolver
             bool isPlayerSide = ReferenceEquals(board, pBoard);
             log.AddAction(CombatAction.Summon(unit.slotIndex, isPlayerSide, unit));
         });
+        engine.SetStatChangeObserver((unit, board, flash) =>
+        {
+            if (unit == null || board == null || log == null) return;
+            bool isPlayerSide = ReferenceEquals(board, pBoard);
+            int slotIdx = board.IndexOf(unit);
+            if (slotIdx < 0) return;
+            log.AddAction(CombatAction.StatChange(slotIdx, isPlayerSide, unit.currentATK, unit.currentHP, flash));
+        });
 
         // --- Phase 1: Setup ---
-        ApplyTribeSynergies(pBoard);
-        ApplyTribeSynergies(eBoard);
+        ApplyTribeSynergies(pBoard, true, log);
+        ApplyTribeSynergies(eBoard, false, log);
 
         int setupSlotCount = Mathf.Min(pBoard.Count, eBoard.Count);
         for (int i = 0; i < setupSlotCount; i++)
@@ -133,31 +141,35 @@ public class CombatResolver
 
         RecordSnapshots(pBoard, eBoard, log);
         engine.SetSummonObserver(null);
+        engine.SetStatChangeObserver(null);
     }
 
     // ==========================================
     // ATTACK STACK BUILDER
-    // Push ngược (slot cuối→0), enemy trước player mỗi slot
-    // → Pop ra thứ tự xen kẽ: P[0], E[0], P[1], E[1], ... (công bằng giữa 2 phe)
+    // Layout: Frontline = index 0-3 (slot 1-4), Backline = index 4-6 (slot 5-7).
+    // Thứ tự tấn công: Frontline (0→3) trước, Backline (4→6) sau.
+    // Stack LIFO → push ngược để pop ra đúng thứ tự.
     // ==========================================
 
     private Stack<AttackIntent> BuildAttackStack(List<CardInstance> pBoard, List<CardInstance> eBoard)
     {
         var stack = new Stack<AttackIntent>();
         int slotCount = Mathf.Min(pBoard.Count, eBoard.Count);
-        for (int i = slotCount - 1; i >= 0; i--)
+
+        // Push ngược (slot cuối → 0) để pop ra 0,1,2,...,6
+        for (int slot = slotCount - 1; slot >= 0; slot--)
         {
-            if (eBoard[i] != null && !eBoard[i].IsDead && eBoard[i].currentATK > 0)
+            if (eBoard[slot] != null && !eBoard[slot].IsDead && eBoard[slot].currentATK > 0)
             {
-                CardInstance target = FindTarget(pBoard, i);
+                CardInstance target = FindTarget(pBoard, slot);
                 if (target != null)
-                    stack.Push(new AttackIntent(eBoard[i], target, i, pBoard.IndexOf(target), false, eBoard, pBoard));
+                    stack.Push(new AttackIntent(eBoard[slot], target, slot, pBoard.IndexOf(target), false, eBoard, pBoard));
             }
-            if (pBoard[i] != null && !pBoard[i].IsDead && pBoard[i].currentATK > 0)
+            if (pBoard[slot] != null && !pBoard[slot].IsDead && pBoard[slot].currentATK > 0)
             {
-                CardInstance target = FindTarget(eBoard, i);
+                CardInstance target = FindTarget(eBoard, slot);
                 if (target != null)
-                    stack.Push(new AttackIntent(pBoard[i], target, i, eBoard.IndexOf(target), true, pBoard, eBoard));
+                    stack.Push(new AttackIntent(pBoard[slot], target, slot, eBoard.IndexOf(target), true, pBoard, eBoard));
             }
         }
         return stack;
@@ -347,7 +359,7 @@ public class CombatResolver
     // Niles    ≥3: +2 HP  — dòng sông sự sống, hồi phục mạnh hơn nhưng yêu cầu đội hình lớn hơn
     // ==========================================
 
-    private void ApplyTribeSynergies(List<CardInstance> board)
+    private void ApplyTribeSynergies(List<CardInstance> board, bool isPlayerSide, TurnRecord log)
     {
         var alive = board.FindAll(u => u != null && !u.IsDead);
 
@@ -356,7 +368,12 @@ public class CombatResolver
         if (babylonCount >= 2)
         {
             foreach (var u in alive)
-                if (u.Data.tribe == Tribe.Babylon) { u.currentHP += 1; u.maxHP += 1; }
+            {
+                if (u.Data.tribe != Tribe.Babylon) continue;
+                u.currentHP += 1; u.maxHP += 1;
+                int idx = board.IndexOf(u);
+                if (idx >= 0) log?.AddAction(CombatAction.StatChange(idx, isPlayerSide, u.currentATK, u.currentHP, FlashType.SynergyBabylon));
+            }
             Debug.Log($"<color=yellow>[SYNERGY]</color> Babylon x{babylonCount}: mỗi Babylon unit +1 HP");
         }
 
@@ -365,7 +382,12 @@ public class CombatResolver
         if (olympusCount >= 2)
         {
             foreach (var u in alive)
-                if (u.Data.tribe == Tribe.Olympus) u.currentATK += 1;
+            {
+                if (u.Data.tribe != Tribe.Olympus) continue;
+                u.currentATK += 1;
+                int idx = board.IndexOf(u);
+                if (idx >= 0) log?.AddAction(CombatAction.StatChange(idx, isPlayerSide, u.currentATK, u.currentHP, FlashType.SynergyOlympus));
+            }
             Debug.Log($"<color=cyan>[SYNERGY]</color> Olympus x{olympusCount}: mỗi Olympus unit +1 ATK");
         }
 
@@ -374,64 +396,82 @@ public class CombatResolver
         if (nilesCount >= 3)
         {
             foreach (var u in alive)
-                if (u.Data.tribe == Tribe.Niles) { u.currentHP += 2; u.maxHP += 2; }
+            {
+                if (u.Data.tribe != Tribe.Niles) continue;
+                u.currentHP += 2; u.maxHP += 2;
+                int idx = board.IndexOf(u);
+                if (idx >= 0) log?.AddAction(CombatAction.StatChange(idx, isPlayerSide, u.currentATK, u.currentHP, FlashType.SynergyNiles));
+            }
             Debug.Log($"<color=green>[SYNERGY]</color> Niles x{nilesCount}: mỗi Niles unit +2 HP");
         }
     }
 
     // ==========================================
     // TARGET SELECTION
+    // Layout: Frontline = index 0-3 | Backline = index 4-6
+    // Ưu tiên 1: Taunt — bypass mọi thứ, kể cả frontline protection
+    // Ưu tiên 2: Frontline (index 0-3) còn sống
+    // Ưu tiên 3: Backline (index 4-6) — chỉ lộ khi TOÀN BỘ frontline đã chết
+    // Trong mỗi nhóm: chọn unit gần nhất với vị trí attacker.
     // ==========================================
 
-    private CardInstance FindTarget(List<CardInstance> board, int prefSlot)
+    private const int FrontlineCount = 4; // index 0-3
+
+    private CardInstance FindTarget(List<CardInstance> board, int attackerSlot)
     {
-        // Chỉ unit "lộ ra" mới có thể bị chọn làm mục tiêu.
-        // Slot sau (index lẻ: 1,3,5) bị che bởi 2 slot trước kề bên.
-        bool hasTaunt = false;
+        // Ưu tiên 1: Taunt — bypass hoàn toàn frontline protection
+        var tauntPool = new List<(int slot, CardInstance unit)>();
         for (int i = 0; i < board.Count; i++)
         {
-            if (IsAttackableTarget(board, i) && board[i].isTaunt)
-            {
-                hasTaunt = true;
-                break;
-            }
+            var u = board[i];
+            if (u != null && !u.IsDead && u.isTaunt)
+                tauntPool.Add((i, u));
         }
+        if (tauntPool.Count > 0) return ClosestTo(tauntPool, attackerSlot);
 
-        // Ripple Search: loang từ prefSlot ra 2 bên trên các mục tiêu đang lộ ra.
-        // Nếu có Taunt hợp lệ -> chỉ xét Taunt; nếu không -> xét mọi unit hợp lệ còn sống.
-        for (int d = 0; d < board.Count; d++)
+        // Ưu tiên 2: Frontline còn sống (index 0-3)
+        var frontPool = new List<(int slot, CardInstance unit)>();
+        for (int i = 0; i < FrontlineCount && i < board.Count; i++)
         {
-            int left  = prefSlot - d;
-            int right = prefSlot + d;
-
-            if (IsAttackableTarget(board, left))
-            {
-                var u = board[left];
-                if (!hasTaunt || u.isTaunt) return u;
-            }
-
-            // d > 0: tránh check prefSlot lần 2 (left == right khi d=0)
-            if (d > 0 && IsAttackableTarget(board, right))
-            {
-                var u = board[right];
-                if (!hasTaunt || u.isTaunt) return u;
-            }
+            if (IsAlive(board, i))
+                frontPool.Add((i, board[i]));
         }
-        return null;
+        if (frontPool.Count > 0) return ClosestTo(frontPool, attackerSlot);
+
+        // Ưu tiên 3: Backline (index 4-6) — chỉ lộ khi toàn bộ frontline đã chết
+        var backPool = new List<(int slot, CardInstance unit)>();
+        for (int i = FrontlineCount; i < board.Count; i++)
+        {
+            if (IsAlive(board, i))
+                backPool.Add((i, board[i]));
+        }
+        return backPool.Count > 0 ? ClosestTo(backPool, attackerSlot) : null;
+    }
+
+    private CardInstance ClosestTo(List<(int slot, CardInstance unit)> candidates, int referenceSlot)
+    {
+        CardInstance best = null;
+        int minDist = int.MaxValue;
+        foreach (var (slot, unit) in candidates)
+        {
+            int dist = Mathf.Abs(slot - referenceSlot);
+            if (dist < minDist) { minDist = dist; best = unit; }
+        }
+        return best;
     }
 
     private bool IsAttackableTarget(List<CardInstance> board, int slot)
     {
         if (slot < 0 || slot >= board.Count) return false;
-
         var unit = board[slot];
         if (unit == null || unit.IsDead) return false;
 
-        // Hàng trước: 1,3,5,7 theo cách người chơi nhìn (index chẵn trong code).
-        if (slot % 2 == 0) return true;
+        if (slot < FrontlineCount) return true; // Frontline: luôn lộ ra
 
-        // Hàng sau: chỉ lộ ra khi cả 2 unit hàng trước kề bên đã chết hoặc trống.
-        return !IsAlive(board, slot - 1) && !IsAlive(board, slot + 1);
+        // Backline: chỉ lộ khi toàn bộ frontline đã chết
+        for (int i = 0; i < FrontlineCount && i < board.Count; i++)
+            if (IsAlive(board, i)) return false;
+        return true;
     }
 
     private bool IsAlive(List<CardInstance> board, int slot)
