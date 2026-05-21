@@ -16,10 +16,7 @@ public class BotAgent
     {
         economy.ResetEconomy();
 
-        // BUG-AI-01 FIX: Dùng bản copy để tiêu thụ slot shop sau mỗi lần mua,
-        // tránh mua lặp cùng 1 thẻ nhiều lần.
-        var availableShop = new List<CardDefinition>(shop);
-
+        // Mua cho đến khi hết tiền hoặc hết chỗ
         bool bought = true;
         while (bought)
         {
@@ -27,7 +24,7 @@ public class BotAgent
             CardDefinition bestCard = null;
             float bestScore = -1f;
 
-            foreach (var card in availableShop)
+            foreach (var card in shop)
             {
                 if (card.cost > economy.CurrentCoin) continue;
                 float score = Evaluate(card);
@@ -41,7 +38,6 @@ public class BotAgent
             if (bestCard != null && HasEmptySlot())
             {
                 BuyAndPlace(bestCard);
-                availableShop.Remove(bestCard);
                 bought = true;
             }
         }
@@ -49,29 +45,26 @@ public class BotAgent
 
     private float Evaluate(CardDefinition c)
     {
-        // BUG-AI-02 FIX: Spell không có stats chiến đấu, không đặt lên board được.
-        if (c.cardType == CardType.Spell) return -1f;
-
+        // 1. Chấm điểm dựa trên chỉ số gốc
         float s = c.baseATK * brain.genes[0] + c.baseHP * brain.genes[1];
 
-        // BUG-AI-04 FIX: Passive keywords độc lập với abilities list —
-        // một thẻ có hasTaunt nhưng abilities rỗng vẫn phải được tính điểm đúng.
-        if (c.hasTaunt)     s += 8  * brain.genes[3];
-        if (c.hasReborn)    s += 10 * brain.genes[5];
-        if (c.hasSafeguard) s += 6  * brain.genes[3];
-
-        if (c.abilities != null)
+        // 2. Chấm điểm dựa trên hệ thống Kỹ năng TTE mới
+        if (c.abilities != null && c.abilities.Count > 0)
         {
-            foreach (var a in c.abilities)
-            {
-                if (a == null) continue;
-                if (a.trigger == TriggerType.OnTakeDamage && a.effect == EffectType.DealDamage)
-                    s += 8  * brain.genes[3];
-                if (a.trigger == TriggerType.StartOfBattle && a.effect == EffectType.AddStats)
-                    s += 12 * brain.genes[4];
-                if (a.trigger == TriggerType.OnDeath && a.effect == EffectType.AddStats)
-                    s += 10 * brain.genes[2];
-            }
+            if (c.hasTaunt)
+                s += 8 * brain.genes[3];
+
+            if (c.abilities.Exists(a => a != null && a.trigger == TriggerType.OnTakeDamage && a.effect == EffectType.DealDamage))
+                s += 8 * brain.genes[3];
+
+            if (c.abilities.Exists(a => a != null && a.trigger == TriggerType.StartOfBattle && a.effect == EffectType.AddStats))
+                s += 12 * brain.genes[4];
+
+            if (c.hasReborn)
+                s += 10 * brain.genes[5];
+
+            if (c.abilities.Exists(a => a != null && a.trigger == TriggerType.OnDeath && a.effect == EffectType.AddStats))
+                s += 10 * brain.genes[2];
         }
 
         return s;

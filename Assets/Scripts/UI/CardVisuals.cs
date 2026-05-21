@@ -91,6 +91,8 @@ public class CardVisuals : MonoBehaviour
     // Hiệu ứng lao vào tấn công
     public IEnumerator AttackAnimation(Vector3 targetWorldPos, float duration)
     {
+        AudioManager.Instance?.Attack();
+
         // 1. Lưu lại vị trí Local ban đầu (thường là 0,0,0 vì nó nằm trong Slot)
         Vector3 originalLocalPos = Vector3.zero;
         Vector3 startWorldPos = transform.position;
@@ -140,6 +142,8 @@ public class CardVisuals : MonoBehaviour
     // Hiệu ứng nứt vỡ và biến mất
     public IEnumerator DieAnimation()
     {
+        AudioManager.Instance?.Destroyed();
+
         float elapsed = 0f;
         float duration = 0.5f;
         Vector3 initialScale = transform.localScale;
@@ -200,5 +204,56 @@ public class CardVisuals : MonoBehaviour
         // 3. Reset màu sắc ảnh nhân vật (nếu bị đổi sang màu đỏ lúc chết)
         CardUI ui = GetComponent<CardUI>();
         if (ui != null) ui.characterArt.color = Color.white;
+    }
+
+    // Hiệu ứng hồi sinh: hiện ra từ scale 0, alpha 0, kèm flash vàng → trở về trạng thái sống bình thường
+    public IEnumerator RebornAnimation()
+    {
+        AudioManager.Instance?.Reborn();
+
+        // Đảm bảo card đang active, ở đúng slot, bắt đầu từ trạng thái "vô hình"
+        gameObject.SetActive(true);
+        if (canvasGroup == null) canvasGroup = GetComponent<CanvasGroup>();
+
+        CardUI ui = GetComponent<CardUI>();
+        Color flashColor  = new Color(1f, 0.95f, 0.4f); // vàng sáng
+        Color normalColor = Color.white;
+
+        Vector3 targetScale  = settledScale;
+        Vector3 startScale   = targetScale * 0.2f;
+        Vector3 overshoot    = targetScale * 1.18f;
+
+        transform.localScale = startScale;
+        if (canvasGroup != null) canvasGroup.alpha = 0f;
+        if (ui != null && ui.characterArt != null) ui.characterArt.color = flashColor;
+
+        // Pha 1: phình to vượt mức, hiện rõ dần
+        float phase1 = 0.28f;
+        float elapsed = 0f;
+        while (elapsed < phase1)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, elapsed / phase1);
+            transform.localScale = Vector3.Lerp(startScale, overshoot, t);
+            if (canvasGroup != null) canvasGroup.alpha = t;
+            yield return null;
+        }
+
+        // Pha 2: co về kích thước chuẩn, màu vàng tan dần về trắng
+        float phase2 = 0.18f;
+        elapsed = 0f;
+        while (elapsed < phase2)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, elapsed / phase2);
+            transform.localScale = Vector3.Lerp(overshoot, targetScale, t);
+            if (ui != null && ui.characterArt != null)
+                ui.characterArt.color = Color.Lerp(flashColor, normalColor, t);
+            yield return null;
+        }
+
+        transform.localScale = targetScale;
+        if (canvasGroup != null) canvasGroup.alpha = 1f;
+        if (ui != null && ui.characterArt != null) ui.characterArt.color = normalColor;
     }
 }

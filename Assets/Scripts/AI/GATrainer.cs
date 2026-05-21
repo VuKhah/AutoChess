@@ -65,21 +65,15 @@ public class GATrainer : MonoBehaviour
             }
 
             // 5. Chọn lọc & Tiến hóa (Elitism: Giữ lại 10% cá thể tốt nhất)
-            // BUG-AI-05 FIX: Tách elites ra riêng làm gene pool nguồn.
-            // Crossover CHỈ lấy từ elites (không dùng con cái vừa tạo làm cha mẹ),
-            // và đảm bảo parentA != parentB khi có nhiều hơn 1 elite.
-            List<Chromosome> elites  = population.Take(populationSize / 10).ToList();
-            List<Chromosome> nextGen = elites.Select(e => e.Clone()).ToList();
+            List<Chromosome> nextGen = population.Take(populationSize / 10).ToList();
 
             // 6. Lai ghép & Đột biến để lấp đầy số lượng quần thể mới
             while (nextGen.Count < populationSize)
             {
-                int idxA = Random.Range(0, elites.Count);
-                int idxB;
-                do { idxB = Random.Range(0, elites.Count); }
-                while (elites.Count > 1 && idxB == idxA);
+                Chromosome parentA = nextGen[Random.Range(0, nextGen.Count)];
+                Chromosome parentB = nextGen[Random.Range(0, nextGen.Count)];
 
-                nextGen.Add(CrossoverAndMutate(elites[idxA], elites[idxB]));
+                nextGen.Add(CrossoverAndMutate(parentA, parentB));
             }
 
             population = nextGen;
@@ -98,8 +92,7 @@ public class GATrainer : MonoBehaviour
 
     private Chromosome CrossoverAndMutate(Chromosome a, Chromosome b)
     {
-        // BUG-AI-07 FIX: Dùng Clone() từ a làm base thay vì new Chromosome() (tránh random init bị bỏ đi ngay).
-        Chromosome child = a.Clone();
+        Chromosome child = new Chromosome();
         for (int i = 0; i < 8; i++)
         {
             // Lai ghép đồng nhất (Uniform Crossover)
@@ -107,11 +100,13 @@ public class GATrainer : MonoBehaviour
 
             // Đột biến Gaussian (5% cơ hội thay đổi giá trị gene)
             if (Random.value < 0.05f)
+            {
                 child.genes[i] += Random.Range(-0.1f, 0.1f);
+            }
 
+            // Đảm bảo gene luôn nằm trong khoảng [0, 1]
             child.genes[i] = Mathf.Clamp01(child.genes[i]);
         }
-        child.fitness = 0;
         return child;
     }
 

@@ -53,6 +53,12 @@ public class CombatResolver
     {
         deathStack.Clear();
         engine.ClearPendingSummons();
+        engine.SetSummonObserver((unit, board) =>
+        {
+            if (unit == null || board == null || log == null) return;
+            bool isPlayerSide = ReferenceEquals(board, pBoard);
+            log.AddAction(CombatAction.Summon(unit.slotIndex, isPlayerSide, unit));
+        });
 
         // --- Phase 1: Setup ---
         ApplyTribeSynergies(pBoard);
@@ -126,23 +132,21 @@ public class CombatResolver
         }
 
         RecordSnapshots(pBoard, eBoard, log);
+        engine.SetSummonObserver(null);
     }
 
     // ==========================================
     // ATTACK STACK BUILDER
-    // Thứ tự tấn công: frontline (slot 1,3,5,7 = index 0,2,4,6) trước, backline (slot 2,4,6 = index 1,3,5) sau
-    // Push ngược attackOrder để khi pop ra đúng thứ tự: P[0],E[0], P[2],E[2], P[4],E[4], P[6],E[6], P[1],E[1], P[3],E[3], P[5],E[5]
+    // Push ngược (slot cuối→0), enemy trước player mỗi slot
+    // → Pop ra thứ tự xen kẽ: P[0], E[0], P[1], E[1], ... (công bằng giữa 2 phe)
     // ==========================================
 
     private Stack<AttackIntent> BuildAttackStack(List<CardInstance> pBoard, List<CardInstance> eBoard)
     {
         var stack = new Stack<AttackIntent>();
         int slotCount = Mathf.Min(pBoard.Count, eBoard.Count);
-        int[] attackOrder = { 0, 2, 4, 6, 1, 3, 5 };
-        for (int j = attackOrder.Length - 1; j >= 0; j--)
+        for (int i = slotCount - 1; i >= 0; i--)
         {
-            int i = attackOrder[j];
-            if (i >= slotCount) continue;
             if (eBoard[i] != null && !eBoard[i].IsDead && eBoard[i].currentATK > 0)
             {
                 CardInstance target = FindTarget(pBoard, i);
@@ -207,9 +211,22 @@ public class CombatResolver
         Debug.Log($"<color=white>[CLASH]</color> {attacker.Data.cardName} đấm {defender.Data.cardName}. " +
                   $"HP Atk: {aBefore}->{attacker.currentHP}, HP Def: {dBefore}->{defender.currentHP}");
 
-        log.AddAction(new CombatAction(atkIdx, defIdx, isPlayerAttacking,
+        var act = new CombatAction(atkIdx, defIdx, isPlayerAttacking,
             attacker.Data.cardName, defender.Data.cardName,
-            aBefore, attacker.currentHP, dBefore, defender.currentHP));
+            aBefore, attacker.currentHP, dBefore, defender.currentHP);
+
+        // Đánh dấu Reborn để visualizer hồi sinh card sau DieAnimation
+        if (defender.IsDead && defender.isReborn && !defender.hasRebornUsed)
+        {
+            act.defenderReborn     = true;
+            act.defenderRevivedHP  = ComputeRevivedHP(defender);
+        }
+        if (attacker.IsDead && attacker.isReborn && !attacker.hasRebornUsed)
+        {
+            act.attackerReborn     = true;
+            act.attackerRevivedHP  = ComputeRevivedHP(attacker);
+        }
+        log.AddAction(act);
     }
 
     // ==========================================
@@ -305,8 +322,8 @@ public class CombatResolver
 
             if (unit.isReborn && !unit.hasRebornUsed)
             {
-                unit.Revive(1);
-                Debug.Log($"<color=magenta>[REBORN]</color> {unit.Data.cardName} hồi sinh với 1 HP!");
+                unit.ReviveDefault();
+                Debug.Log($"<color=magenta>[REBORN]</color> {unit.Data.cardName} hồi sinh với chỉ số mặc định (ATK {unit.currentATK} / HP {unit.currentHP})!");
                 engine.BroadcastAllyEvent(TriggerType.OnAllyReborn, unit, allyBoard, enemyBoard);
                 // BUG FIX: OnAllyReborn có thể kill unit ở slot sau trong cùng pass này.
                 // Scan ngay để đăng ký vào death stack — tránh CleanupBoard null chúng trước khi
@@ -368,30 +385,39 @@ public class CombatResolver
 
     private CardInstance FindTarget(List<CardInstance> board, int prefSlot)
     {
-        // Taunt bỏ qua bảo vệ frontline — bất kỳ unit Taunt nào còn sống đều kéo toàn bộ fire.
-        // (Frontline trống hay không không quan trọng khi địch có Taunt.)
-        bool hasTaunt = board.Exists(u => u != null && !u.IsDead && u.isTaunt);
+        // Chỉ unit "lộ ra" mới có thể bị chọn làm mục tiêu.
+        // Slot sau (index lẻ: 1,3,5) bị che bởi 2 slot trước kề bên.
+        bool hasTaunt = false;
+        for (int i = 0; i < board.Count; i++)
+        {
+            if (IsAttackableTarget(board, i) && board[i].isTaunt)
+            {
+                hasTaunt = true;
+                break;
+            }
+        }
 
-        // Ripple search từ prefSlot ra 2 bên:
-        // - Taunt mode : nhắm unit Taunt gần nhất (bỏ qua frontline shield)
-        // - Normal mode: nhắm unit exposed gần nhất (frontline phải quang trước)
+        // Ripple Search: loang từ prefSlot ra 2 bên trên các mục tiêu đang lộ ra.
+        // Nếu có Taunt hợp lệ -> chỉ xét Taunt; nếu không -> xét mọi unit hợp lệ còn sống.
         for (int d = 0; d < board.Count; d++)
         {
             int left  = prefSlot - d;
             int right = prefSlot + d;
 
-            if (IsValidTarget(board, left,  hasTaunt)) return board[left];
-            if (d > 0 && IsValidTarget(board, right, hasTaunt)) return board[right];
+            if (IsAttackableTarget(board, left))
+            {
+                var u = board[left];
+                if (!hasTaunt || u.isTaunt) return u;
+            }
+
+            // d > 0: tránh check prefSlot lần 2 (left == right khi d=0)
+            if (d > 0 && IsAttackableTarget(board, right))
+            {
+                var u = board[right];
+                if (!hasTaunt || u.isTaunt) return u;
+            }
         }
         return null;
-    }
-
-    private bool IsValidTarget(List<CardInstance> board, int slot, bool tauntMode)
-    {
-        if (slot < 0 || slot >= board.Count) return false;
-        var u = board[slot];
-        if (u == null || u.IsDead) return false;
-        return tauntMode ? u.isTaunt : IsAttackableTarget(board, slot);
     }
 
     private bool IsAttackableTarget(List<CardInstance> board, int slot)
@@ -418,6 +444,14 @@ public class CombatResolver
     // ==========================================
     // HELPERS
     // ==========================================
+
+    private int ComputeRevivedHP(CardInstance unit)
+    {
+        const float keepRatio = 0.7f;
+        int tier = unit.mergeLevel + 1;
+        return Mathf.RoundToInt(unit.Data.baseHP * tier
+               + keepRatio * (unit.growthHPBonus + unit.permanentHPBonus));
+    }
 
     private bool IsSideEliminated(List<CardInstance> board)
         => !board.Exists(u => u != null && !u.IsDead);

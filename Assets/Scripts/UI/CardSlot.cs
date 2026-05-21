@@ -47,6 +47,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
 
             // Kích hoạt hiệu ứng
             GameManager.Instance.resolver.ApplySpellToUnit(spellUI.currentInstance, targetUnitUI.currentInstance);
+            AudioManager.Instance?.Spell();
 
             // Cập nhật lại hiển thị cho Unit (để nhảy số ATK/HP mới)
             targetUnitUI.Setup(targetUnitUI.currentInstance);
@@ -126,6 +127,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
         else if (this.slotType == SlotType.Hand || this.slotType == SlotType.PlayerBoard)
         {
             unitCard.parentReturnTo = this.transform;
+            AudioManager.Instance?.MoveCard();
 
             // Chỉ bắn OnDeploy khi kéo từ Hand lên Board (không phải đổi chỗ trong Board)
             bool shouldDeploy = this.slotType == SlotType.PlayerBoard && sourceSlot.slotType != SlotType.PlayerBoard;
@@ -165,6 +167,8 @@ public class CardSlot : MonoBehaviour, IDropHandler
             TriggerOnDeploy(deployedUI);
         }
         CheckForMerge(cardID, mergeLevel);
+        // Đảm bảo shop blink hint luôn cập nhật sau buy/move (kể cả khi vào Hand)
+        GameManager.Instance.SyncBoards();
     }
 
     private void CheckForMerge(string cardID, int mergeLevel)
@@ -220,6 +224,8 @@ public class CardSlot : MonoBehaviour, IDropHandler
         }
 
         Debug.Log($"<color=gold>[MERGE]</color> 3x {keeper.currentInstance.Data.cardName} hợp nhất thành cấp {keeper.currentInstance.mergeLevel + 1}! (keeper: slot bonus={bestBonus})");
+
+        AudioManager.Instance?.StarUp();
 
         CardVisuals vis = keeper.GetComponent<CardVisuals>();
         if (vis != null) StartCoroutine(vis.BurstAnimation());

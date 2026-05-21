@@ -33,6 +33,14 @@ public class CardDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         // Tắt raycast để chuột có thể "nhìn thấy" Slot bên dưới lá bài
         canvasGroup.blocksRaycasts = false;
 
+        // Hiện panel bán nếu kéo từ Hand hoặc PlayerBoard
+        if (sourceSlot != null
+            && (sourceSlot.slotType == CardSlot.SlotType.Hand
+             || sourceSlot.slotType == CardSlot.SlotType.PlayerBoard))
+        {
+            SellZone.Show();
+        }
+
         Debug.Log("Bắt đầu kéo lá bài");
     }
 
@@ -45,6 +53,12 @@ public class CardDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        // Ẩn panel bán dù đã bán hay chưa
+        SellZone.Hide();
+
+        // Nếu card đã bị bán (destroy) trong OnDrop thì khỏi xử lý gì thêm
+        if (this == null || gameObject == null) return;
+
         // Trả về parent cũ (nếu không tìm thấy slot mới) hoặc slot mới (do script Slot xử lý)
         this.transform.SetParent(parentReturnTo);
 

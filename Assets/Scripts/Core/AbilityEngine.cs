@@ -4,6 +4,13 @@ using UnityEngine;
 // TTE Engine: Trigger → Target → Effect
 public partial class AbilityEngine
 {
+    private System.Action<CardInstance, List<CardInstance>> onUnitSummoned;
+
+    public void SetSummonObserver(System.Action<CardInstance, List<CardInstance>> observer)
+    {
+        onUnitSummoned = observer;
+    }
+
     // Stack-based summon queue: mỗi unit chỉ summon 1 lần ngay lập tức,
     // các unit còn lại trong batch đợi CombatResolver.FlushDeathStack pop ra
     // SAU KHI death chain của unit trước đó resolve hoàn toàn.
@@ -264,6 +271,7 @@ public partial class AbilityEngine
             {
                 board[i] = new CardInstance(data, i) { isBattleSpawned = true };
                 Debug.Log($"<color=green>[SUMMON]</color> Đã triệu hồi {data.cardName} vào slot {i}");
+                onUnitSummoned?.Invoke(board[i], board);
                 return board[i];
             }
         }
@@ -276,6 +284,7 @@ public partial class AbilityEngine
             {
                 board[i] = new CardInstance(data, i) { isBattleSpawned = true };
                 Debug.Log($"<color=green>[SUMMON]</color> Đã triệu hồi {data.cardName} vào slot {i} (thay chỗ dead)");
+                onUnitSummoned?.Invoke(board[i], board);
                 return board[i];
             }
         }

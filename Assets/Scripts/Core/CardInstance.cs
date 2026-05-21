@@ -81,6 +81,23 @@ using UnityEngine;
         lastAttacker     = null;
     }
 
+    // Passive Reborn: hồi sinh với chỉ số mặc định (ATK + HP đầy như đầu combat),
+    // xóa flag isReborn (round đó không revive nữa), giữ nguyên ability counters/buff combat.
+    public void ReviveDefault()
+    {
+        const float keepRatio = 0.7f;
+        int tier = mergeLevel + 1;
+        currentATK = Mathf.RoundToInt(Data.baseATK * tier
+                   + keepRatio * (growthATKBonus + permanentATKBonus));
+        maxHP      = Mathf.RoundToInt(Data.baseHP  * tier
+                   + keepRatio * (growthHPBonus  + permanentHPBonus));
+        currentHP  = maxHP;
+        isReborn   = false;   // mất passive trong round này
+        hasRebornUsed    = true;
+        onDeathProcessed = false;
+        lastAttacker     = null;
+    }
+
     public bool IsDead    => currentHP <= 0;
     public bool IsDamaged => currentHP < maxHP;
 }

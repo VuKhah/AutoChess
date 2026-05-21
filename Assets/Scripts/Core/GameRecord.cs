@@ -22,8 +22,17 @@ public class CardSnapshot
 }
 
 [System.Serializable]
+public enum CombatActionType
+{
+    Clash,
+    Summon
+}
+
+[System.Serializable]
 public class CombatAction
 {
+    public CombatActionType actionType = CombatActionType.Clash;
+
     public int attackerIdx;
     public int targetIdx;
     public bool isPlayerAttacking;
@@ -34,8 +43,21 @@ public class CombatAction
     public int atkHPBefore, atkHPAfter;
     public int defHPBefore, defHPAfter;
 
+    // Passive Reborn: đánh dấu để visualizer biết phải hồi sinh card sau DieAnimation
+    public bool attackerReborn;
+    public bool defenderReborn;
+    public int  attackerRevivedHP;
+    public int  defenderRevivedHP;
+
+    public int summonSlotIdx;
+    public bool isPlayerSummon;
+    public string summonCardID;
+    public int summonHP;
+    public int summonATK;
+
     public CombatAction(int atk, int target, bool isPlayer, string aName, string tName, int aBefore, int aAfter, int dBefore, int dAfter)
     {
+        actionType = CombatActionType.Clash;
         attackerIdx = atk;
         targetIdx = target;
         isPlayerAttacking = isPlayer;
@@ -45,6 +67,19 @@ public class CombatAction
         atkHPAfter = aAfter;
         defHPBefore = dBefore;
         defHPAfter = dAfter;
+    }
+
+    public static CombatAction Summon(int slotIdx, bool isPlayerSide, CardInstance unit)
+    {
+        return new CombatAction(-1, -1, isPlayerSide, null, unit.Data.cardName, 0, 0, 0, 0)
+        {
+            actionType = CombatActionType.Summon,
+            summonSlotIdx = slotIdx,
+            isPlayerSummon = isPlayerSide,
+            summonCardID = unit.Data.cardID,
+            summonHP = unit.currentHP,
+            summonATK = unit.currentATK
+        };
     }
 }
 

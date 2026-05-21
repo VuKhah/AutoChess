@@ -63,6 +63,9 @@ public class UIManager : MonoBehaviour
         mediumBtn?.onClick.AddListener(() => SelectDifficulty("Medium"));
         hardBtn?.onClick.AddListener(()   => SelectDifficulty("Hard"));
         if (difficultyPanel != null) difficultyPanel.SetActive(true);
+
+        // Build sẵn panel bán card (ẩn) để Drop nhanh không bị giật frame đầu
+        SellZone.EnsureExists();
     }
 
     /// <summary>
@@ -96,11 +99,27 @@ public class UIManager : MonoBehaviour
         shopPanel.SetActive(!isCombat);
         enemyBoardPanel.SetActive(isCombat);
         if (handPanel != null)
+        {
             handPanel.SetActive(!isCombat);
+            if (!isCombat)
+            {
+                // Bottom_Zone là cha của handPanel; gắn hiệu ứng chia bài lên đó
+                Transform bottomZone = handPanel.transform.parent != null ? handPanel.transform.parent : handPanel.transform;
+                BottomZoneDeal deal = bottomZone.GetComponent<BottomZoneDeal>();
+                if (deal == null) deal = bottomZone.gameObject.AddComponent<BottomZoneDeal>();
+                deal.Play();
+            }
+        }
         if (backgroundImage != null)
             backgroundImage.sprite = isCombat ? combatPhaseBackground : shopPhaseBackground;
 
         BattlePhaseLayout.Instance?.ApplyPhase(isCombat);
+
+        if (AudioManager.Instance != null)
+        {
+            if (isCombat) AudioManager.Instance.PlayCombatBGM();
+            else          AudioManager.Instance.PlayPrepBGM();
+        }
 
         // 2. Chuyển đổi Icon và Text tài nguyên
         if (resourceIcon != null)

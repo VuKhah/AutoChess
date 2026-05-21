@@ -121,6 +121,8 @@ public partial class GameManager : MonoBehaviour
         if (isGameEnded) return;
         isGameEnded    = true;
         isCombatActive = false;
+        // Phát SFX TRƯỚC StopAllCoroutines để không bị race condition
+        if (AudioManager.Instance != null) { AudioManager.Instance.StopBGM(); AudioManager.Instance.Win(); }
         StopAllCoroutines();
         Debug.Log("<color=yellow>BẠN ĐÃ CHIẾN THẮNG!</color>");
         UIManager.Instance.ShowVictory();
@@ -131,6 +133,8 @@ public partial class GameManager : MonoBehaviour
         if (isGameEnded) return;
         isGameEnded    = true;
         isCombatActive = false;
+        // Phát SFX TRƯỚC StopAllCoroutines để không bị race condition
+        if (AudioManager.Instance != null) { AudioManager.Instance.StopBGM(); AudioManager.Instance.Lose(); }
         StopAllCoroutines();
         Debug.Log("<color=red>GAME OVER!</color>");
         UIManager.Instance.ShowGameOver();
