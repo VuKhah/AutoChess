@@ -7,6 +7,7 @@ public class CardDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     [HideInInspector] public Transform parentReturnTo = null;
     private CanvasGroup canvasGroup;
     private Transform draggingLayer;
+    private CardSlot sourceSlot;
 
     private void Awake()
     {
@@ -24,12 +25,21 @@ public class CardDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
         
         parentReturnTo = this.transform.parent;
+        sourceSlot = parentReturnTo.GetComponent<CardSlot>();
 
         // Nhấc lá bài lên lớp trên cùng để không bị che
         this.transform.SetParent(draggingLayer);
 
         // Tắt raycast để chuột có thể "nhìn thấy" Slot bên dưới lá bài
         canvasGroup.blocksRaycasts = false;
+
+        // Hiện panel bán nếu kéo từ Hand hoặc PlayerBoard
+        if (sourceSlot != null
+            && (sourceSlot.slotType == CardSlot.SlotType.Hand
+             || sourceSlot.slotType == CardSlot.SlotType.PlayerBoard))
+        {
+            SellZone.Show();
+        }
 
         Debug.Log("Bắt đầu kéo lá bài");
     }
@@ -43,12 +53,34 @@ public class CardDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        // Ẩn panel bán dù đã bán hay chưa
+        SellZone.Hide();
+
+        // Nếu card đã bị bán (destroy) trong OnDrop thì khỏi xử lý gì thêm
+        if (this == null || gameObject == null) return;
+
         // Trả về parent cũ (nếu không tìm thấy slot mới) hoặc slot mới (do script Slot xử lý)
         this.transform.SetParent(parentReturnTo);
 
-        // Reset vị trí về giữa Slot
+        // Ép lá bài khít với slot mới sau khi thả.
         RectTransform rect = GetComponent<RectTransform>();
-        rect.anchoredPosition = Vector2.zero;
+        CardSlotFitter.FitToSlot(rect, parentReturnTo);
+        CardVisuals visuals = GetComponent<CardVisuals>();
+        CardSlot destinationSlot = parentReturnTo.GetComponent<CardSlot>();
+        if (visuals != null && destinationSlot != null)
+        {
+            visuals.RefreshSettledScale();
+            bool deployedFromShop = sourceSlot != null
+                && sourceSlot.slotType == CardSlot.SlotType.Shop
+                && destinationSlot.slotType == CardSlot.SlotType.PlayerBoard;
+
+            if (deployedFromShop)
+                visuals.PlayDeployToBoard();
+            else if (destinationSlot.slotType == CardSlot.SlotType.PlayerBoard)
+                visuals.SetBoardPose();
+            else
+                visuals.SetUprightPose();
+        }
 
         // Bật lại raycast để có thể kéo lần sau
         canvasGroup.blocksRaycasts = true;

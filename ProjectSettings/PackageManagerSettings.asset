@@ -35,8 +35,13 @@ MonoBehaviour:
   m_RegistryInfoDraft:
     m_Modified: 0
     m_ErrorMessage: 
+<<<<<<< HEAD
+    m_UserModificationsInstanceId: -920
+    m_OriginalInstanceId: -922
+=======
     m_UserModificationsEntityId:
       m_Data: -942
     m_OriginalEntityId:
       m_Data: -944
+>>>>>>> remotes/origin/Sua2
   m_LoadAssets: 0

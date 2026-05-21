@@ -1,0 +1,71 @@
+├── Document/
+│   ├── assets_tree.txt
+│   ├── CardsBabylons.json
+│   ├── CardsBabylons.json.meta
+│   ├── CardsData.xlsx
+│   ├── CardsData.xlsx.meta
+│   ├── CardsMagic.json
+│   ├── CardsMagic.json.meta
+│   ├── CardsNiles.json
+│   ├── CardsNiles.json.meta
+│   ├── merge_data.py
+│   ├── merge_data.py.meta
+│   ├── scan_assets.py
+│   ├── summary_2608050440.md
+│   ├── TienDo.md.meta
+├── Scripts/
+│   ├── AI.meta
+│   ├── Core.meta
+│   ├── Data.meta
+│   ├── Editor.meta
+│   ├── Managers.meta
+│   ├── Test.meta
+│   ├── UI.meta
+│   ├── AI/
+│   │   ├── AILibrary.cs
+│   │   ├── AILibrary.cs.meta
+│   │   ├── BotAgent.cs
+│   │   ├── BotAgent.cs.meta
+│   │   ├── Chromosome.cs
+│   │   ├── Chromosome.cs.meta
+│   │   ├── GameSimulator.cs
+│   │   ├── GameSimulator.cs.meta
+│   │   ├── GATrainer.cs
+│   │   ├── GATrainer.cs.meta
+│   ├── Core/
+│   │   ├── CardInstance.cs
+│   │   ├── CardInstance.cs.meta
+│   │   ├── CombatResolver.cs
+│   │   ├── CombatResolver.cs.meta
+│   │   ├── GameRecord.cs
+│   │   ├── GameRecord.cs.meta
+│   ├── Data/
+│   │   ├── AbilityData.cs
+│   │   ├── AbilityData.cs.meta
+│   │   ├── CardDefinition.cs
+│   │   ├── CardDefinition.cs.meta
+│   ├── Editor/
+│   ├── Managers/
+│   │   ├── AIManager.cs
+│   │   ├── AIManager.cs.meta
+│   │   ├── CardDatabase.cs
+│   │   ├── CardDatabase.cs.meta
+│   │   ├── EconomyManager.cs
+│   │   ├── EconomyManager.cs.meta
+│   │   ├── GameManager.cs
+│   │   ├── GameManager.cs.meta
+│   │   ├── UIManager.cs
+│   │   ├── UIManager.cs.meta
+│   ├── Test/
+│   │   ├── ProjectSanityChecker.cs
+│   │   ├── ProjectSanityChecker.cs.meta
+│   │   ├── scan_assets.py.meta
+│   ├── UI/
+│   │   ├── CardDraggable.cs
+│   │   ├── CardDraggable.cs.meta
+│   │   ├── CardSlot.cs
+│   │   ├── CardSlot.cs.meta
+│   │   ├── CardUI.cs
+│   │   ├── CardUI.cs.meta
+│   │   ├── CardVisuals.cs
+│   │   ├── CardVisuals.cs.meta

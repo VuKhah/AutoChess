@@ -1,0 +1,473 @@
+{
+    "cards": [
+        {
+            "_comment": "// ================= NILES =================",
+            "cardID": "U_01_Niles",
+            "cardName": "Anubis",
+            "tribe": 3,
+            "tier": 6,
+            "baseATK": 5,
+            "baseHP": 5,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 8,
+                    "target": 6,
+                    "effect": 3,
+                    "effectValue1": 0,
+                    "effectValue2": 0,
+                    "isReborn": true,
+                    "triggerLimit": 2,
+                    "isPermanent": false
+                }
+            ],
+            "description": "OnAllyDeath: ban Reborn cho LowestHealthAlly (tối đa 2 lần)"
+        },
+        {
+            "cardID": "U_02_Niles",
+            "cardName": "Sekhmet",
+            "tribe": 3,
+            "tier": 6,
+            "baseATK": 9,
+            "baseHP": 3,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 9,
+                    "target": 11,
+                    "effect": 5,
+                    "triggerLimit": 2,
+                    "isConsume": true,
+                    "isPermanent": false
+                },
+                {
+                    "trigger": 3,
+                    "target": 1,
+                    "effect": 9,
+                    "isPermanent": false
+                }
+            ],
+            "description": "OnAllySummon: Consume unit đó (tối đa 2 lần). Slain: triệu hồi lại tất cả unit đã Consume."
+        },
+        {
+            "cardID": "U_03_Niles",
+            "cardName": "Osiris",
+            "tribe": 3,
+            "tier": 6,
+            "baseATK": 3,
+            "baseHP": 3,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 10,
+                    "target": 11,
+                    "effect": 1,
+                    "effectValue1": 30,
+                    "effectValue2": 30,
+                    "isPermanent": true
+                }
+            ],
+            "description": "OnAllyReborn: Tăng +30/+30 cho đồng minh đó."
+        },
+        {
+            "cardID": "U_04_Niles",
+            "cardName": "Sobek",
+            "tribe": 3,
+            "tier": 5,
+            "baseATK": 2,
+            "baseHP": 2,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 9,
+                    "target": 1,
+                    "effect": 1,
+                    "effectValue1": 1,
+                    "effectValue2": 2,
+                    "isPermanent": true
+                }
+            ],
+            "description": "OnAllySummon: Tăng vĩnh viễn +1/+2 cho bản thân."
+        },
+        {
+            "cardID": "U_05_Niles",
+            "cardName": "Bastet",
+            "tribe": 3,
+            "tier": 5,
+            "baseATK": 4,
+            "baseHP": 8,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 9,
+                    "target": 9,
+                    "effect": 1,
+                    "effectValue1": 1,
+                    "effectValue2": 1,
+                    "conditionCount": 2,
+                    "isPermanent": false,
+                    "isEscalating": true
+                }
+            ],
+            "description": "OnAllySummon (mỗi 2 lần): Tăng +1/+1 (tăng dần +1/+1 mỗi lần) cho toàn bộ đồng minh Niles trong trận đấu này."
+        },
+        {
+            "cardID": "U_06_Niles",
+            "cardName": "Thoth",
+            "tribe": 3,
+            "tier": 5,
+            "baseATK": 8,
+            "baseHP": 5,
+            "cost": 3,
+            "hasReborn": true,
+            "abilities": [
+                {
+                    "trigger": 3,
+                    "target": 9,
+                    "effect": 1,
+                    "effectValue1": 2,
+                    "effectValue2": 0,
+                    "isPermanent": true
+                }
+            ],
+            "description": "Slain: Tăng vĩnh viễn +2/+0 cho toàn bộ đồng minh Niles."
+        },
+        {
+            "cardID": "U_07_Niles",
+            "cardName": "Isis",
+            "tribe": 3,
+            "tier": 5,
+            "baseATK": 2,
+            "baseHP": 9,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 10,
+                    "target": 3,
+                    "effect": 1,
+                    "effectValue1": 3,
+                    "effectValue2": 3,
+                    "isPermanent": true
+                }
+            ],
+            "description": "OnAllyReborn: Tăng vĩnh viễn +3/+3 cho toàn bộ đồng minh."
+        },
+        {
+            "cardID": "U_08_Niles",
+            "cardName": "Sepopard",
+            "tribe": 3,
+            "tier": 4,
+            "baseATK": 5,
+            "baseHP": 2,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 9,
+                    "target": 11,
+                    "effect": 1,
+                    "effectValue1": 4,
+                    "effectValue2": 4,
+                    "isPermanent": false
+                }
+            ],
+            "description": "OnAllySummon: Tăng +4/+4 cho đồng minh đó trong trận đấu này."
+        },
+        {
+            "cardID": "U_09_Niles",
+            "cardName": "Nefertem",
+            "tribe": 3,
+            "tier": 4,
+            "baseATK": 4,
+            "baseHP": 2,
+            "cost": 3,
+            "hasReborn": true,
+            "abilities": [
+                {
+                    "trigger": 3,
+                    "target": 2,
+                    "effect": 3,
+                    "isPermanent": false,
+                    "isReborn": true
+                }
+            ],
+            "description": "Slain: Ban Reborn cho 1 đồng minh ngẫu nhiên."
+        },
+        {
+            "cardID": "U_10_Niles",
+            "cardName": "Sand Golem",
+            "tribe": 3,
+            "tier": 4,
+            "baseATK": 6,
+            "baseHP": 2,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 3,
+                    "target": 1,
+                    "effect": 4,
+                    "effectValue1": 2,
+                    "summonCardID": "U_20_Niles",
+                    "isPermanent": false
+                }
+            ],
+            "description": "Slain: Triệu hồi 2 Niles Warrior."
+        },
+        {
+            "cardID": "U_11_Niles",
+            "cardName": "Upamaki",
+            "tribe": 3,
+            "tier": 4,
+            "baseATK": 5,
+            "baseHP": 2,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 6,
+                    "target": 7,
+                    "effect": 5,
+                    "isPermanent": false,
+                    "isConsume": true
+                },
+                {
+                    "trigger": 3,
+                    "target": 1,
+                    "effect": 9,
+                    "isPermanent": false
+                }
+            ],
+            "description": "OnDeploy: Consume đồng minh bên trái. Slain: Triệu hồi lại tất cả unit đã bị Consume."
+        },
+        {
+            "cardID": "U_12_Niles",
+            "cardName": "Cat Archer",
+            "tribe": 3,
+            "tier": 3,
+            "baseATK": 3,
+            "baseHP": 1,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 4,
+                    "target": 7,
+                    "effect": 8,
+                    "isPermanent": false
+                }
+            ],
+            "description": "Đầu trận: Kích hoạt kỹ năng của đồng minh bên trái."
+        },
+        {
+            "cardID": "U_13_Niles",
+            "cardName": "Niles Cultist",
+            "tribe": 3,
+            "tier": 3,
+            "baseATK": 3,
+            "baseHP": 1,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 8,
+                    "target": 9,
+                    "effect": 1,
+                    "effectValue1": 1,
+                    "effectValue2": 0,
+                    "conditionCount": 3,
+                    "isPermanent": true
+                }
+            ],
+            "description": "OnAllyDeath (mỗi 3 lần): Tăng vĩnh viễn +1/+0 cho toàn bộ đồng minh Niles."
+        },
+        {
+            "cardID": "U_14_Niles",
+            "cardName": "Scorpion",
+            "tribe": 3,
+            "tier": 3,
+            "baseATK": 1,
+            "baseHP": 1,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 2,
+                    "target": 5,
+                    "effect": 2,
+                    "effectValue1": 5,
+                    "isPermanent": false
+                }
+            ],
+            "description": "Khi tấn công: Gây 5 sát thương cho kẻ địch trực tiếp."
+        },
+        {
+            "cardID": "U_15_Niles",
+            "cardName": "Ammit",
+            "tribe": 3,
+            "tier": 3,
+            "baseATK": 2,
+            "baseHP": 2,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 8,
+                    "target": 1,
+                    "effect": 1,
+                    "effectValue1": 1,
+                    "effectValue2": 1,
+                    "isPermanent": true
+                }
+            ],
+            "description": "OnAllyDeath: Tăng vĩnh viễn +1/+1 cho bản thân."
+        },
+        {
+            "cardID": "U_16_Niles",
+            "cardName": "Hyena Thief",
+            "tribe": 3,
+            "tier": 2,
+            "baseATK": 3,
+            "baseHP": 1,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 6,
+                    "target": 1,
+                    "effect": 6,
+                    "effectValue1": 1,
+                    "isPermanent": false
+                }
+            ],
+            "description": "OnDeploy: Nhận 1 Coin."
+        },
+        {
+            "cardID": "U_17_Niles",
+            "cardName": "Babi",
+            "tribe": 3,
+            "tier": 2,
+            "baseATK": 1,
+            "baseHP": 1,
+            "cost": 3,
+            "hasReborn": true,
+            "abilities": [
+                {
+                    "trigger": 11,
+                    "target": 2,
+                    "effect": 1,
+                    "effectValue1": 2,
+                    "isPermanent": true
+                }
+            ],
+            "description": "Aura: Tăng vĩnh viễn +2/+0 cho đồng minh ngẫu nhiên."
+        },
+        {
+            "cardID": "U_18_Niles",
+            "cardName": "Niles Commander",
+            "tribe": 3,
+            "tier": 2,
+            "baseATK": 4,
+            "baseHP": 4,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 9,
+                    "target": 1,
+                    "effect": 1,
+                    "effectValue1": 1,
+                    "effectValue2": 1,
+                    "isPermanent": false
+                }
+            ],
+            "description": "OnAllySummon: Tăng +1/+1 cho bản thân trong trận đấu này."
+        },
+        {
+            "cardID": "U_19_Niles",
+            "cardName": "Tawaret",
+            "tribe": 3,
+            "tier": 2,
+            "baseATK": 0,
+            "baseHP": 1,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 3,
+                    "target": 1,
+                    "effect": 4,
+                    "effectValue1": 2,
+                    "summonCardID": "U_23_Niles",
+                    "isPermanent": false
+                }
+            ],
+            "description": "Slain: Triệu hồi 2 Medjed."
+        },
+        {
+            "cardID": "U_20_Niles",
+            "cardName": "Niles Warrior",
+            "tribe": 3,
+            "tier": 1,
+            "baseATK": 2,
+            "baseHP": 1,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 3,
+                    "target": 1,
+                    "effect": 4,
+                    "effectValue1": 1,
+                    "summonCardID": "U_22_Niles",
+                    "isPermanent": false
+                }
+            ],
+            "description": "Slain: Triệu hồi 1 Mummy."
+        },
+        {
+            "cardID": "U_21_Niles",
+            "cardName": "Griffin",
+            "tribe": 3,
+            "tier": 1,
+            "baseATK": 2,
+            "baseHP": 1,
+            "cost": 3,
+            "hasTaunt": true,
+            "hasReborn": true,
+            "abilities": [],
+            "description": "Taunt. Reborn."
+        },
+        {
+            "cardID": "U_22_Niles",
+            "cardName": "Mummy",
+            "tribe": 3,
+            "tier": 1,
+            "baseATK": 1,
+            "baseHP": 1,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 0
+                }
+            ]
+        },
+        {
+            "cardID": "U_23_Niles",
+            "cardName": "Medjed",
+            "tribe": 3,
+            "tier": 1,
+            "baseATK": 3,
+            "baseHP": 2,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 0
+                }
+            ]
+        },
+        {
+            "cardID": "U_24_Niles",
+            "cardName": "Dark Medjed",
+            "tribe": 3,
+            "tier": 1,
+            "baseATK": 3,
+            "baseHP": 2,
+            "cost": 3,
+            "abilities": [
+                {
+                    "trigger": 0
+                }
+            ]
+        }
+    ]
+}

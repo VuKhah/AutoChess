@@ -1,11 +1,35 @@
+<<<<<<< HEAD
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+Logs/
+UserSettings/
+=======
 Library/
 Temp/
 Build/
 Logs/
 UserSettings/
 Obj/
+>>>>>>> remotes/origin/Sua2
 
 *.csproj
 *.unityproj
 *.sln
+<<<<<<< HEAD
+*.suo
+*.tmp
 *.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+=======
+*.user
+>>>>>>> remotes/origin/Sua2

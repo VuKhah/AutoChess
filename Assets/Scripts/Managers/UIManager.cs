@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class UIManager : MonoBehaviour
     [Header("Các Panel chính")]
     public GameObject shopPanel;
     public GameObject enemyBoardPanel;
+    public GameObject handPanel;
+    public Image backgroundImage;
+    public Sprite shopPhaseBackground;
+    public Sprite combatPhaseBackground;
 
     [Header("Chỉ số hiển thị")]
     public TextMeshProUGUI playerHPText;
@@ -26,6 +31,17 @@ public class UIManager : MonoBehaviour
     public Color lockActiveColor = Color.cyan;
     public Color lockNormalColor = Color.white;
 
+    [Header("End Game")]
+    public GameObject endGamePanel;
+    public TextMeshProUGUI endGameText;
+    public Button restartButton;
+
+    [Header("AI Difficulty")]
+    public GameObject difficultyPanel;
+    public Button easyBtn;
+    public Button mediumBtn;
+    public Button hardBtn;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -35,9 +51,21 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         // Gán sự kiện cho các nút bấm
-        actionButton.onClick.AddListener(OnActionPressed);
-        rollButton.onClick.AddListener(OnRollPressed);
-        lockButton.onClick.AddListener(OnLockPressed);
+        actionButton?.onClick.AddListener(OnActionPressed);
+        rollButton?.onClick.AddListener(OnRollPressed);
+        lockButton?.onClick.AddListener(OnLockPressed);
+        if (restartButton != null)
+            restartButton.onClick.AddListener(() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex));
+        if (endGamePanel != null)
+            endGamePanel.SetActive(false);
+
+        easyBtn?.onClick.AddListener(()   => SelectDifficulty("Easy"));
+        mediumBtn?.onClick.AddListener(() => SelectDifficulty("Medium"));
+        hardBtn?.onClick.AddListener(()   => SelectDifficulty("Hard"));
+        if (difficultyPanel != null) difficultyPanel.SetActive(true);
+
+        // Build sẵn panel bán card (ẩn) để Drop nhanh không bị giật frame đầu
+        SellZone.EnsureExists();
     }
 
     /// <summary>
@@ -45,9 +73,13 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void UpdateStats(int hp, int cups, int coins)
     {
-        playerHPText.text = hp.ToString();
+        if (playerHPText != null)
+            playerHPText.text = hp.ToString();
 
         // Nếu đang trong trận đấu thì hiện Cup, nếu ở Shop thì hiện Coin
+        if (resourceText == null)
+            return;
+
         if (GameManager.Instance.isCombatActive)
         {
             resourceText.text = cups.ToString();
@@ -66,17 +98,42 @@ public class UIManager : MonoBehaviour
         // 1. Chuyển đổi Panel
         shopPanel.SetActive(!isCombat);
         enemyBoardPanel.SetActive(isCombat);
+        if (handPanel != null)
+        {
+            handPanel.SetActive(!isCombat);
+            if (!isCombat)
+            {
+                // Bottom_Zone là cha của handPanel; gắn hiệu ứng chia bài lên đó
+                Transform bottomZone = handPanel.transform.parent != null ? handPanel.transform.parent : handPanel.transform;
+                BottomZoneDeal deal = bottomZone.GetComponent<BottomZoneDeal>();
+                if (deal == null) deal = bottomZone.gameObject.AddComponent<BottomZoneDeal>();
+                deal.Play();
+            }
+        }
+        if (backgroundImage != null)
+            backgroundImage.sprite = isCombat ? combatPhaseBackground : shopPhaseBackground;
+
+        BattlePhaseLayout.Instance?.ApplyPhase(isCombat);
+
+        if (AudioManager.Instance != null)
+        {
+            if (isCombat) AudioManager.Instance.PlayCombatBGM();
+            else          AudioManager.Instance.PlayPrepBGM();
+        }
 
         // 2. Chuyển đổi Icon và Text tài nguyên
         if (resourceIcon != null)
             resourceIcon.sprite = isCombat ? GameManager.Instance.cupIcon : GameManager.Instance.coinIcon;
 
         // 3. Ẩn/Hiện các nút chức năng Shop
-        rollButton.gameObject.SetActive(!isCombat);
-        lockButton.gameObject.SetActive(!isCombat);
+        if (rollButton != null)
+            rollButton.gameObject.SetActive(!isCombat);
+        if (lockButton != null)
+            lockButton.gameObject.SetActive(!isCombat);
 
         // 4. Thay đổi nội dung nút hành động chính
-        actionText.text = isCombat ? "LƯỢT TIẾP" : "BẮT ĐẦU";
+        if (actionText != null)
+            actionText.text = isCombat ? "LƯỢT TIẾP" : "BẮT ĐẦU";
 
         // Cập nhật lại chỉ số ngay lập tức để tránh bị trễ hiển thị
         UpdateStats(GameManager.Instance.playerHP, GameManager.Instance.playerCups, GameManager.Instance.playerCoins);
@@ -116,7 +173,21 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // Các hàm bổ trợ nếu cần gọi riêng lẻ
-    public void ShowVictory() { /* Hiển thị Popup thắng */ }
-    public void ShowGameOver() { /* Hiển thị Popup thua */ }
+    private void SelectDifficulty(string difficulty)
+    {
+        GameManager.Instance.SetDifficulty(difficulty);
+        if (difficultyPanel != null) difficultyPanel.SetActive(false);
+    }
+
+    private void ShowEndGame(string message)
+    {
+        if (endGamePanel != null) endGamePanel.SetActive(true);
+        if (endGameText  != null) endGameText.text = message;
+        if (actionButton != null) actionButton.interactable = false;
+        if (rollButton != null) rollButton.interactable = false;
+        if (lockButton != null) lockButton.interactable = false;
+    }
+
+    public void ShowVictory()  => ShowEndGame("CHIẾN THẮNG!");
+    public void ShowGameOver() => ShowEndGame("THUA CUỘC!");
 }

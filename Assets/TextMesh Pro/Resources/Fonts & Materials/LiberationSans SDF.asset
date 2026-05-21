@@ -36,7 +36,11 @@ Material:
     - _MaskSoftnessX: 0
     - _MaskSoftnessY: 0
     - _OutlineSoftness: 0
+<<<<<<< HEAD
+    - _OutlineWidth: 0
+=======
     - _OutlineWidth: 0.377
+>>>>>>> remotes/origin/Sua2
     - _PerspectiveFilter: 0.875
     - _ScaleRatioA: 0.9
     - _ScaleRatioB: 1
@@ -62,7 +66,11 @@ Material:
     - _WeightNormal: 0
     m_Colors:
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
-    - _FaceColor: {r: 0.6603774, g: 0.053577736, b: 0.053577736, a: 1}
+<<<<<<< HEAD
+    - _FaceColor: {r: 0.509434, g: 0.06968674, b: 0.06968674, a: 1}
+=======
+    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
+>>>>>>> remotes/origin/Sua2
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _UnderlayColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_BuildTextureStacks: []

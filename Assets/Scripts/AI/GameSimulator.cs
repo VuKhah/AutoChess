@@ -1,21 +1,32 @@
-public class GameSimulator {
+using UnityEngine; // Thêm UnityEngine để dùng Mathf.Clamp
+
+public class GameSimulator
+{
     private CombatResolver resolver = new CombatResolver();
 
-    public int SimulateMatch(BotAgent botA, BotAgent botB) {
+    public int SimulateMatch(BotAgent botA, BotAgent botB)
+    {
         int hpA = 7, hpB = 7;
-        int maxTurns = 15;
+        int maxTurns = 20;
 
-        for (int i = 0; i < maxTurns; i++) {
-            // Pha chuẩn bị (Giả sử shop có 3 lá ngẫu nhiên)
-            botA.DecidePrepPhase(CardDatabase.Instance.GetRandomShop(3));
-            botB.DecidePrepPhase(CardDatabase.Instance.GetRandomShop(3));
+        for (int i = 0; i < maxTurns; i++)
+        {
+            // Trong vòng lặp i chạy từ 0 -> 19, Turn thực tế sẽ là i + 1
+            int currentTurn = i + 1;
+
+            // Công thức tính Tier y hệt như GameManager (Cứ 2 Turn lên 1 Tier, tối đa 6)
+            int currentTier = Mathf.Clamp((currentTurn + 1) / 2, 1, 6);
+
+            // Pha chuẩn bị: Shop roll ra bài phải tuân thủ maxTier của Turn hiện tại
+            botA.DecidePrepPhase(CardDatabase.Instance.GetRandomShop(3, currentTier));
+            botB.DecidePrepPhase(CardDatabase.Instance.GetRandomShop(3, currentTier));
 
             // Pha chiến đấu
             resolver.ResolveTurn(botA.board, botB.board, new TurnRecord());
 
             // Trừ HP
-            bool aAlive = botA.board.Exists(u => u != null);
-            bool bAlive = botB.board.Exists(u => u != null);
+            bool aAlive = botA.board.Exists(u => u != null && !u.IsDead); // [HOTFIX] Thêm !u.IsDead để kiểm tra chính xác lính còn sống
+            bool bAlive = botB.board.Exists(u => u != null && !u.IsDead); // [HOTFIX] Thêm !u.IsDead
 
             if (!aAlive && bAlive) hpA--;
             else if (aAlive && !bAlive) hpB--;

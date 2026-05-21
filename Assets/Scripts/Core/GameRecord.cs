@@ -34,6 +34,12 @@ public class CombatAction
     public int atkHPBefore, atkHPAfter;
     public int defHPBefore, defHPAfter;
 
+    // Passive Reborn: đánh dấu để visualizer biết phải hồi sinh card sau DieAnimation
+    public bool attackerReborn;
+    public bool defenderReborn;
+    public int  attackerRevivedHP;
+    public int  defenderRevivedHP;
+
     public CombatAction(int atk, int target, bool isPlayer, string aName, string tName, int aBefore, int aAfter, int dBefore, int dAfter)
     {
         attackerIdx = atk;

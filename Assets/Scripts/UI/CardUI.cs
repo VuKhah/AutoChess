@@ -1,100 +1,186 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class CardUI : MonoBehaviour
 {
-    [Header("Visual Elements")]
-    public Image characterArt;
-    public Image abilityIcon;
-    public Image tierIcon;
+    [Header("Frame")]
+    public Image frameBackground;   // Khung nền của card — gắn sprite trực tiếp ở prefab
+
+    [Header("Name")]
+    public TextMeshProUGUI nameText;     // Tên thẻ — lấy từ CardDefinition.cardName
+
+    [Header("Stats")]
     public TextMeshProUGUI atkText;
     public TextMeshProUGUI hpText;
+    public Image characterArt;
 
-    [HideInInspector]
-    public CardInstance currentInstance;
+    [Header("Ability Icon (TTE)")]
+    public Image abilityIcon;       // Sprite: Sprites/Icons/Abilities/Abi_{effectID}
+
+    [Header("Passive Keyword Icons")]
+    public Image tauntIcon;         // Sprite: Sprites/Icons/Passives/Taunt   — khiên lớn
+    public Image rebornIcon;        // Sprite: Sprites/Icons/Passives/Reborn  — bình thuốc
+    public Image safeguardIcon;     // Sprite: Sprites/Icons/Passives/Safeguard — vòng bảo vệ
+
+    [Header("Tier Icon")]
+    public Image tierIcon;          // Sprite: Sprites/Icons/Tiers/Tier_{n}
+
+    [Header("Star Icons (Merge Level)")]
+    // Gắn 3 Image vào đây theo thứ tự: [0]=sao 1, [1]=sao 2, [2]=sao 3.
+    // mergeLevel=0 → chỉ hiện sao 1; mergeLevel=1 → sao 1+2; mergeLevel=2 → cả 3 sao.
+    public Image[] starIcons = new Image[3];
+
+    [Header("Merge Hint Blink")]
+    public Color blinkColor = new Color(1f, 0.9f, 0.3f, 1f);
+    public float blinkSpeed = 4f;   // Số lần nhấp nháy mỗi giây (Hz)
+
+    [HideInInspector] public CardInstance currentInstance;
 
     [Header("Visual Feedback")]
     public Color normalHealthColor = Color.white;
     public Color damagedHealthColor = Color.red;
 
+    private Coroutine blinkRoutine;
+    private Color frameOriginalColor;
+    private bool frameOriginalCached;
+
     public void Setup(CardInstance instance)
     {
-        // 0. Kiểm tra dữ liệu đầu vào
         if (instance == null) return;
 
-        // --- BÀI KIỂM TRA AN TOÀN TRƯỚC KHI CHẠY ---
         if (characterArt == null || atkText == null || hpText == null)
         {
-            Debug.LogError($"<color=red>[LỖI]</color> Thiếu thành phần UI (Image/Text) trên Prefab: {gameObject.name}. Hãy kéo thả lại trong Inspector!");
+            Debug.LogError($"[CardUI] Thiếu Visual Elements trên prefab: {gameObject.name}");
             return;
         }
 
-        currentInstance = instance; // Lưu lại instance để tham chiếu sau này (ví dụ: khi bị tấn công, kích hoạt kỹ năng...)
+        currentInstance = instance;
 
-        string folder = (instance.Data.cardType == CardType.Magic) ? "Magic" : "Units";
+        // --- Name ---
+        if (nameText != null) nameText.text = instance.Data.cardName;
 
-        // Đường dẫn bây giờ cực kỳ gọn: Sprites/Cards/Units/U_01
-        // Tribe giờ chỉ dùng để tính toán cộng điểm, không dùng để tìm ảnh nữa
-        string artPath = $"Sprites/Cards/{folder}/{instance.Data.cardID}";
-
-        Sprite art = Resources.Load<Sprite>(artPath);
+        // --- Art ---
+        // Spell dùng fileName (spell-art_XX); Unit dùng cardID (U_01_Babylon)
+        bool isSpell = instance.Data.cardType == CardType.Spell;
+        string folder = isSpell ? "Spells" : "Units";
+        string artFile = isSpell && !string.IsNullOrEmpty(instance.Data.fileName)
+                         ? instance.Data.fileName
+                         : instance.Data.cardID;
+        Sprite art = Resources.Load<Sprite>($"Sprites/Cards/{folder}/{artFile}");
         if (art != null) characterArt.sprite = art;
 
-        // 2. Cập nhật chỉ số ATK và HP
-        atkText.text = instance.currentATK.ToString();
-        hpText.text = instance.currentHP.ToString();
+        // --- Stats ---
+        if (isSpell)
+        {
+            // Spell không có ATK/HP — hiện cost thay vào ô ATK, ẩn HP
+            atkText.text = instance.Data.cost.ToString();
+            hpText.text = "";
+            hpText.color = normalHealthColor;
+        }
+        else
+        {
+            atkText.text = instance.currentATK.ToString();
+            hpText.text = instance.currentHP.ToString();
+            hpText.color = instance.IsDamaged ? damagedHealthColor : normalHealthColor;
+        }
 
-        // Đổi màu chữ HP nếu bị mất máu (Phản hồi trực quan)
-        hpText.color = instance.IsDamaged ? damagedHealthColor : normalHealthColor;
-
-        // 3. Nạp Hình 1: Icon Đặc tính (Ability)
+        // --- TTE Ability icon (chỉ effect của TTE, không lẫn passive) ---
         if (abilityIcon != null)
         {
-            // Ép kiểu Enum sang Int để lấy số (Ví dụ: Enrage -> 1)
-            int abilityID = (int)instance.Data.ability;
-
-            if (abilityID == 0) // 0 là None
+            AbilityData firstActive = instance.Data.abilities?.Find(a => a != null && a.trigger != TriggerType.None);
+            if (firstActive != null)
+            {
+                string iconName = "Abi_" + (int)firstActive.effect;
+                Sprite s = Resources.Load<Sprite>("Sprites/Icons/Abilities/" + iconName);
+                abilityIcon.sprite = s;
+                abilityIcon.gameObject.SetActive(s != null);
+                if (s == null) Debug.LogWarning($"[CardUI] Không tìm thấy: Sprites/Icons/Abilities/{iconName}");
+            }
+            else
             {
                 abilityIcon.gameObject.SetActive(false);
             }
-            else
-            {
-                // Nạp ảnh theo định dạng: Icons/Abilities/Abi_1.png, Icons/Abilities/Abi_2.png...
-                string iconName = "Abi_" + abilityID;
-                Sprite s = Resources.Load<Sprite>("Sprites/Icons/Abilities/" + iconName);
-
-                if (s != null)
-                {
-                    abilityIcon.sprite = s;
-                    abilityIcon.gameObject.SetActive(true);
-                }
-                else
-                {
-                    abilityIcon.gameObject.SetActive(false);
-                    Debug.LogWarning($"Thiếu ảnh: Resources/Sprites/Icons/Abilities/{iconName}.png");
-                }
-            }
         }
 
-        // 4. Nạp Hình 2: Icon Tier (Cấp độ bài)
+        // --- Passive keyword icons (độc lập, không ghi đè nhau) ---
+        SetPassiveIcon(tauntIcon, instance.isTaunt, "Taunt");
+        SetPassiveIcon(rebornIcon, instance.isReborn, "Reborn");
+        SetPassiveIcon(safeguardIcon, instance.safeguardActive, "Safeguard");
+
+        // --- Tier icon ---
         if (tierIcon != null)
         {
-            // Quy tắc đặt tên ảnh trong Resources/Icons: Tier_1, Tier_2, Tier_3...
-            string tierPath = "Sprites/Icons/Tiers/Tier_" + instance.Data.tier;
-            Sprite tSprite = Resources.Load<Sprite>(tierPath);
-
-            if (tSprite != null)
-            {
-                tierIcon.sprite = tSprite;
-                tierIcon.gameObject.SetActive(true);
-            }
-            else
-            {
-                tierIcon.gameObject.SetActive(false);
-                // Nếu chưa có ảnh Tier, chỉ log lỗi nếu Tier > 0
-                if (instance.Data.tier > 0) Debug.LogWarning($"[UI] Không tìm thấy Icon Tier tại: {tierPath}");
-            }
+            Sprite tSprite = Resources.Load<Sprite>("Sprites/Icons/Tiers/Tier_" + instance.Data.tier);
+            tierIcon.sprite = tSprite;
+            tierIcon.gameObject.SetActive(tSprite != null);
         }
+
+        // --- Star icons theo mergeLevel (0/1/2 → 1/2/3 sao) ---
+        UpdateStarIcons(instance.mergeLevel);
+    }
+
+    private void UpdateStarIcons(int mergeLevel)
+    {
+        if (starIcons == null) return;
+        int starsToShow = Mathf.Clamp(mergeLevel + 1, 1, starIcons.Length);
+        for (int i = 0; i < starIcons.Length; i++)
+        {
+            if (starIcons[i] == null) continue;
+            starIcons[i].gameObject.SetActive(i < starsToShow);
+        }
+    }
+
+    private void SetPassiveIcon(Image icon, bool active, string spriteName)
+    {
+        if (icon == null) return;
+        if (active)
+        {
+            Sprite s = Resources.Load<Sprite>("Sprites/Icons/Passives/" + spriteName);
+            if (s != null) icon.sprite = s;
+        }
+        icon.gameObject.SetActive(active);
+    }
+
+    // ==========================================
+    // MERGE HINT BLINK — shop card nhấp nháy khi có thể lên sao
+    // ==========================================
+    public void SetMergeHint(bool on)
+    {
+        if (frameBackground == null) return;
+
+        if (!frameOriginalCached)
+        {
+            frameOriginalColor = frameBackground.color;
+            frameOriginalCached = true;
+        }
+
+        if (on)
+        {
+            if (blinkRoutine == null && isActiveAndEnabled)
+                blinkRoutine = StartCoroutine(BlinkLoop());
+        }
+        else
+        {
+            if (blinkRoutine != null) { StopCoroutine(blinkRoutine); blinkRoutine = null; }
+            frameBackground.color = frameOriginalColor;
+        }
+    }
+
+    private IEnumerator BlinkLoop()
+    {
+        while (true)
+        {
+            float t = (Mathf.Sin(Time.unscaledTime * blinkSpeed * Mathf.PI * 2f) + 1f) * 0.5f;
+            frameBackground.color = Color.Lerp(frameOriginalColor, blinkColor, t);
+            yield return null;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (blinkRoutine != null) { StopCoroutine(blinkRoutine); blinkRoutine = null; }
+        if (frameOriginalCached && frameBackground != null) frameBackground.color = frameOriginalColor;
     }
 }

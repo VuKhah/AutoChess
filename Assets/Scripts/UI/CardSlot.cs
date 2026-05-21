@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -18,10 +20,10 @@ public class CardSlot : MonoBehaviour, IDropHandler
         // 2. Kiểm tra an ninh: Không cho phép tương tác với sân đối thủ
         if (this.slotType == SlotType.EnemyBoard) return;
 
-        // 3. XỬ LÝ RIÊNG CHO BÀI PHÉP (MAGIC)
-        if (draggedUI.currentInstance.Data.cardType == CardType.Magic) // 1 là Magic
+        // 3. XỬ LÝ RIÊNG CHO BÀI PHÉP (SPELL)
+        if (draggedUI.currentInstance.Data.cardType == CardType.Spell)
         {
-            HandleMagicDrop(draggedCard, draggedUI, sourceSlot);
+            HandleSpellDrop(draggedCard, draggedUI, sourceSlot);
             return;
         }
 
@@ -29,7 +31,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
         HandleUnitDrop(draggedCard, draggedUI, sourceSlot);
     }
 
-    private void HandleMagicDrop(CardDraggable magicCard, CardUI magicUI, CardSlot sourceSlot)
+    private void HandleSpellDrop(CardDraggable spellCard, CardUI spellUI, CardSlot sourceSlot)
     {
         // Tìm xem ô này có lính (Unit) nào đang đứng không
         CardUI targetUnitUI = GetComponentInChildren<CardUI>();
@@ -38,34 +40,35 @@ public class CardSlot : MonoBehaviour, IDropHandler
         if (targetUnitUI != null && targetUnitUI.currentInstance.Data.cardType == CardType.Unit)
         {
             // Nếu mua từ Shop thì phải trừ tiền trước
-            if (sourceSlot.slotType == SlotType.Shop)
+            if (sourceSlot != null && sourceSlot.slotType == SlotType.Shop)
             {
-                if (!GameManager.Instance.TryBuyCard(magicUI.currentInstance.Data.cost)) return;
+                if (!GameManager.Instance.TryBuyCard(spellUI.currentInstance.Data.cost)) return;
             }
 
             // Kích hoạt hiệu ứng
-            ApplyMagicEffect(magicUI.currentInstance, targetUnitUI.currentInstance);
+            GameManager.Instance.resolver.ApplySpellToUnit(spellUI.currentInstance, targetUnitUI.currentInstance);
+            AudioManager.Instance?.Spell();
 
             // Cập nhật lại hiển thị cho Unit (để nhảy số ATK/HP mới)
             targetUnitUI.Setup(targetUnitUI.currentInstance);
 
             // Xóa lá bài phép sau khi dùng
-            Destroy(magicCard.gameObject);
-            Debug.Log("<color=purple>Magic:</color> Đã sử dụng phép lên " + targetUnitUI.currentInstance.Data.cardName);
+            Destroy(spellCard.gameObject);
+            Debug.Log("<color=purple>Spell:</color> Đã sử dụng phép lên " + targetUnitUI.currentInstance.Data.cardName);
         }
         // TH 2: Thả bài phép vào ô Hand (để mua về cất túi hoặc sắp xếp túi)
         else if (this.slotType == SlotType.Hand && this.transform.childCount == 0)
         {
-            if (sourceSlot.slotType == SlotType.Shop)
+            if (sourceSlot != null && sourceSlot.slotType == SlotType.Shop)
             {
-                if (GameManager.Instance.TryBuyCard(magicUI.currentInstance.Data.cost))
+                if (GameManager.Instance.TryBuyCard(spellUI.currentInstance.Data.cost))
                 {
-                    magicCard.parentReturnTo = this.transform;
+                    spellCard.parentReturnTo = this.transform;
                 }
             }
             else
             {
-                magicCard.parentReturnTo = this.transform;
+                spellCard.parentReturnTo = this.transform;
             }
         }
         // TH 3: Thả bài phép vào ô Board trống -> KHÔNG CHO PHÉP
@@ -82,6 +85,21 @@ public class CardSlot : MonoBehaviour, IDropHandler
         {
             if (sourceSlot != null && sourceSlot.slotType != SlotType.Shop)
             {
+                // [THÊM MỚI] BẮN SỰ KIỆN ONSELL TRƯỚC KHI BAY MÀU
+                if (unitUI.currentInstance != null)
+                {
+                    // Sync trước khi bắn: lá bài vẫn đang nằm ở slot cũ nên SyncBoards bắt được
+                    GameManager.Instance.SyncBoards();
+                    Debug.Log($"<color=red>[EVENT]</color> Bắn sự kiện OnSell cho {unitUI.currentInstance.Data.cardName}");
+                    GameManager.Instance.resolver.TriggerAbility(
+                        TriggerType.OnSell,
+                        unitUI.currentInstance,
+                        null,
+                        GameManager.Instance.playerBoard,
+                        GameManager.Instance.enemyBoard  // BUG FIX: enemyBoard luôn là list 6-null, không bao giờ null
+                    );
+                }
+
                 GameManager.Instance.SellCard();
                 Destroy(unitCard.gameObject);
             }
@@ -99,6 +117,9 @@ public class CardSlot : MonoBehaviour, IDropHandler
                 if (GameManager.Instance.TryBuyCard(unitUI.currentInstance.Data.cost))
                 {
                     unitCard.parentReturnTo = this.transform;
+
+                    bool shouldDeploy = this.slotType == SlotType.PlayerBoard;
+                    StartCoroutine(CheckMergeNextFrame(unitUI.currentInstance.Data.cardID, unitUI.currentInstance.mergeLevel, shouldDeploy, unitUI));
                 }
             }
         }
@@ -106,28 +127,112 @@ public class CardSlot : MonoBehaviour, IDropHandler
         else if (this.slotType == SlotType.Hand || this.slotType == SlotType.PlayerBoard)
         {
             unitCard.parentReturnTo = this.transform;
+            AudioManager.Instance?.MoveCard();
+
+            // Chỉ bắn OnDeploy khi kéo từ Hand lên Board (không phải đổi chỗ trong Board)
+            bool shouldDeploy = this.slotType == SlotType.PlayerBoard && sourceSlot.slotType != SlotType.PlayerBoard;
+            StartCoroutine(CheckMergeNextFrame(unitUI.currentInstance.Data.cardID, unitUI.currentInstance.mergeLevel, shouldDeploy, unitUI));
         }
     }
 
-    private void ApplyMagicEffect(CardInstance magic, CardInstance unit)
+    // ==========================================
+    // HỆ THỐNG TRIGGER HỖ TRỢ
+    // ==========================================
+    private void TriggerOnDeploy(CardUI unitUI)
     {
-        switch (magic.Data.magicGroup)
+        if (unitUI.currentInstance != null)
         {
-            case 1: // Nhóm 1: Tăng chỉ số
-                unit.permanentATKBonus += magic.Data.statBonusATK;
-                unit.permanentHPBonus += magic.Data.statBonusHP;
-                unit.ResetStats();
-                break;
-            case 2: // Nhóm 2: Cấp Ability
-                unit.Data.ability = magic.Data.ability;
-                unit.Data.abilityValue = magic.Data.abilityValue;
-                unit.ResetStats();
-                break;
-            case 3: // Nhóm 3: Kinh tế (Ví dụ đơn giản)
-                GameManager.Instance.playerCoins += 1;
-                unit.ResetStats();
-                // Có thể thêm logic GiveRandomCardFromTribe ở đây
-                break;
+            Debug.Log($"<color=green>[EVENT]</color> Bắn sự kiện OnDeploy cho {unitUI.currentInstance.Data.cardName}");
+            GameManager.Instance.resolver.TriggerAbility(
+                TriggerType.OnDeploy,
+                unitUI.currentInstance,
+                null,
+                GameManager.Instance.playerBoard,
+                GameManager.Instance.enemyBoard
+            );
         }
+    }
+
+    // ==========================================
+    // HỆ THỐNG MERGE
+    // ==========================================
+
+    private IEnumerator CheckMergeNextFrame(string cardID, int mergeLevel, bool shouldDeploy = false, CardUI deployedUI = null)
+    {
+        yield return null; // Chờ OnEndDrag reparent lá bài vào slot mới
+        if (shouldDeploy && deployedUI != null)
+        {
+            // Sync board từ UI hiện tại (lá bài đã ở slot mới sau yield)
+            GameManager.Instance.SyncBoards();
+            TriggerOnDeploy(deployedUI);
+        }
+        CheckForMerge(cardID, mergeLevel);
+        // Đảm bảo shop blink hint luôn cập nhật sau buy/move (kể cả khi vào Hand)
+        GameManager.Instance.SyncBoards();
+    }
+
+    private void CheckForMerge(string cardID, int mergeLevel)
+    {
+        List<CardUI> matches = new List<CardUI>();
+
+        foreach (var slot in GameManager.Instance.playerSlots)
+        {
+            CardUI ui = slot.GetComponentInChildren<CardUI>();
+            if (ui != null && ui.currentInstance.Data.cardID == cardID
+                && ui.currentInstance.mergeLevel == mergeLevel
+                && !ui.currentInstance.isBattleSpawned)
+                matches.Add(ui);
+        }
+        foreach (var slot in GameManager.Instance.handSlots)
+        {
+            CardUI ui = slot.GetComponentInChildren<CardUI>();
+            if (ui != null && ui.currentInstance.Data.cardID == cardID
+                && ui.currentInstance.mergeLevel == mergeLevel
+                && !ui.currentInstance.isBattleSpawned)
+                matches.Add(ui);
+        }
+
+        if (matches.Count >= 3)
+            PerformMerge(matches);
+    }
+
+    private void PerformMerge(List<CardUI> cards)
+    {
+        // BUG FIX: Chọn keeper là lá bài có tổng bonus cao nhất thay vì luôn lấy cards[0].
+        // Đảm bảo: merged unit luôn mạnh hơn bất kỳ nguyên liệu nào (không bao giờ stat regression).
+        // Công thức: currentATK = baseATK × tier + 0.7 × (permanent + growth)
+        // Khi tier tăng 1 (mergeLevel++), phần base tăng nhưng phần bonus giữ nguyên.
+        // Nếu keeper có bonus thấp hơn một nguyên liệu khác → merged < nguyên liệu đó.
+        int keeperIdx = 0;
+        int bestBonus = int.MinValue;
+        for (int i = 0; i < 3; i++)
+        {
+            var inst = cards[i].currentInstance;
+            int totalBonus = inst.permanentATKBonus + inst.permanentHPBonus
+                           + inst.growthATKBonus    + inst.growthHPBonus;
+            if (totalBonus > bestBonus) { bestBonus = totalBonus; keeperIdx = i; }
+        }
+
+        CardUI keeper = cards[keeperIdx];
+        keeper.currentInstance.mergeLevel++;
+        keeper.currentInstance.ResetStats();
+        keeper.Setup(keeper.currentInstance);
+
+        for (int i = 0; i < 3; i++)
+        {
+            if (i != keeperIdx) Destroy(cards[i].gameObject);
+        }
+
+        Debug.Log($"<color=gold>[MERGE]</color> 3x {keeper.currentInstance.Data.cardName} hợp nhất thành cấp {keeper.currentInstance.mergeLevel + 1}! (keeper: slot bonus={bestBonus})");
+
+        AudioManager.Instance?.StarUp();
+
+        CardVisuals vis = keeper.GetComponent<CardVisuals>();
+        if (vis != null) StartCoroutine(vis.BurstAnimation());
+
+        GameManager.Instance.SyncBoards();
+
+        // Kiểm tra tiếp nếu vừa tạo ra quân đủ bộ 3 ở cấp mới
+        StartCoroutine(CheckMergeNextFrame(keeper.currentInstance.Data.cardID, keeper.currentInstance.mergeLevel));
     }
 }
