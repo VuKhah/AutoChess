@@ -60,21 +60,36 @@ $StartTime = Get-Date
     -logFile $LogFile
 
 $Duration = (Get-Date) - $StartTime
-$ExitCode = $LASTEXITCODE
+$JsonPath = Join-Path $ProjectPath "Assets\Resources\AI_Library.json"
 
 Write-Host ""
-if ($ExitCode -eq 0)
+
+# Unity batchmode đôi khi không trả đúng exit code qua PowerShell &
+# → kiểm tra file output thay vì chỉ dựa vào $LASTEXITCODE
+$Success = (Test-Path $JsonPath) -and (
+    (Select-String -Path $LogFile -Pattern "Hoàn tất" -Quiet) -or
+    (Select-String -Path $LogFile -Pattern "Hard bot saved" -Quiet)
+)
+
+if ($Success)
 {
     Write-Host "Training hoàn tất sau $([int]$Duration.TotalMinutes) phút $($Duration.Seconds) giây"
-    $JsonPath = Join-Path $ProjectPath "Assets\Resources\AI_Library.json"
-    if (Test-Path $JsonPath)
-    {
-        Write-Host "Output : $JsonPath"
-        $Size = (Get-Item $JsonPath).Length
-        Write-Host "Size   : $Size bytes"
-    }
+    Write-Host "Output : $JsonPath"
+    $Size = (Get-Item $JsonPath).Length
+    Write-Host "Size   : $Size bytes"
+
+    # In tóm tắt từ log
+    Write-Host ""
+    Write-Host "--- Kết quả ---"
+    Select-String -Path $LogFile -Pattern "snapshot|Hard bot saved|Bắt đầu" |
+        ForEach-Object { Write-Host $_.Line.Trim() }
 }
 else
 {
-    Write-Error "Training thất bại (exit code $ExitCode). Xem log: $LogFile"
+    Write-Error "Training thất bại hoặc chưa hoàn tất. Xem log: $LogFile"
+    Write-Host ""
+    Write-Host "--- Dòng lỗi cuối ---"
+    Select-String -Path $LogFile -Pattern "Error|Exception|error" |
+        Where-Object { $_.Line -notmatch "Licensing|AI.Tracing|Curl|entitlement|com.unity.ai" } |
+        Select-Object -Last 5 | ForEach-Object { Write-Host $_.Line.Trim() }
 }
