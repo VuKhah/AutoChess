@@ -62,8 +62,8 @@ public partial class GameManager
         UpdateShopMergeHints();
     }
 
-    // Quét shop: nếu player đã có >=2 lá cùng cardID + cùng mergeLevel (board+hand, không phải battleSpawned)
-    // thì card đó trong shop sẽ nhấp nháy → mua thêm 1 lá nữa sẽ merge lên sao.
+    // Quét shop: nếu player đã có đủ (MergeRequiredCount-1) lá cùng cardID + mergeLevel (board+hand, không phải battleSpawned)
+    // thì card đó trong shop sẽ nhấp nháy → mua thêm 1 lá nữa là đủ bộ để merge.
     public void UpdateShopMergeHints()
     {
         if (shopSlots == null) return;
@@ -83,7 +83,8 @@ public partial class GameManager
             string cardID = ui.currentInstance.Data.cardID;
             int mergeLevel = ui.currentInstance.mergeLevel;
             int matches = CountOwnedMatches(cardID, mergeLevel);
-            ui.SetMergeHint(matches >= 2);
+            // Blink nếu mua thêm 1 lá này là đủ bộ để merge
+            ui.SetMergeHint(matches >= CardInstance.MergeRequiredCount(mergeLevel) - 1);
         }
     }
 

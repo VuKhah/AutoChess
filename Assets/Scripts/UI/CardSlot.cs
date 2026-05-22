@@ -201,8 +201,13 @@ public class CardSlot : MonoBehaviour, IDropHandler
                     matches.Add(ui);
             }
 
-        if (matches.Count >= 3)
-            PerformMerge(matches);
+        int required = CardInstance.MergeRequiredCount(mergeLevel);
+        if (matches.Count >= required)
+        {
+            // Trim về đúng số cần thiết — tránh tiêu thụ bản sao dư khi player có nhiều hơn mức cần
+            var toMerge = matches.Count > required ? matches.GetRange(0, required) : matches;
+            PerformMerge(toMerge);
+        }
     }
 
     private void PerformMerge(List<CardUI> cards)
@@ -214,7 +219,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
         // Nếu keeper có bonus thấp hơn một nguyên liệu khác → merged < nguyên liệu đó.
         int keeperIdx = 0;
         int bestBonus = int.MinValue;
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < cards.Count; i++)
         {
             var inst = cards[i].currentInstance;
             int totalBonus = inst.permanentATKBonus + inst.permanentHPBonus
@@ -227,12 +232,12 @@ public class CardSlot : MonoBehaviour, IDropHandler
         keeper.currentInstance.ResetStats();
         keeper.Setup(keeper.currentInstance);
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < cards.Count; i++)
         {
             if (i != keeperIdx) Destroy(cards[i].gameObject);
         }
 
-        Debug.Log($"<color=gold>[MERGE]</color> 3x {keeper.currentInstance.Data.cardName} hợp nhất thành cấp {keeper.currentInstance.mergeLevel + 1}! (keeper: slot bonus={bestBonus})");
+        Debug.Log($"<color=gold>[MERGE]</color> {cards.Count}x {keeper.currentInstance.Data.cardName} hợp nhất thành cấp {keeper.currentInstance.mergeLevel + 1}! (keeper: slot bonus={bestBonus})");
 
         AudioManager.Instance?.StarUp();
 

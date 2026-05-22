@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BotAgent
@@ -8,21 +9,19 @@ public class BotAgent
     public List<CardInstance> board = new List<CardInstance>(new CardInstance[GameManager.BoardSlotCount]);
 
     private const int FrontlineCount = 4;
+    private int _shopTier = 1;
 
-    // startingCoins: Easy=7, Medium=9, Hard=10 — handicap cân bằng độ khó
     public int startingCoins = 10;
 
     public BotAgent(Chromosome brain, int coinsPerTurn = 10)
     {
-        this.brain        = brain;
-        this.economy      = new EconomyManager();
+        this.brain         = brain;
+        this.economy       = new EconomyManager();
         this.startingCoins = coinsPerTurn;
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // END COMBAT PHASE — gọi sau mỗi trận:
-    //   • Xóa unit chết khỏi slot (giải phóng chỗ trống)
-    //   • ResetStats unit sống (khôi phục HP đầy cho trận sau)
+    // END COMBAT PHASE
     // ──────────────────────────────────────────────────────────────────────────
     public void EndCombatPhase()
     {
@@ -30,17 +29,13 @@ public class BotAgent
         {
             var unit = board[i];
             if (unit == null) continue;
-            if (unit.IsDead)
-                board[i] = null;
-            else
-                unit.ResetStats();
+            if (unit.IsDead) board[i] = null;
+            else unit.ResetStats();
         }
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // END TURN SHOP — gọi khi kết thúc lượt chuẩn bị:
-    //   Áp dụng hiệu ứng EndTurnShop (growth, coin…) cho unit còn sống.
-    //   Chỉ xử lý AddStats và GainCoin — đủ cho cơ chế growth cốt lõi.
+    // END TURN SHOP
     // ──────────────────────────────────────────────────────────────────────────
     public void TriggerEndTurnShop()
     {
@@ -74,19 +69,85 @@ public class BotAgent
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // PREP PHASE — mua bài từ shop, điền vào slot trống.
-    //   Board KHÔNG bị reset — chỉ slot null mới được điền.
-    //   Nếu board đầy: cân nhắc bán unit yếu nhất để mua unit tốt hơn.
-    //   Sau khi mua: thử merge nếu đủ 3 bản sao.
+    // PREP PHASE — vòng quyết định chính của bot, giống người chơi thực:
+    //   1. Reroll nếu shop kém
+    //   2. Mua unit tốt nhất
+    //   3. Mua và dùng spell
+    //   4. Bán unit thừa (proactive)
+    //   5. Merge
     // ──────────────────────────────────────────────────────────────────────────
-    public void DecidePrepPhase(List<CardDefinition> shop)
+    public void DecidePrepPhase(List<CardDefinition> unitShop,
+                                List<CardDefinition> spellShop = null,
+                                int shopTier = 1)
     {
         if (brain == null) return;
+        _shopTier = shopTier;
+
         economy.ResetEconomy();
-        // Handicap: Easy/Medium nhận ít coin hơn Hard
         int coinDiff = 10 - startingCoins;
         if (coinDiff > 0) economy.TrySpend(coinDiff);
 
+        // 1. Reroll
+        RerollPhase(ref unitShop, ref spellShop);
+
+        // 2. Mua unit
+        BuyUnitsPhase(unitShop);
+
+        // 3. Mua và dùng spell
+        if (spellShop != null && spellShop.Count > 0)
+            BuySpellsPhase(spellShop);
+
+        // 4. Bán unit điểm thấp để dọn board
+        ProactiveSellPhase();
+
+        // 5. Merge
+        TryMerge();
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // 1. REROLL PHASE
+    //    Trả 1 coin để xem shop mới nếu shop hiện tại không đủ tốt so với board.
+    // ──────────────────────────────────────────────────────────────────────────
+    private void RerollPhase(ref List<CardDefinition> unitShop, ref List<CardDefinition> spellShop)
+    {
+        if (brain.genes[24] < 0.05f) return; // gene quá thấp → không bao giờ reroll
+
+        int maxRerolls = Mathf.FloorToInt(brain.genes[25] * 3f) + 1; // [1..4]
+        int keepCoins  = Mathf.FloorToInt(brain.genes[26] * 4f);     // [0..4]
+
+        for (int r = 0; r < maxRerolls; r++)
+        {
+            // Cần ít nhất (keepCoins + 1) coin để reroll mà không phá vỡ ngưỡng dự phòng
+            if (economy.CurrentCoin < keepCoins + 1) break;
+
+            float shopBest  = BestUnitScore(unitShop);
+            float boardBest = board.Where(u => u != null && !u.IsDead)
+                                   .Select(u => EvaluateInstance(u))
+                                   .DefaultIfEmpty(4f)
+                                   .Max();
+
+            // Shop đã đủ tốt → dừng
+            if (shopBest >= brain.genes[24] * boardBest) break;
+
+            economy.TrySpend(1);
+            unitShop  = CardDatabase.Instance.GetRandomUnitShop(5, _shopTier);
+            spellShop = CardDatabase.Instance.GetRandomSpellShop(2, _shopTier);
+        }
+    }
+
+    private float BestUnitScore(List<CardDefinition> shop)
+    {
+        float best = 0f;
+        foreach (var c in shop)
+            if (c != null) best = Mathf.Max(best, Evaluate(c));
+        return best;
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // 2. BUY UNITS PHASE
+    // ──────────────────────────────────────────────────────────────────────────
+    private void BuyUnitsPhase(List<CardDefinition> unitShop)
+    {
         bool bought = true;
         while (bought)
         {
@@ -94,7 +155,7 @@ public class BotAgent
             CardDefinition bestCard  = null;
             float          bestScore = float.MinValue;
 
-            foreach (var card in shop)
+            foreach (var card in unitShop)
             {
                 if (card == null || card.cost > economy.CurrentCoin) continue;
                 float score = Evaluate(card);
@@ -104,13 +165,11 @@ public class BotAgent
             float saveThreshold = brain.genes[23] * 3f;
             if (bestCard == null || bestScore < saveThreshold) break;
 
-            // Nếu board đầy: bán unit yếu nhất nếu card mới vượt trội đủ nhiều
             if (!HasEmptySlot())
             {
                 int   worstIdx   = FindWorstUnitIndex();
                 float worstScore = worstIdx >= 0 ? EvaluateInstance(board[worstIdx]) : float.MaxValue;
-                // gene[23] làm ngưỡng quyết định bán: cao hơn → khó bán hơn
-                float sellBar = worstScore * (1.5f + brain.genes[23]);
+                float sellBar    = worstScore * (1.5f + brain.genes[23]);
                 if (worstIdx >= 0 && bestScore > sellBar)
                 {
                     board[worstIdx] = null;
@@ -123,17 +182,278 @@ public class BotAgent
             BuyAndPlace(bestCard);
             bought = true;
         }
-
-        TryMerge();
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // MERGE — gộp 3 bản sao cùng cardID + mergeLevel thành 1 unit cấp cao hơn
+    // 3. BUY SPELLS PHASE
+    //    Mua spell nếu đủ tốt, rồi dùng ngay lên unit tốt nhất trên board.
+    // ──────────────────────────────────────────────────────────────────────────
+    private void BuySpellsPhase(List<CardDefinition> spellShop)
+    {
+        float buyThreshold = brain.genes[28] * 3f;
+
+        // Sắp xếp theo điểm giảm dần để ưu tiên spell tốt nhất
+        var sorted = spellShop
+            .Where(s => s != null && s.cardType == CardType.Spell)
+            .OrderByDescending(s => EvaluateSpell(s))
+            .ToList();
+
+        foreach (var spell in sorted)
+        {
+            if (spell.cost > economy.CurrentCoin) continue;
+            if (EvaluateSpell(spell) < buyThreshold) continue;
+
+            economy.TryBuy(spell.cost);
+            ApplySpellToBoard(spell);
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // EVALUATE SPELL — chấm điểm spell để quyết định có mua không
+    // ──────────────────────────────────────────────────────────────────────────
+    private float EvaluateSpell(CardDefinition spell)
+    {
+        if (spell?.spellEffects == null || spell.spellEffects.Count == 0) return float.MinValue;
+
+        float score = 0f;
+        foreach (var fx in spell.spellEffects)
+        {
+            switch (fx.effect)
+            {
+                case 1:  // BuffStats
+                    score += (fx.effectValue1 * brain.genes[0] + fx.effectValue2 * brain.genes[1])
+                           * (fx.isPermanent ? 2.5f : 1f);
+                    break;
+                case 6:  // GainCoin
+                    score += fx.effectValue1 * brain.genes[16] * brain.genes[31];
+                    break;
+                case 10: // GetRandomUnit
+                    score += brain.genes[2] * 6f;
+                    break;
+                case 12: // GainIncome
+                    score += fx.effectValue1 * brain.genes[16] * brain.genes[31]
+                           * (fx.isPermanent ? 12f : 1.5f);
+                    break;
+                case 17: // UpgradeTierUnit
+                    score += brain.genes[2] * 12f;
+                    break;
+                case 18: // GiveDoubleAtkAndSafeguard
+                    score += brain.genes[0] * 8f + brain.genes[6] * 8f;
+                    break;
+                case 19: // ToggleTaunt
+                    score += brain.genes[4] * 6f;
+                    break;
+                case 20: // BuffByShopTier
+                    score += _shopTier * (brain.genes[0] + brain.genes[1]) * 0.6f;
+                    break;
+                case 21: // GiveEndTurnBuff
+                    score += (fx.effectValue1 * brain.genes[0] + fx.effectValue2 * brain.genes[1])
+                           * brain.genes[11] * brain.genes[31] * 3f;
+                    break;
+                case 14: // LoseLife — nguy hiểm, âm điểm nặng
+                    score -= 25f;
+                    break;
+                case 15: // TransferStats — phá hủy unit, rủi ro cao
+                    score -= 8f;
+                    break;
+            }
+        }
+
+        if (spell.cost > 0)
+            score = score / spell.cost * (1f + brain.genes[3]);
+
+        return score;
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // APPLY SPELL TO BOARD — áp dụng spell trực tiếp lên board của bot
+    //   Không gọi GameManager → hoạt động cả trong GameSimulator lẫn gameplay.
+    // ──────────────────────────────────────────────────────────────────────────
+    private void ApplySpellToBoard(CardDefinition spell)
+    {
+        if (spell?.spellEffects == null) return;
+
+        foreach (var fx in spell.spellEffects)
+        {
+            switch (fx.effect)
+            {
+                case 1:  // BuffStats
+                {
+                    var targets = FindSpellTargets(fx);
+                    foreach (var t in targets)
+                    {
+                        if (fx.isPermanent)
+                        {
+                            t.permanentATKBonus += fx.effectValue1;
+                            t.permanentHPBonus  += fx.effectValue2;
+                            if (fx.isTaunt) { t.isTaunt = true; t.Data.hasTaunt = true; }
+                        }
+                        else
+                        {
+                            t.tempSpellATKBonus += fx.effectValue1;
+                            t.tempSpellHPBonus  += fx.effectValue2;
+                        }
+                        t.ResetStats();
+                    }
+                    break;
+                }
+                case 6:  // GainCoin
+                    economy.Earn(fx.effectValue1);
+                    break;
+
+                case 10: // GetRandomUnit — thêm unit ngẫu nhiên vào board
+                {
+                    int tier = fx.effectValue1 > 0 ? fx.effectValue1 : _shopTier;
+                    var pool = CardDatabase.Instance.GetAllUnits().FindAll(c => c.tier == tier);
+                    if (pool.Count == 0)
+                        pool = CardDatabase.Instance.GetAllUnits().FindAll(c => c.tier <= Mathf.Max(tier, 1));
+                    int count = Mathf.Max(fx.targetCount, 1);
+                    for (int i = 0; i < count && HasEmptySlot() && pool.Count > 0; i++)
+                    {
+                        var data = pool[Random.Range(0, pool.Count)];
+                        PlaceOnBoard(new CardInstance(data, 0));
+                    }
+                    break;
+                }
+
+                case 12: // GainIncome
+                    if (fx.isPermanent) economy.AddPermanentIncome(fx.effectValue1);
+                    else               economy.Earn(fx.effectValue1);
+                    break;
+
+                case 17: // UpgradeTierUnit — nâng mergeLevel unit cùng tribe
+                {
+                    CardInstance best = FindBestSpellTarget(preferMerged: true);
+                    if (best != null) { best.mergeLevel = Mathf.Min(best.mergeLevel + 1, 2); best.ResetStats(); }
+                    break;
+                }
+
+                case 18: // GiveDoubleAtkAndSafeguard
+                {
+                    CardInstance best = FindBestSpellTarget();
+                    if (best != null) { best.permanentATKBonus += best.currentATK; best.Data.hasSafeguard = true; best.ResetStats(); }
+                    break;
+                }
+
+                case 19: // ToggleTaunt
+                {
+                    CardInstance best = FindBestSpellTarget();
+                    if (best != null)
+                    {
+                        if (best.isTaunt)
+                        {
+                            best.isTaunt = false; best.Data.hasTaunt = false;
+                            best.permanentATKBonus += fx.effectValue1;
+                        }
+                        else
+                        {
+                            best.isTaunt = true; best.Data.hasTaunt = true;
+                            best.permanentHPBonus += fx.effectValue2;
+                            best.maxHP            += fx.effectValue2;
+                        }
+                        best.ResetStats();
+                    }
+                    break;
+                }
+
+                case 20: // BuffByShopTier
+                {
+                    CardInstance best = FindBestSpellTarget();
+                    if (best != null) { best.permanentATKBonus += _shopTier; best.permanentHPBonus += _shopTier; best.ResetStats(); }
+                    break;
+                }
+
+                case 21: // GiveEndTurnBuff
+                {
+                    CardInstance best = FindBestSpellTarget();
+                    if (best != null)
+                    {
+                        if (best.Data.abilities == null)
+                            best.Data.abilities = new List<AbilityData>();
+                        best.Data.abilities.Add(new AbilityData
+                        {
+                            trigger      = TriggerType.EndTurnShop,
+                            target       = TargetType.Self,
+                            effect       = EffectType.AddStats,
+                            effectValue1 = fx.effectValue1,
+                            effectValue2 = fx.effectValue2,
+                            isPermanent  = true
+                        });
+                        best.abilityTriggerCounts.Add(0);
+                        best.abilityEscalationBonuses.Add(0);
+                    }
+                    break;
+                }
+                // 11=StealFromShop, 13=GetSameRealmUnit, 14=LoseLife, 15=TransferStats,
+                // 16=ConditionalCoinGain: bỏ qua — không phù hợp với context bot
+            }
+        }
+    }
+
+    // Tìm danh sách target cho spell effect (theo target code của SpellEffectData)
+    private List<CardInstance> FindSpellTargets(SpellEffectData fx)
+    {
+        var alive = board.FindAll(u => u != null && !u.IsDead);
+        int n = Mathf.Max(fx.targetCount, 1);
+
+        switch (fx.target)
+        {
+            case 3:  // AllAllies
+                return alive;
+            case 2:  // RandomAlly (1 target)
+            case 13: // RandomAlliesInBattle (N targets)
+            {
+                var shuffled = alive.OrderBy(_ => Random.value).Take(n).ToList();
+                return shuffled;
+            }
+            case 12: // ChosenAlly — bot chọn target tốt nhất
+            default:
+                var best = FindBestSpellTarget();
+                return best != null ? new List<CardInstance> { best } : new List<CardInstance>();
+        }
+    }
+
+    // Chọn unit tốt nhất để dùng spell, cân bằng bởi gene[29] (mạnh) và gene[30] (merged)
+    private CardInstance FindBestSpellTarget(bool preferMerged = false)
+    {
+        var alive = board.FindAll(u => u != null && !u.IsDead);
+        if (alive.Count == 0) return null;
+
+        return alive.OrderByDescending(u =>
+            EvaluateInstance(u) * brain.genes[29]
+            + u.mergeLevel      * brain.genes[30] * 5f
+            + (preferMerged ? u.mergeLevel * 10f : 0f)
+        ).First();
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // 4. PROACTIVE SELL PHASE
+    //    Bán unit có điểm quá thấp để làm chỗ cho các mua lượt sau.
+    // ──────────────────────────────────────────────────────────────────────────
+    private void ProactiveSellPhase()
+    {
+        if (brain.genes[27] < 0.05f) return;
+        float sellBelow = brain.genes[27] * 3f;
+
+        for (int i = 0; i < board.Count; i++)
+        {
+            var unit = board[i];
+            if (unit == null || unit.IsDead || unit.isBattleSpawned) continue;
+            if (EvaluateInstance(unit) < sellBelow)
+            {
+                board[i] = null;
+                economy.Sell();
+            }
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // MERGE
     // ──────────────────────────────────────────────────────────────────────────
     private void TryMerge()
     {
         bool merged = true;
-        while (merged) // lặp để bắt merge chain (star-1 → star-2 → star-3)
+        while (merged)
         {
             merged = false;
             for (int i = 0; i < board.Count; i++)
@@ -145,15 +465,18 @@ public class BotAgent
                 for (int j = i + 1; j < board.Count; j++)
                 {
                     if (board[j] != null
-                        && board[j].Data.cardID  == unit.Data.cardID
-                        && board[j].mergeLevel   == unit.mergeLevel)
+                        && board[j].Data.cardID == unit.Data.cardID
+                        && board[j].mergeLevel  == unit.mergeLevel)
                         copies.Add(j);
                 }
 
-                if (copies.Count < 3) continue;
+                int required = CardInstance.MergeRequiredCount(unit.mergeLevel);
+                if (copies.Count < required) continue;
 
-                // Giữ bản sao có bonus cao nhất
-                int keepIdx = copies[0];
+                // Trim về đúng số cần thiết để không tiêu thụ bản sao dư
+                if (copies.Count > required) copies = copies.Take(required).ToList();
+
+                int keepIdx   = copies[0];
                 int bestBonus = int.MinValue;
                 foreach (int idx in copies)
                 {
@@ -169,13 +492,13 @@ public class BotAgent
                     if (idx != keepIdx) board[idx] = null;
 
                 merged = true;
-                break; // restart scan sau mỗi merge
+                break;
             }
         }
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // EVALUATE CardDefinition — điểm kỳ vọng khi mua card này
+    // EVALUATE
     // ──────────────────────────────────────────────────────────────────────────
     private float Evaluate(CardDefinition c)
     {
@@ -199,8 +522,7 @@ public class BotAgent
             {
                 if (a == null) continue;
                 float tw = TriggerWeight(a.trigger);
-
-                if (a.trigger == TriggerType.OnAllyDeath  ||
+                if (a.trigger == TriggerType.OnAllyDeath ||
                     a.trigger == TriggerType.OnAllySummon ||
                     a.trigger == TriggerType.OnAllyReborn)
                     tw *= Mathf.Clamp01(sameTribeCount / 2f);
@@ -220,7 +542,7 @@ public class BotAgent
             s += same * sw * 4f;
         }
 
-        // Merge proximity
+        // Merge proximity — tính cả mergeLevel > 0
         {
             int copies = 0;
             foreach (var u in board)
@@ -229,7 +551,6 @@ public class BotAgent
             s += copies * brain.genes[21] * (copies == 2 ? 16f : 8f);
         }
 
-        // Frontline bias
         if (c.hasTaunt)
         {
             int emptyFront = 0;
@@ -244,10 +565,6 @@ public class BotAgent
         return s;
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // EVALUATE CardInstance — điểm thực tế của unit đang có trên sân
-    // Dùng cho quyết định bán: so sánh unit cũ vs card mới
-    // ──────────────────────────────────────────────────────────────────────────
     private float EvaluateInstance(CardInstance unit)
     {
         float s = unit.currentATK * brain.genes[0]
@@ -327,6 +644,9 @@ public class BotAgent
         }
     }
 
+    // ──────────────────────────────────────────────────────────────────────────
+    // PLACEMENT HELPERS
+    // ──────────────────────────────────────────────────────────────────────────
     private void BuyAndPlace(CardDefinition c)
     {
         int idx;
@@ -346,6 +666,12 @@ public class BotAgent
             board[idx] = new CardInstance(c, idx);
             economy.TryBuy(c.cost);
         }
+    }
+
+    private void PlaceOnBoard(CardInstance unit)
+    {
+        int idx = FindEmptySlot(0, board.Count);
+        if (idx >= 0) { unit.slotIndex = idx; board[idx] = unit; }
     }
 
     private int FindEmptySlot(int from, int to)

@@ -12,11 +12,16 @@ public class GameSimulator
         for (int i = 0; i < maxTurns; i++)
         {
             int currentTurn = i + 1;
-            int currentTier = Mathf.Clamp((currentTurn + 1) / 2, 1, 6);
+            int shopTier = Mathf.Clamp((currentTurn + 1) / 2, 1, 6);
 
-            // Shop 5 unit — khớp với game thật (shopUnitCount = 5)
-            botA.DecidePrepPhase(CardDatabase.Instance.GetRandomUnitShop(5, currentTier));
-            botB.DecidePrepPhase(CardDatabase.Instance.GetRandomUnitShop(5, currentTier));
+            // Cả 2 bot nhận unit shop + spell shop (giống người chơi thật)
+            var unitShopA  = CardDatabase.Instance.GetRandomUnitShop(5, shopTier);
+            var spellShopA = CardDatabase.Instance.GetRandomSpellShop(2, shopTier);
+            var unitShopB  = CardDatabase.Instance.GetRandomUnitShop(5, shopTier);
+            var spellShopB = CardDatabase.Instance.GetRandomSpellShop(2, shopTier);
+
+            botA.DecidePrepPhase(unitShopA, spellShopA, shopTier);
+            botB.DecidePrepPhase(unitShopB, spellShopB, shopTier);
 
             resolver.ResolveTurn(botA.board, botB.board, new TurnRecord());
 
@@ -28,7 +33,6 @@ public class GameSimulator
 
             if (hpA <= 0 || hpB <= 0) break;
 
-            // Kết thúc combat: xóa dead, giữ alive, tích lũy EndTurnShop (giống gameplay thật)
             botA.EndCombatPhase();
             botB.EndCombatPhase();
             botA.TriggerEndTurnShop();

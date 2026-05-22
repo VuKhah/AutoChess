@@ -75,8 +75,11 @@ public class GATrainer : MonoBehaviour
                 for (int m = 0; m < matchesPerChrom; m++)
                 {
                     BotAgent me       = new BotAgent(chromo);
-                    int oppIdx = Random.Range(0, population.Count - 1);
-                    if (population[oppIdx] == chromo) oppIdx = population.Count - 1;
+                    // Uniform selection: loại trừ chính mình không có bias.
+                    // Random.Range(0, N-1) → [0, N-2]; shift +1 nếu >= selfIdx → đúng [0,N-1]\{selfIdx}
+                    int selfIdx = population.IndexOf(chromo);
+                    int oppIdx  = Random.Range(0, population.Count - 1);
+                    if (oppIdx >= selfIdx) oppIdx++;
                     BotAgent opponent = new BotAgent(population[oppIdx]);
                     int result = sim.SimulateMatch(me, opponent);
 

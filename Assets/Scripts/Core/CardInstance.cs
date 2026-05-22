@@ -109,4 +109,8 @@ using UnityEngine;
 
     public bool IsDead    => currentHP <= 0;
     public bool IsDamaged => currentHP < maxHP;
+
+    // Số bản sao cần để merge lên cấp tiếp theo.
+    // lv0 → lv1: cần 3 bản sao | lv1 → lv2: cần 2 bản sao
+    public static int MergeRequiredCount(int mergeLevel) => mergeLevel == 0 ? 3 : 2;
 }

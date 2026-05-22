@@ -3,7 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class Chromosome
 {
-    public const int GeneCount = 24;
+    public const int GeneCount = 32;
 
     // ── NHÓM 1: Chỉ số gốc (4 genes) ───────────────────────────────────────
     // [0]  wATK          Trọng số ATK cơ bản
@@ -39,7 +39,19 @@ public class Chromosome
     // ── NHÓM 6: Board context (3 genes) ─────────────────────────────────────
     // [21] wMerge         Bonus per bản sao cùng cardID đang có trên sân (merge proximity)
     // [22] wFrontline     Bonus khi mua Taunt cho vị trí frontline còn trống
-    // [23] wSaveThreshold Ngưỡng tối thiểu để quyết định mua (≤ gene*3 → tiết kiệm tiền)
+    // [23] wSaveThreshold Ngưỡng tối thiểu để quyết định mua (điểm < gene*3 → bỏ qua card)
+
+    // ── NHÓM 7: Reroll behavior (4 genes) ───────────────────────────────────
+    // [24] wRerollThresh  Reroll nếu bestShopScore < gene * bestBoardScore  (0 = không bao giờ reroll)
+    // [25] wRerollMax     Số lần reroll tối đa mỗi turn = floor(gene*3)+1  → [1..4]
+    // [26] wRerollKeep    Giữ lại floor(gene*4) coin trước khi reroll       → [0..4]
+    // [27] wProactiveSell Bán unit có điểm < gene*3 để giải phóng board (ngay cả khi chưa đầy)
+
+    // ── NHÓM 8: Spell behavior (4 genes) ────────────────────────────────────
+    // [28] wSpellThresh   Ngưỡng mua spell: score/cost > gene*3 → mua (giống wSaveThreshold)
+    // [29] wSpellOnStrong Ưu tiên cast spell lên unit có EvaluateInstance cao nhất
+    // [30] wSpellOnMerged Ưu tiên cast spell lên unit có mergeLevel cao hơn
+    // [31] wSpellEconomy  Trọng số riêng cho spell kinh tế (GainCoin, GainIncome, GiveEndTurnBuff)
 
     public float[] genes = new float[GeneCount];
     public float fitness = 0f;

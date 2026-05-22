@@ -82,7 +82,9 @@ public partial class GameManager
             foreach (var bot in enemyBots)
             {
                 bot.EndCombatPhase();
-                bot.DecidePrepPhase(CardDatabase.Instance.GetRandomUnitShop(5, shopTier));
+                var unitShop  = CardDatabase.Instance.GetRandomUnitShop(5, shopTier);
+                var spellShop = CardDatabase.Instance.GetRandomSpellShop(2, shopTier);
+                bot.DecidePrepPhase(unitShop, spellShop, shopTier);
             }
 
             // Round-robin: turn 1→bot0, turn 2→bot1, turn 3→bot2, turn 4→bot0, ...

@@ -217,7 +217,7 @@ public partial class AbilityEngine
             case EffectType.GainCoin:
             {
                 int coins = ability.effectValue1 * scaleFactor;
-                GameManager.Instance.AddCoin(coins);
+                GameManager.Instance?.AddCoin(coins); // null-safe: GameManager không tồn tại khi training standalone
                 Debug.Log($"<color=yellow>[ABILITY]</color> {source.Data.cardName} cộng {coins} Coin! (Deploy)");
                 break;
             }

@@ -32,7 +32,7 @@ public class CardDatabase : MonoBehaviour
         LoadDatabase();
     }
 
-    void LoadDatabase()
+    public void LoadDatabase()
     {
         TextAsset jsonFile = Resources.Load<TextAsset>("CardsData");
         if (jsonFile == null)
