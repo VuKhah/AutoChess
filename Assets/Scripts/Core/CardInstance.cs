@@ -20,6 +20,12 @@ using UnityEngine;
     public int slotIndex;
     public bool hasRebornUsed = false;
 
+    // Buff tạm thời từ spell (isPermanent=false): cộng vào 1 lần trong ResetStats rồi tự xóa.
+    // Tồn tại qua ResetStats đầu tiên (ApplySpellToUnit) → có hiệu lực trong combat.
+    // Bị xóa bởi ResetStats tiếp theo (RestorePreCombatPlayerBoard sau trận đấu).
+    public int tempSpellATKBonus;
+    public int tempSpellHPBonus;
+
     // 4. Merge level (0=gốc, 1=đã merge 1 lần, 2=đã merge 2 lần)
     public int mergeLevel = 0;
 
@@ -56,10 +62,12 @@ using UnityEngine;
         const float keepRatio = 0.7f;
         int tier = mergeLevel + 1;
         currentATK = Mathf.RoundToInt(Data.baseATK * tier
-                + keepRatio * (growthATKBonus + permanentATKBonus));
+                + keepRatio * (growthATKBonus + permanentATKBonus)) + tempSpellATKBonus;
         maxHP      = Mathf.RoundToInt(Data.baseHP  * tier
-                 + keepRatio * (growthHPBonus  + permanentHPBonus));
+                 + keepRatio * (growthHPBonus  + permanentHPBonus)) + tempSpellHPBonus;
         currentHP  = maxHP;
+        tempSpellATKBonus = 0;
+        tempSpellHPBonus  = 0;
         // Reset passives từ data gốc (mỗi combat bắt đầu lại từ đầu)
         isTaunt         = Data.hasTaunt;
         isReborn        = Data.hasReborn;

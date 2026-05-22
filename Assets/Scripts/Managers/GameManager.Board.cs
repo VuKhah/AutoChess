@@ -74,11 +74,20 @@ public partial class GameManager
         foreach (var slot in enemySlots)
             foreach (Transform child in slot) Destroy(child.gameObject);
 
-        if (enemyBot != null)
+        if (enemyBots.Count > 0)
         {
-            enemyBot.EndCombatPhase();   // xóa dead, giữ alive với HP đầy
-            enemyBot.DecidePrepPhase(CardDatabase.Instance.GetRandomUnitShop(5, GetCurrentShopTier()));
-            SpawnBotBoard();
+            int shopTier = GetCurrentShopTier();
+
+            // Tất cả đối thủ đều phát triển đội hình mỗi lượt, kể cả khi không đấu
+            foreach (var bot in enemyBots)
+            {
+                bot.EndCombatPhase();
+                bot.DecidePrepPhase(CardDatabase.Instance.GetRandomUnitShop(5, shopTier));
+            }
+
+            // Round-robin: turn 1→bot0, turn 2→bot1, turn 3→bot2, turn 4→bot0, ...
+            currentOpponentIndex = (currentTurn - 1) % enemyBots.Count;
+            SpawnBotBoard(CurrentOpponent);
         }
         else
         {
@@ -86,18 +95,20 @@ public partial class GameManager
         }
     }
 
-    private void SpawnBotBoard()
+    private void SpawnBotBoard(BotAgent bot)
     {
-        for (int i = 0; i < enemyBot.board.Count && i < enemySlots.Length; i++)
+        for (int i = 0; i < bot.board.Count && i < enemySlots.Length; i++)
         {
-            CardInstance unit = enemyBot.board[i];
+            CardInstance unit = bot.board[i];
             if (unit == null) continue;
             GameObject cardObj = Instantiate(cardPrefab, enemySlots[i]);
             RectTransform cardRect = cardObj.GetComponent<RectTransform>();
             CardSlotFitter.FitToSlot(cardRect, enemySlots[i]);
             StartCoroutine(FitCardAfterLayout(cardRect, enemySlots[i]));
             if (cardObj.TryGetComponent<CardDraggable>(out var drg)) drg.enabled = false;
-            cardObj.GetComponent<CardUI>().Setup(new CardInstance(unit.Data, i));
+            // Truyền instance thật — sau combat, bot.board[i].IsDead phản ánh đúng kết quả
+            // (Fix Bug 2: không tạo CardInstance mới làm mất mergeLevel + growth bonus)
+            cardObj.GetComponent<CardUI>().Setup(unit);
             cardObj.GetComponent<CardVisuals>()?.SetBoardPose();
         }
     }

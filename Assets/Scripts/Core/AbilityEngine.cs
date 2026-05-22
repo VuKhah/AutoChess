@@ -272,7 +272,7 @@ public partial class AbilityEngine
         if (data == null) return null;
 
         // Ưu tiên 1: slot trống hoàn toàn
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < board.Count; i++)
         {
             if (board[i] == null)
             {
@@ -283,9 +283,9 @@ public partial class AbilityEngine
             }
         }
 
-        // BUG FIX: Ưu tiên 2: slot dead + đã xử lý OnDeath + KHÔNG có Reborn chờ
+        // Ưu tiên 2: slot dead + đã xử lý OnDeath + KHÔNG có Reborn chờ
         // (tránh overwrite unit đang chờ Reborn trong CleanupBoard)
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < board.Count; i++)
         {
             if (board[i] != null && board[i].IsDead && board[i].onDeathProcessed && !board[i].isReborn)
             {
@@ -324,14 +324,19 @@ public partial class AbilityEngine
                 var targets = ResolveSpellTargets(fx.target, fx.targetCount, targetUnit);
                 foreach (var t in targets)
                 {
-                    t.currentATK += fx.effectValue1;
-                    t.currentHP  += fx.effectValue2;
                     if (fx.isPermanent)
                     {
                         t.permanentATKBonus += fx.effectValue1;
                         t.permanentHPBonus  += fx.effectValue2;
-                        if (fx.effectValue2 > 0) t.maxHP += fx.effectValue2;
                         if (fx.isTaunt) { t.isTaunt = true; t.Data.hasTaunt = true; }
+                    }
+                    else
+                    {
+                        // Buff tạm thời: lưu vào tempSpell thay vì cộng thẳng vào currentATK/HP.
+                        // ResetStats() trong ApplySpellToUnit sẽ áp dụng rồi xóa temp → buff sống
+                        // qua combat, bị xóa bởi ResetStats() sau trận (RestorePreCombatPlayerBoard).
+                        t.tempSpellATKBonus += fx.effectValue1;
+                        t.tempSpellHPBonus  += fx.effectValue2;
                     }
                     Debug.Log($"<color=cyan>[SPELL]</color> {t.Data.cardName} nhận +{fx.effectValue1}/+{fx.effectValue2}{(fx.isTaunt ? " + Taunt" : "")}");
                 }

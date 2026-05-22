@@ -50,7 +50,9 @@ public partial class GameManager : MonoBehaviour
 
     [Header("AI Difficulty")]
     public string selectedDifficulty = "Medium";
-    private BotAgent enemyBot;
+    private readonly List<BotAgent> enemyBots = new List<BotAgent>();
+    private int currentOpponentIndex = 0;
+    private BotAgent CurrentOpponent => enemyBots.Count > 0 ? enemyBots[currentOpponentIndex] : null;
 
     public CombatResolver resolver = new CombatResolver();
 
@@ -75,20 +77,26 @@ public partial class GameManager : MonoBehaviour
     public void SetDifficulty(string difficulty)
     {
         selectedDifficulty = difficulty;
-        enemyBot = null;
-        if (AIManager.Instance != null && AIManager.Instance.loadedLibrary != null)
-        {
-            Chromosome brain = AIManager.Instance.GetBrain(difficulty);
-            if (brain != null && brain.genes != null && brain.genes.Length >= Chromosome.GeneCount)
-            {
-                // Handicap coin: Easy=7, Medium=9, Hard=10
-                int coins = difficulty == "Easy" ? 7 : difficulty == "Medium" ? 9 : 10;
-                enemyBot = new BotAgent(brain, coins);
-            }
-            else
-                Debug.LogWarning($"[AI] Brain không hợp lệ cho '{difficulty}' (genes={brain?.genes?.Length ?? 0}/{Chromosome.GeneCount}) — dùng đội ngẫu nhiên.");
-        }
-        Debug.Log($"<color=cyan>[AI]</color> Độ khó đặt thành: {difficulty}");
+        enemyBots.Clear();
+        currentOpponentIndex = 0;
+
+        var lib = AIManager.Instance?.loadedLibrary;
+        if (lib == null) { Debug.LogWarning("[AI] AILibrary chưa sẵn sàng — dùng đội ngẫu nhiên."); return; }
+
+        // 3 đối thủ cố định: Easy / Medium / Hard brain, handicap coin khác nhau
+        AddBot(lib.easyBot,    7,  "Easy");
+        AddBot(lib.mediumBot,  9,  "Medium");
+        AddBot(lib.hardBot,   10,  "Hard");
+
+        Debug.Log($"<color=cyan>[AI]</color> {enemyBots.Count} đối thủ sẵn sàng (độ khó chọn: {difficulty})");
+    }
+
+    private void AddBot(Chromosome brain, int coins, string label)
+    {
+        if (brain?.genes != null && brain.genes.Length >= Chromosome.GeneCount)
+            enemyBots.Add(new BotAgent(brain, coins));
+        else
+            Debug.LogWarning($"[AI] Brain '{label}' không hợp lệ — bỏ qua đối thủ này.");
     }
 
     void Start()
@@ -123,8 +131,8 @@ public partial class GameManager : MonoBehaviour
                 resolver.TriggerAbility(TriggerType.EndTurnShop, unit, null, playerBoard, enemyBoard);
         }
 
-        // Kích EndTurnShop cho bot (growth tích lũy giống player)
-        enemyBot?.TriggerEndTurnShop();
+        // Kích EndTurnShop cho tất cả đối thủ (growth tích lũy giống player)
+        foreach (var bot in enemyBots) bot.TriggerEndTurnShop();
 
         if (!isShopFrozen) RefreshShop();
         else isShopFrozen = false;
