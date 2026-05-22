@@ -1,0 +1,17 @@
+===== LỆNH TRAIN AI =====
+
+# Mở PowerShell tại thư mục project, rồi chạy:
+
+-- Quick (~2 phút, test nhanh) --
+.\train_ai.ps1
+
+-- Production (~20-30 phút, kết quả thực sự) --
+.\train_ai.ps1 -Production
+
+-- Xem tiến độ live (mở PowerShell mới) --
+Get-Content "D:\workspaces\specialized-essays\AutoChess\training_log.txt" -Wait | Select-String "Gen |snapshot|Hard bot|Hoàn|Error"
+
+===== LƯU Ý =====
+- Kết quả lưu vào: Assets/Resources/AI_Library.json
+- Commit file JSON sau khi train xong
+- Muốn train lại từ đầu: xóa AI_Library.json rồi chạy lại
