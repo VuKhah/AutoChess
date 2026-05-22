@@ -28,9 +28,11 @@ public class GameSimulator
 
             if (hpA <= 0 || hpB <= 0) break;
 
-            // Reset HP của các unit còn sống cho turn tiếp theo (khớp với RestorePreCombatPlayerBoard)
-            foreach (var u in botA.board) { if (u != null && !u.IsDead) u.ResetStats(); }
-            foreach (var u in botB.board) { if (u != null && !u.IsDead) u.ResetStats(); }
+            // Kết thúc combat: xóa dead, giữ alive, tích lũy EndTurnShop (giống gameplay thật)
+            botA.EndCombatPhase();
+            botB.EndCombatPhase();
+            botA.TriggerEndTurnShop();
+            botB.TriggerEndTurnShop();
         }
 
         if (hpA > hpB) return 1;

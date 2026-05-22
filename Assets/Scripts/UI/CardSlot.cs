@@ -176,23 +176,30 @@ public class CardSlot : MonoBehaviour, IDropHandler
     private void CheckForMerge(string cardID, int mergeLevel)
     {
         List<CardUI> matches = new List<CardUI>();
+        var gm = GameManager.Instance;
+        if (gm == null) return;
 
-        foreach (var slot in GameManager.Instance.playerSlots)
-        {
-            CardUI ui = slot.GetComponentInChildren<CardUI>();
-            if (ui != null && ui.currentInstance.Data.cardID == cardID
-                && ui.currentInstance.mergeLevel == mergeLevel
-                && !ui.currentInstance.isBattleSpawned)
-                matches.Add(ui);
-        }
-        foreach (var slot in GameManager.Instance.handSlots)
-        {
-            CardUI ui = slot.GetComponentInChildren<CardUI>();
-            if (ui != null && ui.currentInstance.Data.cardID == cardID
-                && ui.currentInstance.mergeLevel == mergeLevel
-                && !ui.currentInstance.isBattleSpawned)
-                matches.Add(ui);
-        }
+        if (gm.playerSlots != null)
+            foreach (var slot in gm.playerSlots)
+            {
+                if (slot == null) continue;
+                CardUI ui = slot.GetComponentInChildren<CardUI>();
+                if (ui != null && ui.currentInstance?.Data?.cardID == cardID
+                    && ui.currentInstance.mergeLevel == mergeLevel
+                    && !ui.currentInstance.isBattleSpawned)
+                    matches.Add(ui);
+            }
+
+        if (gm.handSlots != null)
+            foreach (var slot in gm.handSlots)
+            {
+                if (slot == null) continue;
+                CardUI ui = slot.GetComponentInChildren<CardUI>();
+                if (ui != null && ui.currentInstance?.Data?.cardID == cardID
+                    && ui.currentInstance.mergeLevel == mergeLevel
+                    && !ui.currentInstance.isBattleSpawned)
+                    matches.Add(ui);
+            }
 
         if (matches.Count >= 3)
             PerformMerge(matches);

@@ -76,7 +76,7 @@ public partial class GameManager
 
         if (enemyBot != null)
         {
-            for (int i = 0; i < enemyBot.board.Count; i++) enemyBot.board[i] = null;
+            enemyBot.EndCombatPhase();   // xóa dead, giữ alive với HP đầy
             enemyBot.DecidePrepPhase(CardDatabase.Instance.GetRandomUnitShop(5, GetCurrentShopTier()));
             SpawnBotBoard();
         }

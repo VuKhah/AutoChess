@@ -7,27 +7,92 @@ public class BotAgent
     public EconomyManager economy;
     public List<CardInstance> board = new List<CardInstance>(new CardInstance[GameManager.BoardSlotCount]);
 
-    private const int FrontlineCount = 4; // slot 0-3 frontline, 4-6 backline
+    private const int FrontlineCount = 4;
 
-    public BotAgent(Chromosome brain)
+    // startingCoins: Easy=7, Medium=9, Hard=10 — handicap cân bằng độ khó
+    public int startingCoins = 10;
+
+    public BotAgent(Chromosome brain, int coinsPerTurn = 10)
     {
-        this.brain = brain;
-        this.economy = new EconomyManager();
+        this.brain        = brain;
+        this.economy      = new EconomyManager();
+        this.startingCoins = coinsPerTurn;
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // PREP PHASE: Mua bài tốt nhất cho đến khi hết tiền / hết chỗ / điểm quá thấp
+    // END COMBAT PHASE — gọi sau mỗi trận:
+    //   • Xóa unit chết khỏi slot (giải phóng chỗ trống)
+    //   • ResetStats unit sống (khôi phục HP đầy cho trận sau)
+    // ──────────────────────────────────────────────────────────────────────────
+    public void EndCombatPhase()
+    {
+        for (int i = 0; i < board.Count; i++)
+        {
+            var unit = board[i];
+            if (unit == null) continue;
+            if (unit.IsDead)
+                board[i] = null;
+            else
+                unit.ResetStats();
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // END TURN SHOP — gọi khi kết thúc lượt chuẩn bị:
+    //   Áp dụng hiệu ứng EndTurnShop (growth, coin…) cho unit còn sống.
+    //   Chỉ xử lý AddStats và GainCoin — đủ cho cơ chế growth cốt lõi.
+    // ──────────────────────────────────────────────────────────────────────────
+    public void TriggerEndTurnShop()
+    {
+        if (brain == null) return;
+        foreach (var unit in board)
+        {
+            if (unit == null || unit.IsDead || unit.Data.abilities == null) continue;
+            foreach (var ability in unit.Data.abilities)
+            {
+                if (ability == null || ability.trigger != TriggerType.EndTurnShop) continue;
+                if (ability.effect == EffectType.AddStats)
+                {
+                    if (ability.isPermanent)
+                    {
+                        unit.permanentATKBonus += ability.effectValue1;
+                        unit.permanentHPBonus  += ability.effectValue2;
+                    }
+                    else
+                    {
+                        unit.growthATKBonus += ability.effectValue1;
+                        unit.growthHPBonus  += ability.effectValue2;
+                    }
+                    unit.ResetStats();
+                }
+                else if (ability.effect == EffectType.GainCoin)
+                {
+                    economy.AddBonus(ability.effectValue1);
+                }
+            }
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // PREP PHASE — mua bài từ shop, điền vào slot trống.
+    //   Board KHÔNG bị reset — chỉ slot null mới được điền.
+    //   Nếu board đầy: cân nhắc bán unit yếu nhất để mua unit tốt hơn.
+    //   Sau khi mua: thử merge nếu đủ 3 bản sao.
     // ──────────────────────────────────────────────────────────────────────────
     public void DecidePrepPhase(List<CardDefinition> shop)
     {
+        if (brain == null) return;
         economy.ResetEconomy();
+        // Handicap: Easy/Medium nhận ít coin hơn Hard
+        int coinDiff = 10 - startingCoins;
+        if (coinDiff > 0) economy.TrySpend(coinDiff);
 
         bool bought = true;
         while (bought)
         {
             bought = false;
-            CardDefinition bestCard = null;
-            float bestScore = float.MinValue;
+            CardDefinition bestCard  = null;
+            float          bestScore = float.MinValue;
 
             foreach (var card in shop)
             {
@@ -36,72 +101,135 @@ public class BotAgent
                 if (score > bestScore) { bestScore = score; bestCard = card; }
             }
 
-            // genes[23]: ngưỡng tiết kiệm — nếu điểm tốt nhất quá thấp, dừng mua
             float saveThreshold = brain.genes[23] * 3f;
-            if (bestCard == null || bestScore < saveThreshold || !HasEmptySlot()) break;
+            if (bestCard == null || bestScore < saveThreshold) break;
+
+            // Nếu board đầy: bán unit yếu nhất nếu card mới vượt trội đủ nhiều
+            if (!HasEmptySlot())
+            {
+                int   worstIdx   = FindWorstUnitIndex();
+                float worstScore = worstIdx >= 0 ? EvaluateInstance(board[worstIdx]) : float.MaxValue;
+                // gene[23] làm ngưỡng quyết định bán: cao hơn → khó bán hơn
+                float sellBar = worstScore * (1.5f + brain.genes[23]);
+                if (worstIdx >= 0 && bestScore > sellBar)
+                {
+                    board[worstIdx] = null;
+                    economy.Sell();
+                }
+            }
+
+            if (!HasEmptySlot()) break;
 
             BuyAndPlace(bestCard);
             bought = true;
         }
+
+        TryMerge();
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // EVALUATE: Tính điểm một card dựa trên 24 genes
+    // MERGE — gộp 3 bản sao cùng cardID + mergeLevel thành 1 unit cấp cao hơn
+    // ──────────────────────────────────────────────────────────────────────────
+    private void TryMerge()
+    {
+        bool merged = true;
+        while (merged) // lặp để bắt merge chain (star-1 → star-2 → star-3)
+        {
+            merged = false;
+            for (int i = 0; i < board.Count; i++)
+            {
+                var unit = board[i];
+                if (unit == null || unit.mergeLevel >= 2) continue;
+
+                var copies = new List<int> { i };
+                for (int j = i + 1; j < board.Count; j++)
+                {
+                    if (board[j] != null
+                        && board[j].Data.cardID  == unit.Data.cardID
+                        && board[j].mergeLevel   == unit.mergeLevel)
+                        copies.Add(j);
+                }
+
+                if (copies.Count < 3) continue;
+
+                // Giữ bản sao có bonus cao nhất
+                int keepIdx = copies[0];
+                int bestBonus = int.MinValue;
+                foreach (int idx in copies)
+                {
+                    var u = board[idx];
+                    int bonus = u.permanentATKBonus + u.permanentHPBonus
+                              + u.growthATKBonus    + u.growthHPBonus;
+                    if (bonus > bestBonus) { bestBonus = bonus; keepIdx = idx; }
+                }
+
+                board[keepIdx].mergeLevel++;
+                board[keepIdx].ResetStats();
+                foreach (int idx in copies)
+                    if (idx != keepIdx) board[idx] = null;
+
+                merged = true;
+                break; // restart scan sau mỗi merge
+            }
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // EVALUATE CardDefinition — điểm kỳ vọng khi mua card này
     // ──────────────────────────────────────────────────────────────────────────
     private float Evaluate(CardDefinition c)
     {
-        // ── Nhóm 1: Chỉ số gốc ────────────────────────────────────────────────
         float s = c.baseATK * brain.genes[0]
                 + c.baseHP  * brain.genes[1]
                 + (c.tier - 1) * brain.genes[2] * 5f;
 
-        // ── Nhóm 2: Passives ──────────────────────────────────────────────────
         if (c.hasTaunt)     s += brain.genes[4] * 10f;
         if (c.hasReborn)    s += brain.genes[5] * 12f;
         if (c.hasSafeguard) s += brain.genes[6] * 8f;
 
-        // ── Nhóm 3+4: Abilities — trigger_weight × effect_weight × 10 ─────────
-        // Tách biệt trigger và effect cho phép GA khám phá tổ hợp phức tạp hơn.
         if (c.abilities != null)
         {
+            int sameTribeCount = 0;
+            if (c.tribe != Tribe.None)
+                foreach (var u in board)
+                    if (u != null && !u.IsDead && u.Data.tribe == c.tribe)
+                        sameTribeCount++;
+
             foreach (var a in c.abilities)
             {
                 if (a == null) continue;
                 float tw = TriggerWeight(a.trigger);
-                float ew = EffectWeight(a.effect);
-                s += tw * ew * 10f;
 
-                // Escalating ability: thêm bonus vì giá trị tăng dần theo trận
+                if (a.trigger == TriggerType.OnAllyDeath  ||
+                    a.trigger == TriggerType.OnAllySummon ||
+                    a.trigger == TriggerType.OnAllyReborn)
+                    tw *= Mathf.Clamp01(sameTribeCount / 2f);
+
+                float ew = EffectWeight(a.effect, a.isConsume);
+                s += tw * ew * 10f;
                 if (a.isEscalating) s += tw * ew * 3f;
             }
         }
 
-        // ── Nhóm 5: Tribe synergy ─────────────────────────────────────────────
         float sw = SynergyWeight(c.tribe);
         if (sw > 0f)
         {
             int same = 0;
             foreach (var u in board)
                 if (u != null && !u.IsDead && u.Data.tribe == c.tribe) same++;
-
-            // Babylon/Olympus kích hoạt ≥2, Niles ≥3 → tính theo proximity
             s += same * sw * 4f;
         }
 
-        // ── Nhóm 6a: Merge bonus ─────────────────────────────────────────────
+        // Merge proximity
         {
             int copies = 0;
             foreach (var u in board)
-                if (u != null && !u.IsDead && u.Data.cardID == c.cardID
-                    && u.mergeLevel == 0) // chỉ tính star-1 để merge lên star-2
+                if (u != null && !u.IsDead && u.Data.cardID == c.cardID && u.mergeLevel == 0)
                     copies++;
-
-            // 1 copy → gần merge; 2 copies → cần đúng lá này để lên sao
             s += copies * brain.genes[21] * (copies == 2 ? 16f : 8f);
         }
 
-        // ── Nhóm 6b: Frontline bonus ─────────────────────────────────────────
-        // Taunt unit có giá trị cao hơn khi frontline (0-3) còn chỗ trống
+        // Frontline bias
         if (c.hasTaunt)
         {
             int emptyFront = 0;
@@ -110,14 +238,48 @@ public class BotAgent
             s += emptyFront * brain.genes[22] * 2f;
         }
 
-        // ── Nhóm 6c: Cost efficiency ─────────────────────────────────────────
         if (c.cost > 0)
             s = s / c.cost * (1f + brain.genes[3]);
 
         return s;
     }
 
-    // Trọng số theo Trigger — genes[7..12]
+    // ──────────────────────────────────────────────────────────────────────────
+    // EVALUATE CardInstance — điểm thực tế của unit đang có trên sân
+    // Dùng cho quyết định bán: so sánh unit cũ vs card mới
+    // ──────────────────────────────────────────────────────────────────────────
+    private float EvaluateInstance(CardInstance unit)
+    {
+        float s = unit.currentATK * brain.genes[0]
+                + unit.currentHP  * brain.genes[1]
+                + unit.mergeLevel * brain.genes[2] * 5f;
+        if (unit.isTaunt)         s += brain.genes[4] * 10f;
+        if (unit.isReborn)        s += brain.genes[5] * 12f;
+        if (unit.safeguardActive) s += brain.genes[6] * 8f;
+        float sw = SynergyWeight(unit.Data.tribe);
+        if (sw > 0f)
+        {
+            int same = 0;
+            foreach (var u in board)
+                if (u != null && !u.IsDead && u.Data.tribe == unit.Data.tribe) same++;
+            s += same * sw * 4f;
+        }
+        return s;
+    }
+
+    private int FindWorstUnitIndex()
+    {
+        int   worstIdx   = -1;
+        float worstScore = float.MaxValue;
+        for (int i = 0; i < board.Count; i++)
+        {
+            if (board[i] == null || board[i].IsDead) continue;
+            float sc = EvaluateInstance(board[i]);
+            if (sc < worstScore) { worstScore = sc; worstIdx = i; }
+        }
+        return worstIdx;
+    }
+
     private float TriggerWeight(TriggerType t)
     {
         switch (t)
@@ -136,15 +298,15 @@ public class BotAgent
         }
     }
 
-    // Trọng số theo Effect — genes[13..17]
-    private float EffectWeight(EffectType e)
+    private float EffectWeight(EffectType e, bool isConsume = false)
     {
         switch (e)
         {
             case EffectType.AddStats:        return brain.genes[13];
             case EffectType.Summon:          return brain.genes[14];
-            case EffectType.SummonConsumed:  return brain.genes[14] * 1.2f; // summon nhiều
-            case EffectType.Destroy:         return brain.genes[14] * 0.7f; // consume để dùng sau
+            case EffectType.SummonConsumed:  return brain.genes[14] * 1.2f;
+            case EffectType.Destroy:
+                return isConsume ? brain.genes[14] * 0.7f : brain.genes[15] * 0.8f;
             case EffectType.DealDamage:      return brain.genes[15];
             case EffectType.GainCoin:        return brain.genes[16];
             case EffectType.GiveBuff:        return brain.genes[17];
@@ -154,7 +316,6 @@ public class BotAgent
         }
     }
 
-    // Trọng số synergy theo Tribe — genes[18..20]
     private float SynergyWeight(Tribe t)
     {
         switch (t)
@@ -166,9 +327,6 @@ public class BotAgent
         }
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // PLACEMENT: Taunt → frontline; các unit khác → backline trước
-    // ──────────────────────────────────────────────────────────────────────────
     private void BuyAndPlace(CardDefinition c)
     {
         int idx;

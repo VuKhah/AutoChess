@@ -69,11 +69,12 @@ public partial class GameManager
         if (shopSlots == null) return;
         foreach (var slot in shopSlots)
         {
+            if (slot == null) continue;
             CardUI ui = slot.GetComponentInChildren<CardUI>();
             if (ui == null || ui.currentInstance == null) continue;
 
             // Spell không merge — đảm bảo tắt blink
-            if (ui.currentInstance.Data.cardType != CardType.Unit)
+            if (ui.currentInstance.Data == null || ui.currentInstance.Data.cardType != CardType.Unit)
             {
                 ui.SetMergeHint(false);
                 continue;
@@ -89,23 +90,33 @@ public partial class GameManager
     private int CountOwnedMatches(string cardID, int mergeLevel)
     {
         int count = 0;
-        foreach (var slot in playerSlots)
+        if (playerSlots != null)
         {
-            CardUI ui = slot.GetComponentInChildren<CardUI>();
-            if (ui != null && ui.currentInstance != null
-                && ui.currentInstance.Data.cardID == cardID
-                && ui.currentInstance.mergeLevel == mergeLevel
-                && !ui.currentInstance.isBattleSpawned)
-                count++;
+            foreach (var slot in playerSlots)
+            {
+                if (slot == null) continue;
+                CardUI ui = slot.GetComponentInChildren<CardUI>();
+                if (ui != null && ui.currentInstance != null
+                    && ui.currentInstance.Data != null
+                    && ui.currentInstance.Data.cardID == cardID
+                    && ui.currentInstance.mergeLevel == mergeLevel
+                    && !ui.currentInstance.isBattleSpawned)
+                    count++;
+            }
         }
-        foreach (var slot in handSlots)
+        if (handSlots != null)
         {
-            CardUI ui = slot.GetComponentInChildren<CardUI>();
-            if (ui != null && ui.currentInstance != null
-                && ui.currentInstance.Data.cardID == cardID
-                && ui.currentInstance.mergeLevel == mergeLevel
-                && !ui.currentInstance.isBattleSpawned)
-                count++;
+            foreach (var slot in handSlots)
+            {
+                if (slot == null) continue;
+                CardUI ui = slot.GetComponentInChildren<CardUI>();
+                if (ui != null && ui.currentInstance != null
+                    && ui.currentInstance.Data != null
+                    && ui.currentInstance.Data.cardID == cardID
+                    && ui.currentInstance.mergeLevel == mergeLevel
+                    && !ui.currentInstance.isBattleSpawned)
+                    count++;
+            }
         }
         return count;
     }

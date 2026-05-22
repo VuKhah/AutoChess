@@ -8,17 +8,27 @@ public partial class GameManager
 {
     public void SyncBoards()
     {
-        for (int i = 0; i < playerSlots.Length; i++)
+        if (playerSlots != null)
         {
-            CardUI ui = playerSlots[i].GetComponentInChildren<CardUI>();
-            playerBoard[i] = (ui != null) ? ui.currentInstance : null;
-            if (playerBoard[i] != null) playerBoard[i].slotIndex = i; // giữ slotIndex đồng bộ với vị trí thực
+            int pLen = Mathf.Min(playerSlots.Length, playerBoard.Count);
+            for (int i = 0; i < pLen; i++)
+            {
+                if (playerSlots[i] == null) continue;
+                CardUI ui = playerSlots[i].GetComponentInChildren<CardUI>();
+                playerBoard[i] = (ui != null) ? ui.currentInstance : null;
+                if (playerBoard[i] != null) playerBoard[i].slotIndex = i;
+            }
         }
-        for (int i = 0; i < enemySlots.Length; i++)
+        if (enemySlots != null)
         {
-            CardUI ui = enemySlots[i].GetComponentInChildren<CardUI>();
-            enemyBoard[i] = (ui != null) ? ui.currentInstance : null;
-            if (enemyBoard[i] != null) enemyBoard[i].slotIndex = i;
+            int eLen = Mathf.Min(enemySlots.Length, enemyBoard.Count);
+            for (int i = 0; i < eLen; i++)
+            {
+                if (enemySlots[i] == null) continue;
+                CardUI ui = enemySlots[i].GetComponentInChildren<CardUI>();
+                enemyBoard[i] = (ui != null) ? ui.currentInstance : null;
+                if (enemyBoard[i] != null) enemyBoard[i].slotIndex = i;
+            }
         }
         // Cập nhật nhấp nháy shop theo trạng thái board+hand vừa sync.
         UpdateShopMergeHints();
@@ -55,8 +65,15 @@ public partial class GameManager
     private IEnumerator CombatSequence()
     {
         // Giai đoạn A: Đảm bảo tọa độ UI chính xác
-        LayoutRebuilder.ForceRebuildLayoutImmediate(playerSlots[0].parent.GetComponent<RectTransform>());
-        LayoutRebuilder.ForceRebuildLayoutImmediate(enemySlots[0].parent.GetComponent<RectTransform>());
+        // Dùng GetComponentInParent để tránh NullRef khi parent là null (root transform)
+        RectTransform playerPanel = playerSlots != null && playerSlots.Length > 0
+            ? playerSlots[0].GetComponentInParent<RectTransform>()
+            : null;
+        RectTransform enemyPanel = enemySlots != null && enemySlots.Length > 0
+            ? enemySlots[0].GetComponentInParent<RectTransform>()
+            : null;
+        if (playerPanel != null) LayoutRebuilder.ForceRebuildLayoutImmediate(playerPanel);
+        if (enemyPanel  != null) LayoutRebuilder.ForceRebuildLayoutImmediate(enemyPanel);
         yield return new WaitForEndOfFrame();
 
         // Giai đoạn B: Tính toán toàn bộ trận đấu trong 1 tích tắc

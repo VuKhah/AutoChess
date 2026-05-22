@@ -75,8 +75,19 @@ public partial class GameManager : MonoBehaviour
     public void SetDifficulty(string difficulty)
     {
         selectedDifficulty = difficulty;
+        enemyBot = null;
         if (AIManager.Instance != null && AIManager.Instance.loadedLibrary != null)
-            enemyBot = new BotAgent(AIManager.Instance.GetBrain(difficulty));
+        {
+            Chromosome brain = AIManager.Instance.GetBrain(difficulty);
+            if (brain != null && brain.genes != null && brain.genes.Length >= Chromosome.GeneCount)
+            {
+                // Handicap coin: Easy=7, Medium=9, Hard=10
+                int coins = difficulty == "Easy" ? 7 : difficulty == "Medium" ? 9 : 10;
+                enemyBot = new BotAgent(brain, coins);
+            }
+            else
+                Debug.LogWarning($"[AI] Brain không hợp lệ cho '{difficulty}' (genes={brain?.genes?.Length ?? 0}/{Chromosome.GeneCount}) — dùng đội ngẫu nhiên.");
+        }
         Debug.Log($"<color=cyan>[AI]</color> Độ khó đặt thành: {difficulty}");
     }
 
@@ -105,12 +116,15 @@ public partial class GameManager : MonoBehaviour
         // Reset về đúng 10 Coin cố định + bonus coin từ spell lượt trước
         economy.ResetEconomy();
 
-        // Kích EndTurnShop cho tất cả unit trên sân qua TTE engine
+        // Kích EndTurnShop cho player (qua TTE engine đầy đủ)
         foreach (var unit in playerBoard)
         {
             if (unit != null && !unit.IsDead)
                 resolver.TriggerAbility(TriggerType.EndTurnShop, unit, null, playerBoard, enemyBoard);
         }
+
+        // Kích EndTurnShop cho bot (growth tích lũy giống player)
+        enemyBot?.TriggerEndTurnShop();
 
         if (!isShopFrozen) RefreshShop();
         else isShopFrozen = false;

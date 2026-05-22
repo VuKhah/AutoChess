@@ -7,9 +7,9 @@ using System.IO;
 public class GATrainer : MonoBehaviour
 {
     [Header("Cấu hình huấn luyện")]
-    public int populationSize  = 100;  // lớn hơn cho không gian 24 chiều
-    public int generations     = 150;
-    public int matchesPerChrom = 15;   // đủ để đánh giá ổn định
+    public int populationSize  = 30;   // test nhanh: 30 | production: 100
+    public int generations     = 40;   // test nhanh: 40 | production: 150
+    public int matchesPerChrom = 5;    // test nhanh: 5  | production: 15
     [Range(0.05f, 0.25f)]
     public float mutationRate  = 0.08f;
     [Range(0.05f, 0.2f)]
@@ -21,9 +21,44 @@ public class GATrainer : MonoBehaviour
 
     void Start()
     {
+        if (IsLibraryValid())
+        {
+            Debug.Log("[GATrainer] AI_Library.json đã có đủ 3 bot — bỏ qua training.");
+            return;
+        }
+        BeginTraining();
+    }
+
+    // Gọi từ Inspector (chuột phải vào component) để train lại từ đầu dù file đã có.
+    [ContextMenu("Retrain AI (Force)")]
+    public void ForceRetrain()
+    {
+        StopAllCoroutines();
+        BeginTraining();
+    }
+
+    private bool IsLibraryValid()
+    {
+        TextAsset file = Resources.Load<TextAsset>("AI_Library");
+        if (file == null) return false;
+        var lib = JsonUtility.FromJson<AILibrary>(file.text);
+        return lib?.easyBot?.genes  != null && lib.easyBot.genes.Length  >= Chromosome.GeneCount
+            && lib.mediumBot?.genes != null && lib.mediumBot.genes.Length >= Chromosome.GeneCount
+            && lib.hardBot?.genes   != null && lib.hardBot.genes.Length   >= Chromosome.GeneCount;
+    }
+
+    private void BeginTraining()
+    {
+        if (CardDatabase.Instance == null)
+        {
+            Debug.LogError("[GATrainer] CardDatabase chưa sẵn sàng — training bị huỷ.");
+            return;
+        }
+        population.Clear();
+        library = new AILibrary();
         for (int i = 0; i < populationSize; i++)
             population.Add(new Chromosome());
-
+        Debug.LogWarning($"[GATrainer] BẮT ĐẦU TRAINING — Genes:{Chromosome.GeneCount} Pop:{populationSize} Gen:{generations}");
         StartCoroutine(TrainRoutine());
     }
 
@@ -40,7 +75,9 @@ public class GATrainer : MonoBehaviour
                 for (int m = 0; m < matchesPerChrom; m++)
                 {
                     BotAgent me       = new BotAgent(chromo);
-                    BotAgent opponent = new BotAgent(population[Random.Range(0, population.Count)]);
+                    int oppIdx = Random.Range(0, population.Count - 1);
+                    if (population[oppIdx] == chromo) oppIdx = population.Count - 1;
+                    BotAgent opponent = new BotAgent(population[oppIdx]);
                     int result = sim.SimulateMatch(me, opponent);
 
                     if (result ==  1) chromo.fitness += 10f;
@@ -56,10 +93,14 @@ public class GATrainer : MonoBehaviour
             float worst = population[population.Count - 1].fitness;
             Debug.Log($"Gen {g,3}/{generations}  Best={best,5:F0}  Avg={avg,5:F1}  Worst={worst,5:F0}");
 
-            // ── Snapshots ─────────────────────────────────────────────────────
-            if (g == 10)  { library.easyBot  = population[0].Clone(); Debug.Log("<color=green>► Easy Bot snapshot (Gen 10)</color>"); }
-            if (g == 50)  { library.mediumBot = population[0].Clone(); Debug.Log("<color=yellow>► Medium Bot snapshot (Gen 50)</color>"); }
-            if (g == 100) Debug.Log("<color=cyan>── Halfway checkpoint (Gen 100) ──</color>");
+            // ── Snapshots — tính theo % tổng gen để hoạt động mọi config ────────
+            int easyAt   = Mathf.Max(1, generations / 4);   // 25% đầu
+            int mediumAt = Mathf.Max(2, generations / 2);   // 50% giữa
+            int halfAt   = Mathf.Max(3, generations * 3/4); // 75%
+
+            if (g == easyAt)   { library.easyBot  = population[0].Clone(); Debug.Log($"<color=green>► Easy Bot snapshot (Gen {g})</color>"); }
+            if (g == mediumAt) { library.mediumBot = population[0].Clone(); Debug.Log($"<color=yellow>► Medium Bot snapshot (Gen {g})</color>"); }
+            if (g == halfAt)   Debug.Log($"<color=cyan>── Checkpoint (Gen {g}/{generations}) ──</color>");
 
             // ── Elitism: clone top 10%, breed phần còn lại ───────────────────
             int eliteCount = Mathf.Max(2, populationSize / 10);
@@ -70,9 +111,8 @@ public class GATrainer : MonoBehaviour
             List<Chromosome> nextGen = new List<Chromosome>(elite);
             while (nextGen.Count < populationSize)
             {
-                // Tournament selection trong elite để có diversity
-                Chromosome parentA = TournamentSelect(elite, 3);
-                Chromosome parentB = TournamentSelect(elite, 3);
+                Chromosome parentA = TournamentSelect(population, 3);
+                Chromosome parentB = TournamentSelect(population, 3);
                 nextGen.Add(CrossoverAndMutate(parentA, parentB));
             }
 
@@ -112,9 +152,13 @@ public class GATrainer : MonoBehaviour
             // Uniform crossover
             child.genes[i] = Random.value > 0.5f ? a.genes[i] : b.genes[i];
 
-            // Gaussian mutation
             if (Random.value < mutationRate)
-                child.genes[i] += Random.Range(-mutationMag, mutationMag);
+            {
+                // Box-Muller → phân phối chuẩn N(0, mutationMag)
+                float u1 = Mathf.Max(1e-6f, Random.value);
+                float z  = Mathf.Sqrt(-2f * Mathf.Log(u1)) * Mathf.Cos(2f * Mathf.PI * Random.value);
+                child.genes[i] += z * mutationMag;
+            }
 
             child.genes[i] = Mathf.Clamp01(child.genes[i]);
         }

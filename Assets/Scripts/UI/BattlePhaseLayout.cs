@@ -122,9 +122,11 @@ public class BattlePhaseLayout : MonoBehaviour
 
     private static void ApplyCombatSlots(RectTransform[] rects, Vector2[] anchors)
     {
+        if (rects == null) return;
         for (int i = 0; i < rects.Length && i < anchors.Length; i++)
         {
             RectTransform rect = rects[i];
+            if (rect == null) continue;
             rect.anchorMin = anchors[i];
             rect.anchorMax = anchors[i];
             rect.anchoredPosition = Vector2.zero;
