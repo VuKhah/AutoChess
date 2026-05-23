@@ -1,1248 +1,1251 @@
 {
-    "cards": [
-        {
-            "comment": "Babylon",
-            "cardID": "U_01_Babylon",
-            "cardName": "Ereskigal",
-            "tribe": 1,
-            "tier": 6,
-            "baseATK": 10,
-            "baseHP": 10,
-            "cost": 3,
-            "description": "OnSell (tối đa 3 lần): Tăng vĩnh viễn +0/+0 cho bản thân.",
-            "abilities": [
-                {
-                    "trigger": 7,
-                    "target": 1,
-                    "effect": 1,
-                    "triggerLimit": 3,
-                    "isPermanent": true
-                }
-            ]
-        },
-        {
-            "cardID": "U_02_Babylon",
-            "cardName": "Ninurta",
-            "tribe": 1,
-            "tier": 6,
-            "baseATK": 9,
-            "baseHP": 9,
-            "cost": 3,
-            "description": "OnDeploy (mỗi 3 lần): Nhận 1 Coin.",
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 1,
-                    "effect": 6,
-                    "effectValue1": 1,
-                    "conditionCount": 3,
-                    "isPermanent": false
-                }
-            ]
-        },
-        {
-            "cardID": "U_03_Babylon",
-            "cardName": "Utu",
-            "tribe": 1,
-            "tier": 6,
-            "baseATK": 8,
-            "baseHP": 8,
-            "cost": 3,
-            "description": "OnDeploy: Tăng vĩnh viễn +1/+1 cho toàn bộ đồng minh Babylon.",
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 10,
-                    "effect": 1,
-                    "effectValue1": 1,
-                    "effectValue2": 1,
-                    "isPermanent": true
-                }
-            ]
-        },
-        {
-            "cardID": "U_04_Babylon",
-            "cardName": "Ki",
-            "tribe": 1,
-            "tier": 5,
-            "baseATK": 6,
-            "baseHP": 6,
-            "cost": 3,
-            "description": "OnDeploy: Tăng vĩnh viễn +3/+3 cho 1 đồng minh ngẫu nhiên.",
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 2,
-                    "effect": 1,
-                    "effectValue1": 3,
-                    "effectValue2": 3,
-                    "isPermanent": true
-                }
-            ]
-        },
-        {
-            "cardID": "U_05_Babylon",
-            "cardName": "Nanna",
-            "tribe": 1,
-            "tier": 5,
-            "baseATK": 15,
-            "baseHP": 15,
-            "cost": 3,
-            "description": "OnSell: Tăng vĩnh viễn +0/+0 cho 2 đồng minh Babylon.",
-            "abilities": [
-                {
-                    "trigger": 7,
-                    "target": 10,
-                    "targetCount": 2,
-                    "effect": 1,
-                    "isPermanent": true
-                }
-            ]
-        },
-        {
-            "cardID": "U_06_Babylon",
-            "cardName": "Ashur",
-            "tribe": 1,
-            "tier": 5,
-            "baseATK": 6,
-            "baseHP": 6,
-            "cost": 3,
-            "description": "OnSell: Tăng vĩnh viễn +5/+5 cho toàn bộ đồng minh.",
-            "abilities": [
-                {
-                    "trigger": 7,
-                    "target": 3,
-                    "effect": 1,
-                    "effectValue1": 5,
-                    "effectValue2": 5,
-                    "isPermanent": true
-                }
-            ]
-        },
-        {
-            "cardID": "U_07_Babylon",
-            "cardName": "Enki",
-            "tribe": 1,
-            "tier": 5,
-            "baseATK": 2,
-            "baseHP": 15,
-            "cost": 3,
-            "description": "Taunt. Khi bị đánh: Gây 0 sát thương cho kẻ địch trực tiếp.",
-            "abilities": [
-                {
-                    "isTaunt": true,
-                    "trigger": 1,
-                    "target": 5,
-                    "effect": 2,
-                    "isPermanent": false
-                }
-            ]
-        },
-        {
-            "cardID": "U_08_Babylon",
-            "cardName": "Gugalana",
-            "tribe": 1,
-            "tier": 4,
-            "baseATK": 10,
-            "baseHP": 10,
-            "cost": 3,
-            "description": "Taunt. OnDeploy: Tăng vĩnh viễn +20/+20 cho bản thân.",
-            "abilities": [
-                {
-                    "isTaunt": true,
-                    "trigger": 6,
-                    "target": 1,
-                    "effect": 1,
-                    "effectValue1": 20,
-                    "effectValue2": 20,
-                    "isPermanent": true
-                }
-            ]
-        },
-        {
-            "cardID": "U_09_Babylon",
-            "cardName": "Umu Drabutu",
-            "tribe": 1,
-            "tier": 4,
-            "baseATK": 5,
-            "baseHP": 5,
-            "cost": 3,
-            "description": "OnDeploy: Triệu hồi 2 đơn vị.",
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 1,
-                    "effect": 4,
-                    "effectValue1": 2,
-                    "isPermanent": false
-                }
-            ]
-        },
-        {
-            "cardID": "U_10_Babylon",
-            "cardName": "Enkidu",
-            "tribe": 1,
-            "tier": 4,
-            "baseATK": 5,
-            "baseHP": 5,
-            "cost": 3,
-            "description": "OnDeploy: Tăng vĩnh viễn +3/+3 cho đồng minh bên phải.",
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 8,
-                    "effect": 1,
-                    "effectValue1": 3,
-                    "effectValue2": 3,
-                    "isPermanent": true
-                }
-            ]
-        },
-        {
-            "cardID": "U_11_Babylon",
-            "cardName": "Gilgamesh",
-            "tribe": 1,
-            "tier": 4,
-            "baseATK": 8,
-            "baseHP": 8,
-            "cost": 3,
-            "description": "Aura: Tăng vĩnh viễn +3/+2 cho bản thân.",
-            "abilities": [
-                {
-                    "trigger": 11,
-                    "target": 1,
-                    "effect": 1,
-                    "effectValue1": 3,
-                    "effectValue2": 2,
-                    "isPermanent": true
-                }
-            ]
-        },
-        {
-            "cardID": "U_12_Babylon",
-            "cardName": "Humbaba",
-            "tribe": 1,
-            "tier": 4,
-            "baseATK": 7,
-            "baseHP": 1,
-            "cost": 3,
-            "description": "Khi tấn công: Nhận 2 Coin.",
-            "abilities": [
-                {
-                    "trigger": 2,
-                    "target": 1,
-                    "effect": 6,
-                    "effectValue1": 2,
-                    "isPermanent": false
-                }
-            ]
-        },
-        {
-            "cardID": "U_13_Babylon",
-            "cardName": "Asag",
-            "tribe": 1,
-            "tier": 4,
-            "baseATK": 8,
-            "baseHP": 8,
-            "cost": 3,
-            "description": "OnDeploy: Tăng vĩnh viễn +0/+0 cho 1 đồng minh ngẫu nhiên.",
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 2,
-                    "effect": 1,
-                    "isPermanent": true
-                }
-            ]
-        },
-        {
-            "cardID": "U_14_Babylon",
-            "cardName": "Usumgallu",
-            "tribe": 1,
-            "tier": 3,
-            "baseATK": 3,
-            "baseHP": 3,
-            "cost": 3,
-            "description": "Taunt. Khi bị đánh: Tăng +1/+2 cho toàn bộ đồng minh Babylon trong trận đấu này.",
-            "abilities": [
-                {
-                    "isTaunt": true,
-                    "trigger": 1,
-                    "target": 10,
-                    "effect": 1,
-                    "effectValue1": 1,
-                    "effectValue2": 2,
-                    "isPermanent": false
-                }
-            ]
-        },
-        {
-            "cardID": "U_15_Babylon",
-            "cardName": "Lamashtu",
-            "tribe": 1,
-            "tier": 3,
-            "baseATK": 1,
-            "baseHP": 5,
-            "cost": 3,
-            "description": "Trigger 12: Tăng vĩnh viễn +1/+0 cho toàn bộ đồng minh Babylon.",
-            "abilities": [
-                {
-                    "trigger": 12,
-                    "target": 10,
-                    "effect": 1,
-                    "effectValue1": 1,
-                    "isPermanent": true
-                }
-            ]
-        },
-        {
-            "cardID": "U_16_Babylon",
-            "cardName": "Pazuzu",
-            "tribe": 1,
-            "tier": 3,
-            "baseATK": 1,
-            "baseHP": 2,
-            "cost": 3,
-            "description": "OnDeploy: Nhận 2 Coin.",
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 1,
-                    "effect": 6,
-                    "effectValue1": 2,
-                    "isPermanent": false
-                }
-            ]
-        },
-        {
-            "cardID": "U_17_Babylon",
-            "cardName": "Kingu",
-            "tribe": 1,
-            "tier": 2,
-            "baseATK": 2,
-            "baseHP": 2,
-            "cost": 3,
-            "description": "Taunt. Reborn.",
-            "abilities": [
-                {
-                    "isTaunt": true,
-                    "isReborn": true
-                }
-            ]
-        },
-        {
-            "cardID": "U_18_Babylon",
-            "cardName": "Uridimmu",
-            "tribe": 1,
-            "tier": 2,
-            "baseATK": 5,
-            "baseHP": 1,
-            "cost": 3,
-            "description": "Trigger 12: Tăng vĩnh viễn +0/+1 cho toàn bộ đồng minh Babylon.",
-            "abilities": [
-                {
-                    "trigger": 12,
-                    "target": 10,
-                    "effect": 1,
-                    "effectValue2": 1,
-                    "isPermanent": true
-                }
-            ]
-        },
-        {
-            "cardID": "U_19_Babylon",
-            "cardName": "Ugallu",
-            "tribe": 1,
-            "tier": 2,
-            "baseATK": 3,
-            "baseHP": 3,
-            "cost": 3,
-            "description": "OnSell: Triệu hồi 1 đơn vị.",
-            "abilities": [
-                {
-                    "trigger": 7,
-                    "target": 1,
-                    "effect": 4,
-                    "effectValue1": 1,
-                    "isPermanent": false
-                }
-            ]
-        },
-        {
-            "cardID": "U_20_Babylon",
-            "cardName": "Kusarikku",
-            "tribe": 1,
-            "tier": 1,
-            "baseATK": 3,
-            "baseHP": 3,
-            "cost": 3,
-            "description": "OnSell: Tăng vĩnh viễn +1/+1 cho bản thân.",
-            "abilities": [
-                {
-                    "trigger": 7,
-                    "target": 1,
-                    "effect": 1,
-                    "effectValue1": 1,
-                    "effectValue2": 1,
-                    "isPermanent": true
-                }
-            ]
-        },
-        {
-            "cardID": "U_21_Babylon",
-            "cardName": "Babilonian Soldier",
-            "tribe": 1,
-            "tier": 1,
-            "baseATK": 2,
-            "baseHP": 4,
-            "cost": 3,
-            "description": "OnDeploy: Tăng vĩnh viễn +0/+1 cho bản thân.",
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 1,
-                    "effect": 1,
-                    "effectValue2": 1,
-                    "isPermanent": true
-                }
-            ]
-        },
-        {
-            "cardID": "U_22_Babylon",
-            "cardName": "Sumerian Scholar",
-            "tribe": 1,
-            "tier": 1,
-            "baseATK": 3,
-            "baseHP": 2,
-            "cost": 3,
-            "description": "OnDeploy: Nhận 1 Coin.",
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 1,
-                    "effect": 6,
-                    "effectValue1": 1,
-                    "isPermanent": false
-                }
-            ]
-        },
-        {
-            "comment": "Nile",
-            "cardID": "U_01_Niles",
-            "cardName": "Anubis",
-            "tribe": 3,
-            "tier": 6,
-            "baseATK": 5,
-            "baseHP": 5,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 8,
-                    "target": 6,
-                    "effect": 3,
-                    "effectValue1": 0,
-                    "effectValue2": 0,
-                    "isReborn": true,
-                    "triggerLimit": 2,
-                    "isPermanent": false
-                }
-            ],
-            "description": "OnAllyDeath: ban Reborn cho LowestHealthAlly (tối đa 2 lần)"
-        },
-        {
-            "cardID": "U_02_Niles",
-            "cardName": "Sekhmet",
-            "tribe": 3,
-            "tier": 6,
-            "baseATK": 9,
-            "baseHP": 3,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 9,
-                    "target": 11,
-                    "effect": 5,
-                    "triggerLimit": 2,
-                    "isConsume": true,
-                    "isPermanent": false
-                },
-                {
-                    "trigger": 3,
-                    "target": 1,
-                    "effect": 9,
-                    "isPermanent": false
-                }
-            ],
-            "description": "OnAllySummon: Consume unit đó (tối đa 2 lần). Slain: triệu hồi lại tất cả unit đã Consume."
-        },
-        {
-            "cardID": "U_03_Niles",
-            "cardName": "Osiris",
-            "tribe": 3,
-            "tier": 6,
-            "baseATK": 3,
-            "baseHP": 3,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 10,
-                    "target": 11,
-                    "effect": 1,
-                    "effectValue1": 30,
-                    "effectValue2": 30,
-                    "isPermanent": true
-                }
-            ],
-            "description": "OnAllyReborn: Tăng +30/+30 cho đồng minh đó."
-        },
-        {
-            "cardID": "U_04_Niles",
-            "cardName": "Sobek",
-            "tribe": 3,
-            "tier": 5,
-            "baseATK": 2,
-            "baseHP": 2,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 9,
-                    "target": 1,
-                    "effect": 1,
-                    "effectValue1": 1,
-                    "effectValue2": 2,
-                    "isPermanent": true
-                }
-            ],
-            "description": "OnAllySummon: Tăng vĩnh viễn +1/+2 cho bản thân."
-        },
-        {
-            "cardID": "U_05_Niles",
-            "cardName": "Bastet",
-            "tribe": 3,
-            "tier": 5,
-            "baseATK": 4,
-            "baseHP": 8,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 9,
-                    "target": 9,
-                    "effect": 1,
-                    "effectValue1": 1,
-                    "effectValue2": 1,
-                    "conditionCount": 2,
-                    "isPermanent": false,
-                    "isEscalating": true
-                }
-            ],
-            "description": "OnAllySummon (mỗi 2 lần): Tăng +1/+1 (tăng dần +1/+1 mỗi lần) cho toàn bộ đồng minh Niles trong trận đấu này."
-        },
-        {
-            "cardID": "U_06_Niles",
-            "cardName": "Thoth",
-            "tribe": 3,
-            "tier": 5,
-            "baseATK": 8,
-            "baseHP": 5,
-            "cost": 3,
-            "hasReborn": true,
-            "abilities": [
-                {
-                    "trigger": 3,
-                    "target": 9,
-                    "effect": 1,
-                    "effectValue1": 2,
-                    "effectValue2": 0,
-                    "isPermanent": true
-                }
-            ],
-            "description": "Slain: Tăng vĩnh viễn +2/+0 cho toàn bộ đồng minh Niles."
-        },
-        {
-            "cardID": "U_07_Niles",
-            "cardName": "Isis",
-            "tribe": 3,
-            "tier": 5,
-            "baseATK": 2,
-            "baseHP": 9,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 10,
-                    "target": 3,
-                    "effect": 1,
-                    "effectValue1": 3,
-                    "effectValue2": 3,
-                    "isPermanent": true
-                }
-            ],
-            "description": "OnAllyReborn: Tăng vĩnh viễn +3/+3 cho toàn bộ đồng minh."
-        },
-        {
-            "cardID": "U_08_Niles",
-            "cardName": "Sepopard",
-            "tribe": 3,
-            "tier": 4,
-            "baseATK": 5,
-            "baseHP": 2,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 9,
-                    "target": 11,
-                    "effect": 1,
-                    "effectValue1": 4,
-                    "effectValue2": 4,
-                    "isPermanent": false
-                }
-            ],
-            "description": "OnAllySummon: Tăng +4/+4 cho đồng minh đó trong trận đấu này."
-        },
-        {
-            "cardID": "U_09_Niles",
-            "cardName": "Nefertem",
-            "tribe": 3,
-            "tier": 4,
-            "baseATK": 4,
-            "baseHP": 2,
-            "cost": 3,
-            "hasReborn": true,
-            "abilities": [
-                {
-                    "trigger": 3,
-                    "target": 2,
-                    "effect": 3,
-                    "isPermanent": false,
-                    "isReborn": true
-                }
-            ],
-            "description": "Slain: Ban Reborn cho 1 đồng minh ngẫu nhiên."
-        },
-        {
-            "cardID": "U_10_Niles",
-            "cardName": "Sand Golem",
-            "tribe": 3,
-            "tier": 4,
-            "baseATK": 6,
-            "baseHP": 2,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 3,
-                    "target": 1,
-                    "effect": 4,
-                    "effectValue1": 2,
-                    "summonCardID": "U_20_Niles",
-                    "isPermanent": false
-                }
-            ],
-            "description": "Slain: Triệu hồi 2 Niles Warrior."
-        },
-        {
-            "cardID": "U_11_Niles",
-            "cardName": "Upamaki",
-            "tribe": 3,
-            "tier": 4,
-            "baseATK": 5,
-            "baseHP": 2,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 7,
-                    "effect": 5,
-                    "isPermanent": false,
-                    "isConsume": true
-                },
-                {
-                    "trigger": 3,
-                    "target": 1,
-                    "effect": 9,
-                    "isPermanent": false
-                }
-            ],
-            "description": "OnDeploy: Consume đồng minh bên trái. Slain: Triệu hồi lại tất cả unit đã bị Consume."
-        },
-        {
-            "cardID": "U_12_Niles",
-            "cardName": "Cat Archer",
-            "tribe": 3,
-            "tier": 3,
-            "baseATK": 3,
-            "baseHP": 1,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 4,
-                    "target": 7,
-                    "effect": 8,
-                    "isPermanent": false
-                }
-            ],
-            "description": "Đầu trận: Kích hoạt kỹ năng của đồng minh bên trái."
-        },
-        {
-            "cardID": "U_13_Niles",
-            "cardName": "Niles Cultist",
-            "tribe": 3,
-            "tier": 3,
-            "baseATK": 3,
-            "baseHP": 1,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 8,
-                    "target": 9,
-                    "effect": 1,
-                    "effectValue1": 1,
-                    "effectValue2": 0,
-                    "conditionCount": 3,
-                    "isPermanent": true
-                }
-            ],
-            "description": "OnAllyDeath (mỗi 3 lần): Tăng vĩnh viễn +1/+0 cho toàn bộ đồng minh Niles."
-        },
-        {
-            "cardID": "U_14_Niles",
-            "cardName": "Scorpion",
-            "tribe": 3,
-            "tier": 3,
-            "baseATK": 1,
-            "baseHP": 1,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 2,
-                    "target": 5,
-                    "effect": 2,
-                    "effectValue1": 5,
-                    "isPermanent": false
-                }
-            ],
-            "description": "Khi tấn công: Gây 5 sát thương cho kẻ địch trực tiếp."
-        },
-        {
-            "cardID": "U_15_Niles",
-            "cardName": "Ammit",
-            "tribe": 3,
-            "tier": 3,
-            "baseATK": 2,
-            "baseHP": 2,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 8,
-                    "target": 1,
-                    "effect": 1,
-                    "effectValue1": 1,
-                    "effectValue2": 1,
-                    "isPermanent": true
-                }
-            ],
-            "description": "OnAllyDeath: Tăng vĩnh viễn +1/+1 cho bản thân."
-        },
-        {
-            "cardID": "U_16_Niles",
-            "cardName": "Hyena Thief",
-            "tribe": 3,
-            "tier": 2,
-            "baseATK": 3,
-            "baseHP": 1,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 6,
-                    "target": 1,
-                    "effect": 6,
-                    "effectValue1": 1,
-                    "isPermanent": false
-                }
-            ],
-            "description": "OnDeploy: Nhận 1 Coin."
-        },
-        {
-            "cardID": "U_17_Niles",
-            "cardName": "Babi",
-            "tribe": 3,
-            "tier": 2,
-            "baseATK": 1,
-            "baseHP": 1,
-            "cost": 3,
-            "hasReborn": true,
-            "abilities": [
-                {
-                    "trigger": 11,
-                    "target": 2,
-                    "effect": 1,
-                    "effectValue1": 2,
-                    "isPermanent": true
-                }
-            ],
-            "description": "Aura: Tăng vĩnh viễn +2/+0 cho đồng minh ngẫu nhiên."
-        },
-        {
-            "cardID": "U_18_Niles",
-            "cardName": "Niles Commander",
-            "tribe": 3,
-            "tier": 2,
-            "baseATK": 4,
-            "baseHP": 4,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 9,
-                    "target": 1,
-                    "effect": 1,
-                    "effectValue1": 1,
-                    "effectValue2": 1,
-                    "isPermanent": false
-                }
-            ],
-            "description": "OnAllySummon: Tăng +1/+1 cho bản thân trong trận đấu này."
-        },
-        {
-            "cardID": "U_19_Niles",
-            "cardName": "Tawaret",
-            "tribe": 3,
-            "tier": 2,
-            "baseATK": 0,
-            "baseHP": 1,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 3,
-                    "target": 1,
-                    "effect": 4,
-                    "effectValue1": 2,
-                    "summonCardID": "U_23_Niles",
-                    "isPermanent": false
-                }
-            ],
-            "description": "Slain: Triệu hồi 2 Medjed."
-        },
-        {
-            "cardID": "U_20_Niles",
-            "cardName": "Niles Warrior",
-            "tribe": 3,
-            "tier": 1,
-            "baseATK": 2,
-            "baseHP": 1,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 3,
-                    "target": 1,
-                    "effect": 4,
-                    "effectValue1": 1,
-                    "summonCardID": "U_22_Niles",
-                    "isPermanent": false
-                }
-            ],
-            "description": "Slain: Triệu hồi 1 Mummy."
-        },
-        {
-            "cardID": "U_21_Niles",
-            "cardName": "Griffin",
-            "tribe": 3,
-            "tier": 1,
-            "baseATK": 2,
-            "baseHP": 1,
-            "cost": 3,
-            "hasTaunt": true,
-            "hasReborn": true,
-            "abilities": [],
-            "description": "Taunt. Reborn."
-        },
-        {
-            "cardID": "U_22_Niles",
-            "cardName": "Mummy",
-            "tribe": 3,
-            "tier": 1,
-            "baseATK": 1,
-            "baseHP": 1,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 0
-                }
-            ]
-        },
-        {
-            "cardID": "U_23_Niles",
-            "cardName": "Medjed",
-            "tribe": 3,
-            "tier": 1,
-            "baseATK": 3,
-            "baseHP": 2,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 0
-                }
-            ]
-        },
-        {
-            "cardID": "U_24_Niles",
-            "cardName": "Dark Medjed",
-            "tribe": 3,
-            "tier": 1,
-            "baseATK": 3,
-            "baseHP": 2,
-            "cost": 3,
-            "abilities": [
-                {
-                    "trigger": 0
-                }
-            ]
-        },
-        {
-            "cardID": "S_01",
-            "cardName": "Ancient Coin",
-            "tribe": 0,
-            "tier": 1,
-            "cost": 1,
-            "fileName": "spell-art_01",
-            "spellEffects": [
-                {
-                    "effect": 6,
-                    "effectValue1": 1
-                }
-            ],
-            "description": "Nhận 1 đồng.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_02",
-            "cardName": "Sharpen Blade",
-            "tribe": 0,
-            "tier": 1,
-            "cost": 1,
-            "fileName": "spell-art_02",
-            "spellEffects": [
-                {
-                    "effect": 1,
-                    "target": 12,
-                    "effectValue1": 3,
-                    "effectValue2": 0,
-                    "isPermanent": true
-                }
-            ],
-            "description": "Ban vĩnh viễn +3/+0 cho 1 đồng minh.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_03",
-            "cardName": "Plated Armor",
-            "tribe": 0,
-            "tier": 1,
-            "cost": 1,
-            "fileName": "spell-art_03",
-            "spellEffects": [
-                {
-                    "effect": 1,
-                    "target": 12,
-                    "effectValue1": 0,
-                    "effectValue2": 3,
-                    "isTaunt": true,
-                    "isPermanent": true
-                }
-            ],
-            "description": "Ban vĩnh viễn +0/+3 và Taunt cho 1 đồng minh.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_04",
-            "cardName": "Quick Recruit",
-            "tribe": 0,
-            "tier": 1,
-            "cost": 2,
-            "fileName": "spell-art_04",
-            "spellEffects": [
-                {
-                    "effect": 10,
-                    "effectValue1": 1,
-                    "targetCount": 1
-                }
-            ],
-            "description": "Nhận 1 đơn vị ngẫu nhiên Tier 1.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_05",
-            "cardName": "Sanctum Heist",
-            "tribe": 0,
-            "tier": 1,
-            "cost": 2,
-            "fileName": "spell-art_05",
-            "spellEffects": [
-                {
-                    "effect": 11,
-                    "targetCount": 1
-                }
-            ],
-            "description": "Lấy 1 đơn vị ngẫu nhiên từ Shop hiện tại.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_06",
-            "cardName": "Let's Feast",
-            "tribe": 0,
-            "tier": 1,
-            "cost": 2,
-            "fileName": "spell-art_06",
-            "spellEffects": [
-                {
-                    "effect": 1,
-                    "target": 13,
-                    "targetCount": 3,
-                    "effectValue1": 0,
-                    "effectValue2": 2,
-                    "isPermanent": false
-                }
-            ],
-            "description": "Ban +0/+2 cho 3 đồng minh ngẫu nhiên đang trên bàn chiến (chỉ trận này).",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_07",
-            "cardName": "Balance Stance",
-            "tribe": 0,
-            "tier": 1,
-            "cost": 2,
-            "fileName": "spell-art_07",
-            "spellEffects": [
-                {
-                    "effect": 1,
-                    "target": 12,
-                    "effectValue1": 3,
-                    "effectValue2": 3,
-                    "isPermanent": true
-                }
-            ],
-            "description": "Ban vĩnh viễn +3/+3 cho 1 đồng minh.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_08",
-            "cardName": "Trader's Trick",
-            "tribe": 0,
-            "tier": 2,
-            "cost": 1,
-            "fileName": "spell-art_08",
-            "spellEffects": [
-                {
-                    "effect": 12,
-                    "effectValue1": 2,
-                    "isPermanent": false
-                }
-            ],
-            "description": "Tăng Thu Nhập thêm 2 đến hết lượt này.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_17",
-            "cardName": "Wager",
-            "tribe": 0,
-            "tier": 2,
-            "cost": 1,
-            "fileName": "spell-art_17",
-            "spellEffects": [
-                {
-                    "effect": 16,
-                    "effectValue1": 3
-                }
-            ],
-            "description": "Nếu thắng trận kế tiếp, nhận 3 đồng.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_13",
-            "cardName": "Strengthen Bond",
-            "tribe": 1,
-            "tier": 2,
-            "cost": 1,
-            "fileName": "spell-art_13",
-            "spellEffects": [
-                {
-                    "effect": 1,
-                    "target": 3,
-                    "effectValue1": 1,
-                    "effectValue2": 1,
-                    "isPermanent": true
-                }
-            ],
-            "description": "Ban vĩnh viễn +1/+1 cho toàn bộ đồng minh.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_12",
-            "cardName": "Caishen's Knock",
-            "tribe": 1,
-            "tier": 2,
-            "cost": 2,
-            "fileName": "spell-art_12",
-            "spellEffects": [
-                {
-                    "effect": 12,
-                    "effectValue1": 1,
-                    "isPermanent": true
-                }
-            ],
-            "description": "Tăng vĩnh viễn Thu Nhập thêm 1.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_09",
-            "cardName": "Tailored Recruit",
-            "tribe": 1,
-            "tier": 2,
-            "cost": 3,
-            "fileName": "spell-art_09",
-            "spellEffects": [
-                {
-                    "effect": 13,
-                    "target": 12
-                }
-            ],
-            "description": "Chọn 1 đơn vị, nhận 1 đơn vị khác cùng Tộc (không trùng đơn vị đã chọn).",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_14",
-            "cardName": "Rising Spirit",
-            "tribe": 1,
-            "tier": 3,
-            "cost": 2,
-            "fileName": "spell-art_14",
-            "spellEffects": [
-                {
-                    "effect": 21,
-                    "target": 12,
-                    "effectValue1": 2,
-                    "effectValue2": 2
-                }
-            ],
-            "description": "Ban cho 1 đồng minh khả năng: cuối mỗi lượt Shop, nhận +2/+2.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_16",
-            "cardName": "Gate of Destruction",
-            "tribe": 1,
-            "tier": 4,
-            "cost": 3,
-            "fileName": "spell-art_16",
-            "spellEffects": [
-                {
-                    "effect": 15,
-                    "target": 12
-                }
-            ],
-            "description": "Loại bỏ 1 đồng minh, chuyển toàn bộ chỉ số của nó cho 1 đồng minh ngẫu nhiên.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_15",
-            "cardName": "Military Support",
-            "tribe": 1,
-            "tier": 5,
-            "cost": 5,
-            "fileName": "spell-art_15",
-            "spellEffects": [
-                {
-                    "effect": 10,
-                    "effectValue1": 5,
-                    "targetCount": 3
-                }
-            ],
-            "description": "Nhận 3 đơn vị ngẫu nhiên Tier 5.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_10",
-            "cardName": "Devil's Deal",
-            "tribe": 2,
-            "tier": 4,
-            "cost": 1,
-            "fileName": "spell-art_10",
-            "spellEffects": [
-                {
-                    "effect": 14,
-                    "effectValue1": 1
-                },
-                {
-                    "effect": 6,
-                    "effectValue1": 6
-                }
-            ],
-            "description": "Mất 1 Mạng, nhận 6 đồng.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_18",
-            "cardName": "Ritual of the Realm",
-            "tribe": 2,
-            "tier": 3,
-            "cost": 3,
-            "fileName": "spell-art_18",
-            "spellEffects": [
-                {
-                    "effect": 17,
-                    "target": 12
-                }
-            ],
-            "description": "Chọn 1 đơn vị tham chiếu, nâng cấp 1 đơn vị khác cùng Tộc lên +1 Tier.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_19",
-            "cardName": "Olympic Flame",
-            "tribe": 2,
-            "tier": 4,
-            "cost": 3,
-            "fileName": "spell-art_19",
-            "spellEffects": [
-                {
-                    "effect": 18,
-                    "target": 12
-                }
-            ],
-            "description": "Ban Nhân Đôi ATK và Safeguard cho 1 đồng minh.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_20",
-            "cardName": "Change of Heart",
-            "tribe": 3,
-            "tier": 2,
-            "cost": 2,
-            "fileName": "spell-art_20",
-            "spellEffects": [
-                {
-                    "effect": 19,
-                    "target": 12,
-                    "effectValue1": 3,
-                    "effectValue2": 5
-                }
-            ],
-            "description": "Nếu đơn vị chưa có Taunt: ban Taunt và +0/+5. Nếu đã có Taunt: xóa Taunt và ban +3/+0.",
-            "cardType": 1
-        },
-        {
-            "cardID": "S_11",
-            "cardName": "Divine Inspiration",
-            "tribe": 3,
-            "tier": 3,
-            "cost": 2,
-            "fileName": "spell-art_11",
-            "spellEffects": [
-                {
-                    "effect": 20,
-                    "target": 12
-                }
-            ],
-            "description": "Ban cho 1 đồng minh ATK và HP bằng Tier hiện tại của Shop.",
-            "cardType": 1
+  "cards": [
+    {
+      "comment": "Babylon",
+      "cardID": "U_01_Babylon",
+      "cardName": "Ereskigal",
+      "tribe": 1,
+      "tier": 6,
+      "baseATK": 10,
+      "baseHP": 10,
+      "cost": 3,
+      "description": "OnSell (tối đa 3 lần): Tăng vĩnh viễn +0/+0 cho bản thân.",
+      "abilities": [
+        {
+          "trigger": 7,
+          "target": 1,
+          "effect": 1,
+          "triggerLimit": 3,
+          "isPermanent": true
         }
-    ]
+      ]
+    },
+    {
+      "cardID": "U_02_Babylon",
+      "cardName": "Ninurta",
+      "tribe": 1,
+      "tier": 6,
+      "baseATK": 9,
+      "baseHP": 9,
+      "cost": 3,
+      "description": "OnDeploy (mỗi 3 lần): Nhận 1 Coin.",
+      "abilities": [
+        {
+          "trigger": 6,
+          "target": 1,
+          "effect": 6,
+          "effectValue1": 1,
+          "conditionCount": 3,
+          "isPermanent": false
+        }
+      ]
+    },
+    {
+      "cardID": "U_03_Babylon",
+      "cardName": "Utu",
+      "tribe": 1,
+      "tier": 6,
+      "baseATK": 8,
+      "baseHP": 8,
+      "cost": 3,
+      "description": "OnDeploy: Tăng vĩnh viễn +1/+1 cho toàn bộ đồng minh Babylon.",
+      "abilities": [
+        {
+          "trigger": 6,
+          "target": 10,
+          "effect": 1,
+          "effectValue1": 1,
+          "effectValue2": 1,
+          "isPermanent": true
+        }
+      ]
+    },
+    {
+      "cardID": "U_04_Babylon",
+      "cardName": "Ki",
+      "tribe": 1,
+      "tier": 5,
+      "baseATK": 6,
+      "baseHP": 6,
+      "cost": 3,
+      "description": "OnDeploy: Tăng vĩnh viễn +3/+3 cho 1 đồng minh ngẫu nhiên.",
+      "abilities": [
+        {
+          "trigger": 6,
+          "target": 2,
+          "effect": 1,
+          "effectValue1": 3,
+          "effectValue2": 3,
+          "isPermanent": true
+        }
+      ]
+    },
+    {
+      "cardID": "U_05_Babylon",
+      "cardName": "Nanna",
+      "tribe": 1,
+      "tier": 5,
+      "baseATK": 15,
+      "baseHP": 15,
+      "cost": 3,
+      "description": "OnSell: Tăng vĩnh viễn +0/+0 cho 2 đồng minh Babylon.",
+      "abilities": [
+        {
+          "trigger": 7,
+          "target": 10,
+          "targetCount": 2,
+          "effect": 1,
+          "isPermanent": true
+        }
+      ]
+    },
+    {
+      "cardID": "U_06_Babylon",
+      "cardName": "Ashur",
+      "tribe": 1,
+      "tier": 5,
+      "baseATK": 6,
+      "baseHP": 6,
+      "cost": 3,
+      "description": "OnSell: Tăng vĩnh viễn +5/+5 cho toàn bộ đồng minh.",
+      "abilities": [
+        {
+          "trigger": 7,
+          "target": 3,
+          "effect": 1,
+          "effectValue1": 5,
+          "effectValue2": 5,
+          "isPermanent": true
+        }
+      ]
+    },
+    {
+      "cardID": "U_07_Babylon",
+      "cardName": "Enki",
+      "tribe": 1,
+      "tier": 5,
+      "baseATK": 2,
+      "baseHP": 15,
+      "cost": 3,
+      "description": "Taunt. Khi bị đánh: Gây 0 sát thương cho kẻ địch trực tiếp.",
+      "abilities": [
+        {
+          "isTaunt": true,
+          "trigger": 1,
+          "target": 5,
+          "effect": 2,
+          "isPermanent": false
+        }
+      ]
+    },
+    {
+      "cardID": "U_08_Babylon",
+      "cardName": "Gugalana",
+      "tribe": 1,
+      "tier": 4,
+      "baseATK": 10,
+      "baseHP": 10,
+      "cost": 3,
+      "description": "Taunt. OnDeploy: Tăng vĩnh viễn +20/+20 cho bản thân.",
+      "abilities": [
+        {
+          "isTaunt": true,
+          "trigger": 6,
+          "target": 1,
+          "effect": 1,
+          "effectValue1": 20,
+          "effectValue2": 20,
+          "isPermanent": true
+        }
+      ]
+    },
+    {
+      "cardID": "U_09_Babylon",
+      "cardName": "Umu Drabutu",
+      "tribe": 1,
+      "tier": 4,
+      "baseATK": 5,
+      "baseHP": 5,
+      "cost": 3,
+      "description": "OnDeploy: Triệu hồi 2 đơn vị.",
+      "abilities": [
+        {
+          "trigger": 6,
+          "target": 1,
+          "effect": 4,
+          "effectValue1": 2,
+          "isPermanent": false
+        }
+      ]
+    },
+    {
+      "cardID": "U_10_Babylon",
+      "cardName": "Enkidu",
+      "tribe": 1,
+      "tier": 4,
+      "baseATK": 5,
+      "baseHP": 5,
+      "cost": 3,
+      "description": "OnDeploy: Tăng vĩnh viễn +3/+3 cho đồng minh bên phải.",
+      "abilities": [
+        {
+          "trigger": 6,
+          "target": 8,
+          "effect": 1,
+          "effectValue1": 3,
+          "effectValue2": 3,
+          "isPermanent": true
+        }
+      ]
+    },
+    {
+      "cardID": "U_11_Babylon",
+      "cardName": "Gilgamesh",
+      "tribe": 1,
+      "tier": 4,
+      "baseATK": 8,
+      "baseHP": 8,
+      "cost": 3,
+      "description": "Aura: Tăng vĩnh viễn +3/+2 cho bản thân.",
+      "abilities": [
+        {
+          "trigger": 11,
+          "target": 1,
+          "effect": 1,
+          "effectValue1": 3,
+          "effectValue2": 2,
+          "isPermanent": true
+        }
+      ]
+    },
+    {
+      "cardID": "U_12_Babylon",
+      "cardName": "Humbaba",
+      "tribe": 1,
+      "tier": 4,
+      "baseATK": 7,
+      "baseHP": 1,
+      "cost": 3,
+      "description": "Khi tấn công: Nhận 2 Coin.",
+      "abilities": [
+        {
+          "trigger": 2,
+          "target": 1,
+          "effect": 6,
+          "effectValue1": 2,
+          "isPermanent": false
+        }
+      ]
+    },
+    {
+      "cardID": "U_13_Babylon",
+      "cardName": "Asag",
+      "tribe": 1,
+      "tier": 4,
+      "baseATK": 8,
+      "baseHP": 8,
+      "cost": 3,
+      "description": "OnDeploy: Tăng vĩnh viễn +0/+0 cho 1 đồng minh ngẫu nhiên.",
+      "abilities": [
+        {
+          "trigger": 6,
+          "target": 2,
+          "effect": 1,
+          "isPermanent": true
+        }
+      ]
+    },
+    {
+      "cardID": "U_14_Babylon",
+      "cardName": "Usumgallu",
+      "tribe": 1,
+      "tier": 3,
+      "baseATK": 3,
+      "baseHP": 3,
+      "cost": 3,
+      "description": "Taunt. Khi bị đánh: Tăng +1/+2 cho toàn bộ đồng minh Babylon trong trận đấu này.",
+      "abilities": [
+        {
+          "isTaunt": true,
+          "trigger": 1,
+          "target": 10,
+          "effect": 1,
+          "effectValue1": 1,
+          "effectValue2": 2,
+          "isPermanent": false
+        }
+      ]
+    },
+    {
+      "cardID": "U_15_Babylon",
+      "cardName": "Lamashtu",
+      "tribe": 1,
+      "tier": 3,
+      "baseATK": 1,
+      "baseHP": 5,
+      "cost": 3,
+      "description": "Trigger 12: Tăng vĩnh viễn +1/+0 cho toàn bộ đồng minh Babylon.",
+      "abilities": [
+        {
+          "trigger": 12,
+          "target": 10,
+          "effect": 1,
+          "effectValue1": 1,
+          "isPermanent": true
+        }
+      ]
+    },
+    {
+      "cardID": "U_16_Babylon",
+      "cardName": "Pazuzu",
+      "tribe": 1,
+      "tier": 3,
+      "baseATK": 1,
+      "baseHP": 2,
+      "cost": 3,
+      "description": "OnDeploy: Nhận 2 Coin.",
+      "abilities": [
+        {
+          "trigger": 6,
+          "target": 1,
+          "effect": 6,
+          "effectValue1": 2,
+          "isPermanent": false
+        }
+      ]
+    },
+    {
+      "cardID": "U_17_Babylon",
+      "cardName": "Kingu",
+      "tribe": 1,
+      "tier": 2,
+      "baseATK": 2,
+      "baseHP": 2,
+      "cost": 3,
+      "description": "Taunt. Reborn.",
+      "abilities": [
+        {
+          "isTaunt": true,
+          "isReborn": true
+        }
+      ]
+    },
+    {
+      "cardID": "U_18_Babylon",
+      "cardName": "Uridimmu",
+      "tribe": 1,
+      "tier": 2,
+      "baseATK": 5,
+      "baseHP": 1,
+      "cost": 3,
+      "description": "Trigger 12: Tăng vĩnh viễn +0/+1 cho toàn bộ đồng minh Babylon.",
+      "abilities": [
+        {
+          "trigger": 12,
+          "target": 10,
+          "effect": 1,
+          "effectValue2": 1,
+          "isPermanent": true
+        }
+      ]
+    },
+    {
+      "cardID": "U_19_Babylon",
+      "cardName": "Ugallu",
+      "tribe": 1,
+      "tier": 2,
+      "baseATK": 3,
+      "baseHP": 3,
+      "cost": 3,
+      "description": "OnSell: Triệu hồi 1 đơn vị.",
+      "abilities": [
+        {
+          "trigger": 7,
+          "target": 1,
+          "effect": 4,
+          "effectValue1": 1,
+          "isPermanent": false
+        }
+      ]
+    },
+    {
+      "cardID": "U_20_Babylon",
+      "cardName": "Kusarikku",
+      "tribe": 1,
+      "tier": 1,
+      "baseATK": 3,
+      "baseHP": 3,
+      "cost": 3,
+      "description": "OnSell: Tăng vĩnh viễn +1/+1 cho bản thân.",
+      "abilities": [
+        {
+          "trigger": 7,
+          "target": 1,
+          "effect": 1,
+          "effectValue1": 1,
+          "effectValue2": 1,
+          "isPermanent": true
+        }
+      ]
+    },
+    {
+      "cardID": "U_21_Babylon",
+      "cardName": "Babilonian Soldier",
+      "tribe": 1,
+      "tier": 1,
+      "baseATK": 2,
+      "baseHP": 4,
+      "cost": 3,
+      "description": "OnDeploy: Tăng vĩnh viễn +0/+1 cho bản thân.",
+      "abilities": [
+        {
+          "trigger": 6,
+          "target": 1,
+          "effect": 1,
+          "effectValue2": 1,
+          "isPermanent": true
+        }
+      ]
+    },
+    {
+      "cardID": "U_22_Babylon",
+      "cardName": "Sumerian Scholar",
+      "tribe": 1,
+      "tier": 1,
+      "baseATK": 3,
+      "baseHP": 2,
+      "cost": 3,
+      "description": "OnDeploy: Nhận 1 Coin.",
+      "abilities": [
+        {
+          "trigger": 6,
+          "target": 1,
+          "effect": 6,
+          "effectValue1": 1,
+          "isPermanent": false
+        }
+      ]
+    },
+    {
+      "comment": "Nile",
+      "cardID": "U_01_Niles",
+      "cardName": "Anubis",
+      "tribe": 3,
+      "tier": 6,
+      "baseATK": 5,
+      "baseHP": 5,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 8,
+          "target": 6,
+          "effect": 3,
+          "effectValue1": 0,
+          "effectValue2": 0,
+          "isReborn": true,
+          "triggerLimit": 2,
+          "isPermanent": false
+        }
+      ],
+      "description": "OnAllyDeath: ban Reborn cho LowestHealthAlly (tối đa 2 lần)"
+    },
+    {
+      "cardID": "U_02_Niles",
+      "cardName": "Sekhmet",
+      "tribe": 3,
+      "tier": 6,
+      "baseATK": 9,
+      "baseHP": 3,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 9,
+          "target": 11,
+          "effect": 5,
+          "triggerLimit": 2,
+          "isConsume": true,
+          "isPermanent": false
+        },
+        {
+          "trigger": 3,
+          "target": 1,
+          "effect": 9,
+          "isPermanent": false
+        }
+      ],
+      "description": "OnAllySummon: Consume unit đó (tối đa 2 lần). Slain: triệu hồi lại tất cả unit đã Consume."
+    },
+    {
+      "cardID": "U_03_Niles",
+      "cardName": "Osiris",
+      "tribe": 3,
+      "tier": 6,
+      "baseATK": 3,
+      "baseHP": 3,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 10,
+          "target": 11,
+          "effect": 1,
+          "effectValue1": 30,
+          "effectValue2": 30,
+          "isPermanent": true
+        }
+      ],
+      "description": "OnAllyReborn: Tăng +30/+30 cho đồng minh đó."
+    },
+    {
+      "cardID": "U_04_Niles",
+      "cardName": "Sobek",
+      "tribe": 3,
+      "tier": 5,
+      "baseATK": 2,
+      "baseHP": 2,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 9,
+          "target": 1,
+          "effect": 1,
+          "effectValue1": 1,
+          "effectValue2": 2,
+          "isPermanent": true
+        }
+      ],
+      "description": "OnAllySummon: Tăng vĩnh viễn +1/+2 cho bản thân."
+    },
+    {
+      "cardID": "U_05_Niles",
+      "cardName": "Bastet",
+      "tribe": 3,
+      "tier": 5,
+      "baseATK": 4,
+      "baseHP": 8,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 9,
+          "target": 9,
+          "effect": 1,
+          "effectValue1": 1,
+          "effectValue2": 1,
+          "conditionCount": 2,
+          "isPermanent": false,
+          "isEscalating": true
+        }
+      ],
+      "description": "OnAllySummon (mỗi 2 lần): Tăng +1/+1 (tăng dần +1/+1 mỗi lần) cho toàn bộ đồng minh Niles trong trận đấu này."
+    },
+    {
+      "cardID": "U_06_Niles",
+      "cardName": "Thoth",
+      "tribe": 3,
+      "tier": 5,
+      "baseATK": 8,
+      "baseHP": 5,
+      "cost": 3,
+      "hasReborn": true,
+      "abilities": [
+        {
+          "trigger": 3,
+          "target": 9,
+          "effect": 1,
+          "effectValue1": 2,
+          "effectValue2": 0,
+          "isPermanent": true
+        }
+      ],
+      "description": "Slain: Tăng vĩnh viễn +2/+0 cho toàn bộ đồng minh Niles."
+    },
+    {
+      "cardID": "U_07_Niles",
+      "cardName": "Isis",
+      "tribe": 3,
+      "tier": 5,
+      "baseATK": 2,
+      "baseHP": 9,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 10,
+          "target": 3,
+          "effect": 1,
+          "effectValue1": 3,
+          "effectValue2": 3,
+          "isPermanent": true
+        }
+      ],
+      "description": "OnAllyReborn: Tăng vĩnh viễn +3/+3 cho toàn bộ đồng minh."
+    },
+    {
+      "cardID": "U_08_Niles",
+      "cardName": "Sepopard",
+      "tribe": 3,
+      "tier": 4,
+      "baseATK": 5,
+      "baseHP": 2,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 9,
+          "target": 11,
+          "effect": 1,
+          "effectValue1": 4,
+          "effectValue2": 4,
+          "isPermanent": false
+        }
+      ],
+      "description": "OnAllySummon: Tăng +4/+4 cho đồng minh đó trong trận đấu này."
+    },
+    {
+      "cardID": "U_09_Niles",
+      "cardName": "Nefertem",
+      "tribe": 3,
+      "tier": 4,
+      "baseATK": 4,
+      "baseHP": 2,
+      "cost": 3,
+      "hasReborn": true,
+      "abilities": [
+        {
+          "trigger": 3,
+          "target": 2,
+          "effect": 3,
+          "isPermanent": false,
+          "isReborn": true
+        }
+      ],
+      "description": "Slain: Ban Reborn cho 1 đồng minh ngẫu nhiên."
+    },
+    {
+      "cardID": "U_10_Niles",
+      "cardName": "Sand Golem",
+      "tribe": 3,
+      "tier": 4,
+      "baseATK": 6,
+      "baseHP": 2,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 3,
+          "target": 1,
+          "effect": 4,
+          "effectValue1": 2,
+          "summonCardID": "U_20_Niles",
+          "isPermanent": false
+        }
+      ],
+      "description": "Slain: Triệu hồi 2 Niles Warrior."
+    },
+    {
+      "cardID": "U_11_Niles",
+      "cardName": "Upamaki",
+      "tribe": 3,
+      "tier": 4,
+      "baseATK": 5,
+      "baseHP": 2,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 6,
+          "target": 7,
+          "effect": 5,
+          "isPermanent": false,
+          "isConsume": true
+        },
+        {
+          "trigger": 3,
+          "target": 1,
+          "effect": 9,
+          "isPermanent": false
+        }
+      ],
+      "description": "OnDeploy: Consume đồng minh bên trái. Slain: Triệu hồi lại tất cả unit đã bị Consume."
+    },
+    {
+      "cardID": "U_12_Niles",
+      "cardName": "Cat Archer",
+      "tribe": 3,
+      "tier": 3,
+      "baseATK": 3,
+      "baseHP": 1,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 4,
+          "target": 7,
+          "effect": 8,
+          "isPermanent": false
+        }
+      ],
+      "description": "Đầu trận: Kích hoạt kỹ năng của đồng minh bên trái."
+    },
+    {
+      "cardID": "U_13_Niles",
+      "cardName": "Niles Cultist",
+      "tribe": 3,
+      "tier": 3,
+      "baseATK": 3,
+      "baseHP": 1,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 8,
+          "target": 9,
+          "effect": 1,
+          "effectValue1": 1,
+          "effectValue2": 0,
+          "conditionCount": 3,
+          "isPermanent": true
+        }
+      ],
+      "description": "OnAllyDeath (mỗi 3 lần): Tăng vĩnh viễn +1/+0 cho toàn bộ đồng minh Niles."
+    },
+    {
+      "cardID": "U_14_Niles",
+      "cardName": "Scorpion",
+      "tribe": 3,
+      "tier": 3,
+      "baseATK": 1,
+      "baseHP": 1,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 2,
+          "target": 5,
+          "effect": 2,
+          "effectValue1": 5,
+          "isPermanent": false
+        }
+      ],
+      "description": "Khi tấn công: Gây 5 sát thương cho kẻ địch trực tiếp."
+    },
+    {
+      "cardID": "U_15_Niles",
+      "cardName": "Ammit",
+      "tribe": 3,
+      "tier": 3,
+      "baseATK": 2,
+      "baseHP": 2,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 8,
+          "target": 1,
+          "effect": 1,
+          "effectValue1": 1,
+          "effectValue2": 1,
+          "isPermanent": true
+        }
+      ],
+      "description": "OnAllyDeath: Tăng vĩnh viễn +1/+1 cho bản thân."
+    },
+    {
+      "cardID": "U_16_Niles",
+      "cardName": "Hyena Thief",
+      "tribe": 3,
+      "tier": 2,
+      "baseATK": 3,
+      "baseHP": 1,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 6,
+          "target": 1,
+          "effect": 6,
+          "effectValue1": 1,
+          "isPermanent": false
+        }
+      ],
+      "description": "OnDeploy: Nhận 1 Coin."
+    },
+    {
+      "cardID": "U_17_Niles",
+      "cardName": "Babi",
+      "tribe": 3,
+      "tier": 2,
+      "baseATK": 1,
+      "baseHP": 1,
+      "cost": 3,
+      "hasReborn": true,
+      "abilities": [
+        {
+          "trigger": 11,
+          "target": 2,
+          "effect": 1,
+          "effectValue1": 2,
+          "isPermanent": true
+        }
+      ],
+      "description": "Aura: Tăng vĩnh viễn +2/+0 cho đồng minh ngẫu nhiên."
+    },
+    {
+      "cardID": "U_18_Niles",
+      "cardName": "Niles Commander",
+      "tribe": 3,
+      "tier": 2,
+      "baseATK": 4,
+      "baseHP": 4,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 9,
+          "target": 1,
+          "effect": 1,
+          "effectValue1": 1,
+          "effectValue2": 1,
+          "isPermanent": false
+        }
+      ],
+      "description": "OnAllySummon: Tăng +1/+1 cho bản thân trong trận đấu này."
+    },
+    {
+      "cardID": "U_19_Niles",
+      "cardName": "Tawaret",
+      "tribe": 3,
+      "tier": 2,
+      "baseATK": 0,
+      "baseHP": 1,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 3,
+          "target": 1,
+          "effect": 4,
+          "effectValue1": 2,
+          "summonCardID": "U_23_Niles",
+          "isPermanent": false
+        }
+      ],
+      "description": "Slain: Triệu hồi 2 Medjed."
+    },
+    {
+      "cardID": "U_20_Niles",
+      "cardName": "Niles Warrior",
+      "tribe": 3,
+      "tier": 1,
+      "baseATK": 2,
+      "baseHP": 1,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 3,
+          "target": 1,
+          "effect": 4,
+          "effectValue1": 1,
+          "summonCardID": "U_22_Niles",
+          "isPermanent": false
+        }
+      ],
+      "description": "Slain: Triệu hồi 1 Mummy."
+    },
+    {
+      "cardID": "U_21_Niles",
+      "cardName": "Griffin",
+      "tribe": 3,
+      "tier": 1,
+      "baseATK": 2,
+      "baseHP": 1,
+      "cost": 3,
+      "hasTaunt": true,
+      "hasReborn": true,
+      "abilities": [],
+      "description": "Taunt. Reborn."
+    },
+    {
+      "cardID": "U_22_Niles",
+      "cardName": "Mummy",
+      "tribe": 3,
+      "tier": 1,
+      "baseATK": 1,
+      "baseHP": 1,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 0
+        }
+      ],
+      "description": "Được triệu hồi khi Niles Warrior hy sinh. Không có kỹ năng."
+    },
+    {
+      "cardID": "U_23_Niles",
+      "cardName": "Medjed",
+      "tribe": 3,
+      "tier": 1,
+      "baseATK": 3,
+      "baseHP": 2,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 0
+        }
+      ],
+      "description": "Được triệu hồi khi Tawaret hy sinh. Không có kỹ năng."
+    },
+    {
+      "cardID": "U_24_Niles",
+      "cardName": "Dark Medjed",
+      "tribe": 3,
+      "tier": 1,
+      "baseATK": 3,
+      "baseHP": 2,
+      "cost": 3,
+      "abilities": [
+        {
+          "trigger": 0
+        }
+      ],
+      "description": "Token triệu hồi. Không có kỹ năng."
+    },
+    {
+      "cardID": "S_01",
+      "cardName": "Ancient Coin",
+      "tribe": 0,
+      "tier": 1,
+      "cost": 1,
+      "fileName": "spell-art_01",
+      "spellEffects": [
+        {
+          "effect": 6,
+          "effectValue1": 1
+        }
+      ],
+      "description": "Nhận 1 đồng.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_02",
+      "cardName": "Sharpen Blade",
+      "tribe": 0,
+      "tier": 1,
+      "cost": 1,
+      "fileName": "spell-art_02",
+      "spellEffects": [
+        {
+          "effect": 1,
+          "target": 12,
+          "effectValue1": 3,
+          "effectValue2": 0,
+          "isPermanent": true
+        }
+      ],
+      "description": "Ban vĩnh viễn +3/+0 cho 1 đồng minh.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_03",
+      "cardName": "Plated Armor",
+      "tribe": 0,
+      "tier": 1,
+      "cost": 1,
+      "fileName": "spell-art_03",
+      "spellEffects": [
+        {
+          "effect": 1,
+          "target": 12,
+          "effectValue1": 0,
+          "effectValue2": 3,
+          "isTaunt": true,
+          "isPermanent": true
+        }
+      ],
+      "description": "Ban vĩnh viễn +0/+3 và Taunt cho 1 đồng minh.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_04",
+      "cardName": "Quick Recruit",
+      "tribe": 0,
+      "tier": 1,
+      "cost": 2,
+      "fileName": "spell-art_04",
+      "spellEffects": [
+        {
+          "effect": 10,
+          "effectValue1": 1,
+          "targetCount": 1
+        }
+      ],
+      "description": "Nhận 1 đơn vị ngẫu nhiên Tier 1.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_05",
+      "cardName": "Sanctum Heist",
+      "tribe": 0,
+      "tier": 1,
+      "cost": 2,
+      "fileName": "spell-art_05",
+      "spellEffects": [
+        {
+          "effect": 11,
+          "targetCount": 1
+        }
+      ],
+      "description": "Lấy 1 đơn vị ngẫu nhiên từ Shop hiện tại.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_06",
+      "cardName": "Let's Feast",
+      "tribe": 0,
+      "tier": 1,
+      "cost": 2,
+      "fileName": "spell-art_06",
+      "spellEffects": [
+        {
+          "effect": 1,
+          "target": 13,
+          "targetCount": 3,
+          "effectValue1": 0,
+          "effectValue2": 2,
+          "isPermanent": false
+        }
+      ],
+      "description": "Ban +0/+2 cho 3 đồng minh ngẫu nhiên đang trên bàn chiến (chỉ trận này).",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_07",
+      "cardName": "Balance Stance",
+      "tribe": 0,
+      "tier": 1,
+      "cost": 2,
+      "fileName": "spell-art_07",
+      "spellEffects": [
+        {
+          "effect": 1,
+          "target": 12,
+          "effectValue1": 3,
+          "effectValue2": 3,
+          "isPermanent": true
+        }
+      ],
+      "description": "Ban vĩnh viễn +3/+3 cho 1 đồng minh.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_08",
+      "cardName": "Trader's Trick",
+      "tribe": 0,
+      "tier": 2,
+      "cost": 1,
+      "fileName": "spell-art_08",
+      "spellEffects": [
+        {
+          "effect": 12,
+          "effectValue1": 2,
+          "isPermanent": false
+        }
+      ],
+      "description": "Tăng Thu Nhập thêm 2 đến hết lượt này.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_17",
+      "cardName": "Wager",
+      "tribe": 0,
+      "tier": 2,
+      "cost": 1,
+      "fileName": "spell-art_17",
+      "spellEffects": [
+        {
+          "effect": 16,
+          "effectValue1": 3
+        }
+      ],
+      "description": "Nếu thắng trận kế tiếp, nhận 3 đồng.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_13",
+      "cardName": "Strengthen Bond",
+      "tribe": 1,
+      "tier": 2,
+      "cost": 1,
+      "fileName": "spell-art_13",
+      "spellEffects": [
+        {
+          "effect": 1,
+          "target": 3,
+          "effectValue1": 1,
+          "effectValue2": 1,
+          "isPermanent": true
+        }
+      ],
+      "description": "Ban vĩnh viễn +1/+1 cho toàn bộ đồng minh.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_12",
+      "cardName": "Caishen's Knock",
+      "tribe": 1,
+      "tier": 2,
+      "cost": 2,
+      "fileName": "spell-art_12",
+      "spellEffects": [
+        {
+          "effect": 12,
+          "effectValue1": 1,
+          "isPermanent": true
+        }
+      ],
+      "description": "Tăng vĩnh viễn Thu Nhập thêm 1.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_09",
+      "cardName": "Tailored Recruit",
+      "tribe": 1,
+      "tier": 2,
+      "cost": 3,
+      "fileName": "spell-art_09",
+      "spellEffects": [
+        {
+          "effect": 13,
+          "target": 12
+        }
+      ],
+      "description": "Chọn 1 đơn vị, nhận 1 đơn vị khác cùng Tộc (không trùng đơn vị đã chọn).",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_14",
+      "cardName": "Rising Spirit",
+      "tribe": 1,
+      "tier": 3,
+      "cost": 2,
+      "fileName": "spell-art_14",
+      "spellEffects": [
+        {
+          "effect": 21,
+          "target": 12,
+          "effectValue1": 2,
+          "effectValue2": 2
+        }
+      ],
+      "description": "Ban cho 1 đồng minh khả năng: cuối mỗi lượt Shop, nhận +2/+2.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_16",
+      "cardName": "Gate of Destruction",
+      "tribe": 1,
+      "tier": 4,
+      "cost": 3,
+      "fileName": "spell-art_16",
+      "spellEffects": [
+        {
+          "effect": 15,
+          "target": 12
+        }
+      ],
+      "description": "Loại bỏ 1 đồng minh, chuyển toàn bộ chỉ số của nó cho 1 đồng minh ngẫu nhiên.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_15",
+      "cardName": "Military Support",
+      "tribe": 1,
+      "tier": 5,
+      "cost": 5,
+      "fileName": "spell-art_15",
+      "spellEffects": [
+        {
+          "effect": 10,
+          "effectValue1": 5,
+          "targetCount": 3
+        }
+      ],
+      "description": "Nhận 3 đơn vị ngẫu nhiên Tier 5.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_10",
+      "cardName": "Devil's Deal",
+      "tribe": 2,
+      "tier": 4,
+      "cost": 1,
+      "fileName": "spell-art_10",
+      "spellEffects": [
+        {
+          "effect": 14,
+          "effectValue1": 1
+        },
+        {
+          "effect": 6,
+          "effectValue1": 6
+        }
+      ],
+      "description": "Mất 1 Mạng, nhận 6 đồng.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_18",
+      "cardName": "Ritual of the Realm",
+      "tribe": 2,
+      "tier": 3,
+      "cost": 3,
+      "fileName": "spell-art_18",
+      "spellEffects": [
+        {
+          "effect": 17,
+          "target": 12
+        }
+      ],
+      "description": "Chọn 1 đơn vị tham chiếu, nâng cấp 1 đơn vị khác cùng Tộc lên +1 Tier.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_19",
+      "cardName": "Olympic Flame",
+      "tribe": 2,
+      "tier": 4,
+      "cost": 3,
+      "fileName": "spell-art_19",
+      "spellEffects": [
+        {
+          "effect": 18,
+          "target": 12
+        }
+      ],
+      "description": "Ban Nhân Đôi ATK và Safeguard cho 1 đồng minh.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_20",
+      "cardName": "Change of Heart",
+      "tribe": 3,
+      "tier": 2,
+      "cost": 2,
+      "fileName": "spell-art_20",
+      "spellEffects": [
+        {
+          "effect": 19,
+          "target": 12,
+          "effectValue1": 3,
+          "effectValue2": 5
+        }
+      ],
+      "description": "Nếu đơn vị chưa có Taunt: ban Taunt và +0/+5. Nếu đã có Taunt: xóa Taunt và ban +3/+0.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_11",
+      "cardName": "Divine Inspiration",
+      "tribe": 3,
+      "tier": 3,
+      "cost": 2,
+      "fileName": "spell-art_11",
+      "spellEffects": [
+        {
+          "effect": 20,
+          "target": 12
+        }
+      ],
+      "description": "Ban cho 1 đồng minh ATK và HP bằng Tier hiện tại của Shop.",
+      "cardType": 1
+    }
+  ]
 }

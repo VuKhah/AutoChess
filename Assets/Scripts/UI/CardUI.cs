@@ -32,6 +32,9 @@ public class CardUI : MonoBehaviour
     // mergeLevel=0 → chỉ hiện sao 1; mergeLevel=1 → sao 1+2; mergeLevel=2 → cả 3 sao.
     public Image[] starIcons = new Image[3];
 
+    [Header("Description")]
+    public TextMeshProUGUI descriptionText;
+
     [Header("Merge Hint Blink")]
     public Color blinkColor = new Color(1f, 0.9f, 0.3f, 1f);
     public float blinkSpeed = 4f;   // Số lần nhấp nháy mỗi giây (Hz)
@@ -123,6 +126,10 @@ public class CardUI : MonoBehaviour
             UpdateStarIcons(instance.mergeLevel);
         else if (starIcons != null)
             foreach (var s in starIcons) { if (s != null) s.gameObject.SetActive(false); }
+
+        // --- Description ---
+        if (descriptionText != null)
+            descriptionText.text = instance.Data.description ?? "";
     }
 
     private void UpdateStarIcons(int mergeLevel)
