@@ -1,9 +1,10 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 
-public class CardUI : MonoBehaviour
+public class CardUI : MonoBehaviour, IPointerClickHandler
 {
     [Header("Frame")]
     public Image frameBackground;   // Khung nền của card — gắn sprite trực tiếp ở prefab
@@ -48,6 +49,9 @@ public class CardUI : MonoBehaviour
     private Coroutine blinkRoutine;
     private Color frameOriginalColor;
     private bool frameOriginalCached;
+
+    private float _lastClickTime = -999f;
+    private const float DoubleClickThreshold = 0.3f;
 
     public void Setup(CardInstance instance)
     {
@@ -193,5 +197,20 @@ public class CardUI : MonoBehaviour
     {
         if (blinkRoutine != null) { StopCoroutine(blinkRoutine); blinkRoutine = null; }
         if (frameOriginalCached && frameBackground != null) frameBackground.color = frameOriginalColor;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        float now = Time.unscaledTime;
+        if (now - _lastClickTime <= DoubleClickThreshold)
+        {
+            if (currentInstance != null && CardDetailPanel.Instance != null)
+                CardDetailPanel.Instance.Show(currentInstance);
+            _lastClickTime = -999f;
+        }
+        else
+        {
+            _lastClickTime = now;
+        }
     }
 }
