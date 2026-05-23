@@ -66,9 +66,10 @@ Write-Host ""
 
 # Unity batchmode đôi khi không trả đúng exit code qua PowerShell &
 # → kiểm tra file output thay vì chỉ dựa vào $LASTEXITCODE
-$Success = (Test-Path $JsonPath) -and (
-    (Select-String -Path $LogFile -Pattern "Hoàn tất" -Quiet) -or
-    (Select-String -Path $LogFile -Pattern "Hard bot saved" -Quiet)
+
+$Success = (
+(Test-Path $JsonPath) -and
+((Get-Item $JsonPath).Length -gt 10)
 )
 
 if ($Success)

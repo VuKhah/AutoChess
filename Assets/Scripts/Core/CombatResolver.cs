@@ -99,7 +99,7 @@ public class CombatResolver
 
             if (attackStack.Count == 0)
             {
-                Debug.Log("<color=gray>[COMBAT]</color> Trận đấu hòa: Không còn đòn tấn công hợp lệ!");
+                if (!Application.isBatchMode) Debug.Log("<color=gray>[COMBAT]</color> Trận đấu hòa: Không còn đòn tấn công hợp lệ!");
                 break;
             }
 
@@ -197,13 +197,13 @@ public class CombatResolver
         {
             dmgToDefender = 0;
             defender.safeguardActive = false;
-            Debug.Log($"<color=cyan>[SAFEGUARD]</color> {defender.Data.cardName} chặn đòn tấn công!");
+            if (!Application.isBatchMode) Debug.Log($"<color=cyan>[SAFEGUARD]</color> {defender.Data.cardName} chặn đòn tấn công!");
         }
         if (attacker.safeguardActive)
         {
             dmgToAttacker = 0;
             attacker.safeguardActive = false;
-            Debug.Log($"<color=cyan>[SAFEGUARD]</color> {attacker.Data.cardName} chặn phản đòn!");
+            if (!Application.isBatchMode) Debug.Log($"<color=cyan>[SAFEGUARD]</color> {attacker.Data.cardName} chặn phản đòn!");
         }
 
         defender.currentHP -= dmgToDefender;
@@ -220,7 +220,7 @@ public class CombatResolver
         if (dmgToDefender > 0 && !defender.IsDead)
             engine.TriggerAbility(TriggerType.OnTakeDamage, defender, attacker, defBoard, atkBoard);
 
-        Debug.Log($"<color=white>[CLASH]</color> {attacker.Data.cardName} đấm {defender.Data.cardName}. " +
+        if (!Application.isBatchMode) Debug.Log($"<color=white>[CLASH]</color> {attacker.Data.cardName} đấm {defender.Data.cardName}. " +
                   $"HP Atk: {aBefore}->{attacker.currentHP}, HP Def: {dBefore}->{defender.currentHP}");
 
         var act = new CombatAction(atkIdx, defIdx, isPlayerAttacking,
@@ -335,7 +335,7 @@ public class CombatResolver
             if (unit.isReborn && !unit.hasRebornUsed)
             {
                 unit.ReviveDefault();
-                Debug.Log($"<color=magenta>[REBORN]</color> {unit.Data.cardName} hồi sinh với chỉ số mặc định (ATK {unit.currentATK} / HP {unit.currentHP})!");
+                if (!Application.isBatchMode) Debug.Log($"<color=magenta>[REBORN]</color> {unit.Data.cardName} hồi sinh với chỉ số mặc định (ATK {unit.currentATK} / HP {unit.currentHP})!");
                 engine.BroadcastAllyEvent(TriggerType.OnAllyReborn, unit, allyBoard, enemyBoard);
                 // BUG FIX: OnAllyReborn có thể kill unit ở slot sau trong cùng pass này.
                 // Scan ngay để đăng ký vào death stack — tránh CleanupBoard null chúng trước khi
@@ -374,7 +374,7 @@ public class CombatResolver
                 int idx = board.IndexOf(u);
                 if (idx >= 0) log?.AddAction(CombatAction.StatChange(idx, isPlayerSide, u.currentATK, u.currentHP, FlashType.SynergyBabylon));
             }
-            Debug.Log($"<color=yellow>[SYNERGY]</color> Babylon x{babylonCount}: mỗi Babylon unit +1 HP");
+            if (!Application.isBatchMode) Debug.Log($"<color=yellow>[SYNERGY]</color> Babylon x{babylonCount}: mỗi Babylon unit +1 HP");
         }
 
         // Olympus ≥2 → +1 ATK
@@ -388,7 +388,7 @@ public class CombatResolver
                 int idx = board.IndexOf(u);
                 if (idx >= 0) log?.AddAction(CombatAction.StatChange(idx, isPlayerSide, u.currentATK, u.currentHP, FlashType.SynergyOlympus));
             }
-            Debug.Log($"<color=cyan>[SYNERGY]</color> Olympus x{olympusCount}: mỗi Olympus unit +1 ATK");
+            if (!Application.isBatchMode) Debug.Log($"<color=cyan>[SYNERGY]</color> Olympus x{olympusCount}: mỗi Olympus unit +1 ATK");
         }
 
         // Niles ≥3 → +2 HP
@@ -402,7 +402,7 @@ public class CombatResolver
                 int idx = board.IndexOf(u);
                 if (idx >= 0) log?.AddAction(CombatAction.StatChange(idx, isPlayerSide, u.currentATK, u.currentHP, FlashType.SynergyNiles));
             }
-            Debug.Log($"<color=green>[SYNERGY]</color> Niles x{nilesCount}: mỗi Niles unit +2 HP");
+            if (!Application.isBatchMode) Debug.Log($"<color=green>[SYNERGY]</color> Niles x{nilesCount}: mỗi Niles unit +2 HP");
         }
     }
 
