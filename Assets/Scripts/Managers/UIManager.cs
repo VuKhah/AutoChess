@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Chỉ số hiển thị")]
     public TextMeshProUGUI playerHPText;
+    public TextMeshProUGUI playerCupText; // Luôn hiển thị số Cup
     public TextMeshProUGUI resourceText; // Hiển thị số Coin hoặc số Cup
     public Image resourceIcon;           // Icon thay đổi giữa Coin/Cup
 
@@ -75,6 +76,9 @@ public class UIManager : MonoBehaviour
     {
         if (playerHPText != null)
             playerHPText.text = hp.ToString();
+
+        if (playerCupText != null)
+            playerCupText.text = cups.ToString();
 
         // Nếu đang trong trận đấu thì hiện Cup, nếu ở Shop thì hiện Coin
         if (resourceText == null)
@@ -137,6 +141,13 @@ public class UIManager : MonoBehaviour
 
         // Cập nhật lại chỉ số ngay lập tức để tránh bị trễ hiển thị
         UpdateStats(GameManager.Instance.playerHP, GameManager.Instance.playerCups, GameManager.Instance.playerCoins);
+
+        // ShopTierPanel chỉ hiện khi ở phase Shop
+        if (ShopTierPanel.Instance != null)
+        {
+            ShopTierPanel.Instance.gameObject.SetActive(!isCombat);
+            if (!isCombat) ShopTierPanel.Instance.Refresh();
+        }
     }
 
     // --- CÁC SỰ KIỆN NÚT BẤM ---

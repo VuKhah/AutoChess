@@ -127,6 +127,15 @@ public class CardDatabase : MonoBehaviour
         return null;
     }
 
+    public int[] GetDropRates(int shopLevel)
+    {
+        int levelIndex = Mathf.Clamp(shopLevel - 1, 0, 5);
+        var rates = new int[6];
+        for (int i = 0; i < 6; i++)
+            rates[i] = shopDropRates[levelIndex, i];
+        return rates;
+    }
+
     public List<CardDefinition> GetAllUnits()  => unitList;
     public List<CardDefinition> GetAllSpells() => spellList;
 }

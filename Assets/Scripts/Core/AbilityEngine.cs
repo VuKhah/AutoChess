@@ -4,6 +4,9 @@ using UnityEngine;
 // TTE Engine: Trigger → Target → Effect
 public partial class AbilityEngine
 {
+    private static void CLog(string m)  { if (!Application.isBatchMode) Debug.Log(m); }
+    private static void CLogW(string m) { if (!Application.isBatchMode) Debug.LogWarning(m); }
+
     private System.Action<CardInstance, List<CardInstance>> onUnitSummoned;
     private System.Action<CardInstance, List<CardInstance>, FlashType> onStatChanged;
 
@@ -34,10 +37,10 @@ public partial class AbilityEngine
         CardInstance summoned = SummonUnit(e.cardID, e.allyBoard);
         if (summoned == null)
         {
-            Debug.Log($"<color=gray>[SUMMON]</color> Pending {e.cardID}: hết slot, unit biến mất theo stack.");
+            CLog($"<color=gray>[SUMMON]</color> Pending {e.cardID}: hết slot, unit biến mất theo stack.");
             return;
         }
-        Debug.Log($"<color=green>[SUMMON]</color> (pending) triệu hồi {summoned.Data.cardName}!");
+        CLog($"<color=green>[SUMMON]</color> (pending) triệu hồi {summoned.Data.cardName}!");
         TriggerAbility(TriggerType.OnDeploy, summoned, null, e.allyBoard, e.enemyBoard);
         BroadcastAllyEvent(TriggerType.OnAllySummon, summoned, e.allyBoard, e.enemyBoard);
     }
@@ -102,7 +105,7 @@ public partial class AbilityEngine
         // giữ nguyên bonus từ tribe synergy và các buff trước đó trong cùng combat.
         target.currentATK += atkGain;
         target.currentHP  += hpGain;
-        Debug.Log($"<color=lime>[GROWTH]</color> {target.Data.cardName} tăng trưởng +{atkGain}ATK/+{hpGain}HP (tổng: +{target.growthATKBonus}/+{target.growthHPBonus})");
+        CLog($"<color=lime>[GROWTH]</color> {target.Data.cardName} tăng trưởng +{atkGain}ATK/+{hpGain}HP (tổng: +{target.growthATKBonus}/+{target.growthHPBonus})");
         onStatChanged?.Invoke(target, allyBoard, FlashType.Buff);
     }
 
@@ -136,16 +139,16 @@ public partial class AbilityEngine
                     // Không cập nhật → IsDamaged sai, heal-to-max tính thiếu HP.
                     if (hp > 0) target.maxHP += hp;
                 }
-                Debug.Log($"<color=cyan>[ABILITY]</color> {target.Data.cardName} được buff +{atk}ATK / +{hp}HP");
+                CLog($"<color=cyan>[ABILITY]</color> {target.Data.cardName} được buff +{atk}ATK / +{hp}HP");
                 onStatChanged?.Invoke(target, allyBoard, (atk > 0 || hp > 0) ? FlashType.Buff : FlashType.Debuff);
                 break;
             }
 
             case EffectType.GiveBuff:
             {
-                if (ability.isTaunt)      { target.isTaunt = true;         Debug.Log($"<color=cyan>[BUFF]</color> {target.Data.cardName} nhận Taunt!"); }
-                if (ability.isReborn)     { target.isReborn = true; target.hasRebornUsed = false; Debug.Log($"<color=cyan>[BUFF]</color> {target.Data.cardName} nhận Reborn!"); }
-                if (ability.isSafeguard)  { target.safeguardActive = true; Debug.Log($"<color=cyan>[BUFF]</color> {target.Data.cardName} nhận Safeguard!"); }
+                if (ability.isTaunt)      { target.isTaunt = true;         CLog($"<color=cyan>[BUFF]</color> {target.Data.cardName} nhận Taunt!"); }
+                if (ability.isReborn)     { target.isReborn = true; target.hasRebornUsed = false; CLog($"<color=cyan>[BUFF]</color> {target.Data.cardName} nhận Reborn!"); }
+                if (ability.isSafeguard)  { target.safeguardActive = true; CLog($"<color=cyan>[BUFF]</color> {target.Data.cardName} nhận Safeguard!"); }
                 onStatChanged?.Invoke(target, allyBoard, FlashType.Status);
                 break;
             }
@@ -155,7 +158,7 @@ public partial class AbilityEngine
                 if (target.safeguardActive)
                 {
                     target.safeguardActive = false;
-                    Debug.Log($"<color=cyan>[SAFEGUARD]</color> {target.Data.cardName} chặn sát thương kỹ năng!");
+                    CLog($"<color=cyan>[SAFEGUARD]</color> {target.Data.cardName} chặn sát thương kỹ năng!");
                     onStatChanged?.Invoke(target, allyBoard, FlashType.Status);
                     break;
                 }
@@ -163,7 +166,7 @@ public partial class AbilityEngine
                 target.currentHP -= dmg;
                 // Track kẻ gây đòn chết để death stack dùng làm directEnemy trong OnDeath
                 if (target.IsDead) target.lastAttacker = source;
-                Debug.Log($"<color=orange>[ABILITY]</color> {target.Data.cardName} chịu {dmg} sát thương kỹ năng");
+                CLog($"<color=orange>[ABILITY]</color> {target.Data.cardName} chịu {dmg} sát thương kỹ năng");
                 onStatChanged?.Invoke(target, allyBoard, FlashType.Debuff);
                 break;
             }
@@ -179,7 +182,7 @@ public partial class AbilityEngine
                     // vừa nằm trong consumedCardIDs, gây nhân bản khi consumer chết.
                     target.hasRebornUsed = true;
                 }
-                Debug.Log($"<color=red>[ABILITY]</color> {source.Data.cardName} tiêu diệt {target.Data.cardName}{(ability.isConsume ? " (Consumed!)" : "")}");
+                CLog($"<color=red>[ABILITY]</color> {source.Data.cardName} tiêu diệt {target.Data.cardName}{(ability.isConsume ? " (Consumed!)" : "")}");
                 break;
 
             case EffectType.Reborn:
@@ -188,7 +191,7 @@ public partial class AbilityEngine
                     // Mathf.Max(1,...): đảm bảo reviveHP > 0 tránh IsDead ngay sau revive → OnDeath fire 2 lần
                     int reviveHP = Mathf.Max(1, ability.effectValue1 * scaleFactor);
                     target.Revive(reviveHP);
-                    Debug.Log($"<color=magenta>[ABILITY]</color> {target.Data.cardName} HỒI SINH với {reviveHP} HP!");
+                    CLog($"<color=magenta>[ABILITY]</color> {target.Data.cardName} HỒI SINH với {reviveHP} HP!");
                     BroadcastAllyEvent(TriggerType.OnAllyReborn, target, allyBoard, enemyBoard);
                 }
                 break;
@@ -200,7 +203,7 @@ public partial class AbilityEngine
                 CardInstance first = SummonUnit(ability.summonCardID, allyBoard);
                 if (first != null)
                 {
-                    Debug.Log($"<color=green>[SUMMON]</color> {source.Data.cardName} triệu hồi {first.Data.cardName} (1/{summonCount})!");
+                    CLog($"<color=green>[SUMMON]</color> {source.Data.cardName} triệu hồi {first.Data.cardName} (1/{summonCount})!");
                     TriggerAbility(TriggerType.OnDeploy, first, null, allyBoard, enemyBoard);
                     BroadcastAllyEvent(TriggerType.OnAllySummon, first, allyBoard, enemyBoard);
                 }
@@ -218,7 +221,7 @@ public partial class AbilityEngine
             {
                 int coins = ability.effectValue1 * scaleFactor;
                 GameManager.Instance?.AddCoin(coins); // null-safe: GameManager không tồn tại khi training standalone
-                Debug.Log($"<color=yellow>[ABILITY]</color> {source.Data.cardName} cộng {coins} Coin! (Deploy)");
+                CLog($"<color=yellow>[ABILITY]</color> {source.Data.cardName} cộng {coins} Coin! (Deploy)");
                 break;
             }
 
@@ -235,7 +238,7 @@ public partial class AbilityEngine
             case EffectType.SummonConsumed:
                 if (source.consumedCardIDs != null && source.consumedCardIDs.Count > 0)
                 {
-                    Debug.Log($"<color=magenta>[CONSUME]</color> {source.Data.cardName} giải phóng {source.consumedCardIDs.Count} unit đã tiêu thụ!");
+                    CLog($"<color=magenta>[CONSUME]</color> {source.Data.cardName} giải phóng {source.consumedCardIDs.Count} unit đã tiêu thụ!");
                     foreach (var cardID in source.consumedCardIDs)
                     {
                         CardInstance released = SummonUnit(cardID, allyBoard);
@@ -277,7 +280,7 @@ public partial class AbilityEngine
             if (board[i] == null)
             {
                 board[i] = new CardInstance(data, i) { isBattleSpawned = true };
-                Debug.Log($"<color=green>[SUMMON]</color> Đã triệu hồi {data.cardName} vào slot {i}");
+                CLog($"<color=green>[SUMMON]</color> Đã triệu hồi {data.cardName} vào slot {i}");
                 onUnitSummoned?.Invoke(board[i], board);
                 return board[i];
             }
@@ -290,7 +293,7 @@ public partial class AbilityEngine
             if (board[i] != null && board[i].IsDead && board[i].onDeathProcessed && !board[i].isReborn)
             {
                 board[i] = new CardInstance(data, i) { isBattleSpawned = true };
-                Debug.Log($"<color=green>[SUMMON]</color> Đã triệu hồi {data.cardName} vào slot {i} (thay chỗ dead)");
+                CLog($"<color=green>[SUMMON]</color> Đã triệu hồi {data.cardName} vào slot {i} (thay chỗ dead)");
                 onUnitSummoned?.Invoke(board[i], board);
                 return board[i];
             }
@@ -304,7 +307,7 @@ public partial class AbilityEngine
         if (spell == null) return;
         if (spell.Data.spellEffects == null || spell.Data.spellEffects.Count == 0)
         {
-            Debug.LogWarning($"[SPELL] {spell.Data.cardName} không có spellEffects.");
+            CLogW($"[SPELL] {spell.Data.cardName} không có spellEffects.");
             return;
         }
 
@@ -312,7 +315,7 @@ public partial class AbilityEngine
             ApplySpellEffect(fx, targetUnit, spell);
 
         if (targetUnit != null) targetUnit.ResetStats();
-        Debug.Log($"<color=cyan>[SPELL]</color> Đã dùng phép {spell.Data.cardName}{(targetUnit != null ? " lên " + targetUnit.Data.cardName : "")}.");
+        CLog($"<color=cyan>[SPELL]</color> Đã dùng phép {spell.Data.cardName}{(targetUnit != null ? " lên " + targetUnit.Data.cardName : "")}.");
     }
 
     private void ApplySpellEffect(SpellEffectData fx, CardInstance targetUnit, CardInstance spell)
@@ -338,14 +341,14 @@ public partial class AbilityEngine
                         t.tempSpellATKBonus += fx.effectValue1;
                         t.tempSpellHPBonus  += fx.effectValue2;
                     }
-                    Debug.Log($"<color=cyan>[SPELL]</color> {t.Data.cardName} nhận +{fx.effectValue1}/+{fx.effectValue2}{(fx.isTaunt ? " + Taunt" : "")}");
+                    CLog($"<color=cyan>[SPELL]</color> {t.Data.cardName} nhận +{fx.effectValue1}/+{fx.effectValue2}{(fx.isTaunt ? " + Taunt" : "")}");
                 }
                 break;
             }
 
             case 6: // GainCoin
                 GameManager.Instance.AddCoin(fx.effectValue1);
-                Debug.Log($"<color=yellow>[SPELL]</color> Nhận {fx.effectValue1} đồng.");
+                CLog($"<color=yellow>[SPELL]</color> Nhận {fx.effectValue1} đồng.");
                 break;
 
             case 10: // GetRandomUnit — nhận N unit ngẫu nhiên Tier X vào Hand
@@ -370,7 +373,7 @@ public partial class AbilityEngine
                     GameManager.Instance.AddPermanentIncome(fx.effectValue1);
                 else
                     GameManager.Instance.AddCoin(fx.effectValue1);
-                Debug.Log($"<color=yellow>[SPELL]</color> Thu nhập {(fx.isPermanent ? "vĩnh viễn" : "tạm thời")} +{fx.effectValue1}.");
+                CLog($"<color=yellow>[SPELL]</color> Thu nhập {(fx.isPermanent ? "vĩnh viễn" : "tạm thời")} +{fx.effectValue1}.");
                 break;
 
             case 13: // GetSameRealmUnit — nhận unit cùng Tộc với unit đã chọn
@@ -382,7 +385,7 @@ public partial class AbilityEngine
                 if (pool.Count > 0)
                     GameManager.Instance.AddUnitToHand(pool[Random.Range(0, pool.Count)]);
                 else
-                    Debug.LogWarning($"[SPELL] Không tìm thấy unit cùng Tộc {tribe} để thêm vào Hand.");
+                    CLogW($"[SPELL] Không tìm thấy unit cùng Tộc {tribe} để thêm vào Hand.");
                 break;
             }
 
@@ -407,7 +410,7 @@ public partial class AbilityEngine
                 if (targetUnit == null) break;
                 targetUnit.permanentATKBonus += targetUnit.currentATK;
                 targetUnit.Data.hasSafeguard  = true; // tồn tại qua ResetStats (Data đã clone)
-                Debug.Log($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: ATK x2 + Safeguard.");
+                CLog($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: ATK x2 + Safeguard.");
                 break;
             }
 
@@ -420,7 +423,7 @@ public partial class AbilityEngine
                     targetUnit.Data.hasTaunt = false;
                     targetUnit.currentATK        += fx.effectValue1;
                     targetUnit.permanentATKBonus += fx.effectValue1;
-                    Debug.Log($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: xóa Taunt + +{fx.effectValue1} ATK.");
+                    CLog($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: xóa Taunt + +{fx.effectValue1} ATK.");
                 }
                 else
                 {
@@ -429,7 +432,7 @@ public partial class AbilityEngine
                     targetUnit.currentHP         += fx.effectValue2;
                     targetUnit.permanentHPBonus  += fx.effectValue2;
                     targetUnit.maxHP             += fx.effectValue2;
-                    Debug.Log($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: nhận Taunt + +{fx.effectValue2} HP.");
+                    CLog($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: nhận Taunt + +{fx.effectValue2} HP.");
                 }
                 break;
             }
@@ -440,7 +443,7 @@ public partial class AbilityEngine
                 int shopTier = GameManager.Instance.GetCurrentShopTier();
                 targetUnit.permanentATKBonus += shopTier;
                 targetUnit.permanentHPBonus  += shopTier;
-                Debug.Log($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: +{shopTier}/+{shopTier} (Shop Tier {shopTier}).");
+                CLog($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: +{shopTier}/+{shopTier} (Shop Tier {shopTier}).");
                 break;
             }
 
@@ -460,12 +463,12 @@ public partial class AbilityEngine
                 });
                 targetUnit.abilityTriggerCounts.Add(0);
                 targetUnit.abilityEscalationBonuses.Add(0);
-                Debug.Log($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: nhận buff +{fx.effectValue1}/+{fx.effectValue2} mỗi cuối lượt Shop.");
+                CLog($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: nhận buff +{fx.effectValue1}/+{fx.effectValue2} mỗi cuối lượt Shop.");
                 break;
             }
 
             default:
-                Debug.LogWarning($"[SPELL] Effect {fx.effect} của '{spell.Data.cardName}' chưa được triển khai.");
+                CLogW($"[SPELL] Effect {fx.effect} của '{spell.Data.cardName}' chưa được triển khai.");
                 break;
         }
     }
