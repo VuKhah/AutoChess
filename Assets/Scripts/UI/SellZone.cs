@@ -102,7 +102,7 @@ public class SellZone : MonoBehaviour, IDropHandler
             return;
         }
 
-        // Bắn OnSell cho Unit (Spell không có OnSell ý nghĩa nhưng vẫn bán được)
+        // Bắn OnSell + broadcast OnAllySell cho Unit
         if (ui.currentInstance.Data.cardType == CardType.Unit)
         {
             GameManager.Instance.SyncBoards();
@@ -110,6 +110,12 @@ public class SellZone : MonoBehaviour, IDropHandler
                 TriggerType.OnSell,
                 ui.currentInstance,
                 null,
+                GameManager.Instance.playerBoard,
+                GameManager.Instance.enemyBoard
+            );
+            GameManager.Instance.resolver.BroadcastAllyEvent(
+                TriggerType.OnAllySell,
+                ui.currentInstance,
                 GameManager.Instance.playerBoard,
                 GameManager.Instance.enemyBoard
             );

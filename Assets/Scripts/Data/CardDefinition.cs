@@ -37,6 +37,8 @@ public class CardDefinition
     public bool hasSafeguard;
 
     public string description;
+    public bool isToken;           // Token: không xuất hiện trong shop, không được spell GetRandomUnit chọn
+    public bool isRepeatingDeploy; // Bỏ qua giới hạn hasDeployed — OnDeploy kích hoạt mỗi lần deploy
 
     // Spell fields
     public string fileName;

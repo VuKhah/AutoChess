@@ -9,14 +9,16 @@
       "baseATK": 10,
       "baseHP": 10,
       "cost": 3,
-      "description": "OnSell (tối đa 3 lần): Tăng vĩnh viễn +0/+0 cho bản thân.",
+      "description": "OnAllySell (chỉ Babylon, tối đa 2/4/6 lần/lượt): Hấp thụ vĩnh viễn toàn bộ chỉ số của unit vừa bán.",
       "abilities": [
         {
-          "trigger": 7,
-          "target": 1,
-          "effect": 1,
-          "triggerLimit": 3,
-          "isPermanent": true
+          "trigger": 12,
+          "target": 11,
+          "effect": 11,
+          "subjectTribe": 1,
+          "isPermanent": true,
+          "triggerLimit": 2,
+          "isScaledTriggerLimit": true
         }
       ]
     },
@@ -28,13 +30,13 @@
       "baseATK": 9,
       "baseHP": 9,
       "cost": 3,
-      "description": "OnDeploy (mỗi 3 lần): Nhận 1 Coin.",
+      "description": "OnDeploy (mỗi 3 lần): Nhận 1 Ancient Coin.",
       "abilities": [
         {
           "trigger": 6,
           "target": 1,
-          "effect": 6,
-          "effectValue1": 1,
+          "effect": 10,
+          "summonCardID": "S_01",
           "conditionCount": 3,
           "isPermanent": false
         }
@@ -48,10 +50,10 @@
       "baseATK": 8,
       "baseHP": 8,
       "cost": 3,
-      "description": "OnDeploy: Tăng vĩnh viễn +1/+1 cho toàn bộ đồng minh Babylon.",
+      "description": "Khi một đồng minh deploy: Tăng vĩnh viễn +1/+1 cho toàn bộ đồng minh Babylon.",
       "abilities": [
         {
-          "trigger": 6,
+          "trigger": 14,
           "target": 10,
           "effect": 1,
           "effectValue1": 1,
@@ -85,16 +87,16 @@
       "cardName": "Nanna",
       "tribe": 1,
       "tier": 5,
-      "baseATK": 15,
-      "baseHP": 15,
+      "baseATK": 6,
+      "baseHP": 6,
       "cost": 3,
-      "description": "OnSell: Tăng vĩnh viễn +0/+0 cho 2 đồng minh Babylon.",
+      "description": "OnSell: Trao vĩnh viễn toàn bộ chỉ số của bản thân cho 2 đồng minh ngẫu nhiên.",
       "abilities": [
         {
           "trigger": 7,
-          "target": 10,
+          "target": 2,
           "targetCount": 2,
-          "effect": 1,
+          "effect": 12,
           "isPermanent": true
         }
       ]
@@ -107,14 +109,14 @@
       "baseATK": 6,
       "baseHP": 6,
       "cost": 3,
-      "description": "OnSell: Tăng vĩnh viễn +5/+5 cho toàn bộ đồng minh.",
+      "description": "Khi bất kỳ đồng minh bị bán: Tăng vĩnh viễn +3/+3 cho toàn bộ đồng minh.",
       "abilities": [
         {
-          "trigger": 7,
+          "trigger": 12,
           "target": 3,
           "effect": 1,
-          "effectValue1": 5,
-          "effectValue2": 5,
+          "effectValue1": 3,
+          "effectValue2": 3,
           "isPermanent": true
         }
       ]
@@ -127,13 +129,14 @@
       "baseATK": 2,
       "baseHP": 15,
       "cost": 3,
-      "description": "Taunt. Khi bị đánh: Gây 0 sát thương cho kẻ địch trực tiếp.",
+      "hasTaunt": true,
+      "description": "Taunt. Khi bị đánh: Phản 5 sát thương cho kẻ địch trực tiếp.",
       "abilities": [
         {
-          "isTaunt": true,
           "trigger": 1,
           "target": 5,
           "effect": 2,
+          "effectValue1": 5,
           "isPermanent": false
         }
       ]
@@ -146,10 +149,10 @@
       "baseATK": 10,
       "baseHP": 10,
       "cost": 3,
+      "hasTaunt": true,
       "description": "Taunt. OnDeploy: Tăng vĩnh viễn +20/+20 cho bản thân.",
       "abilities": [
         {
-          "isTaunt": true,
           "trigger": 6,
           "target": 1,
           "effect": 1,
@@ -167,13 +170,14 @@
       "baseATK": 5,
       "baseHP": 5,
       "cost": 3,
-      "description": "OnDeploy: Triệu hồi 2 đơn vị.",
+      "description": "OnDeploy (1 lần): Nhận 2 đơn vị Babylon ngẫu nhiên Tier ≥ 4 vào Hand.",
       "abilities": [
         {
           "trigger": 6,
           "target": 1,
           "effect": 4,
           "effectValue1": 2,
+          "targetTribe": 1,
           "isPermanent": false
         }
       ]
@@ -186,7 +190,8 @@
       "baseATK": 5,
       "baseHP": 5,
       "cost": 3,
-      "description": "OnDeploy: Tăng vĩnh viễn +3/+3 cho đồng minh bên phải.",
+      "isRepeatingDeploy": true,
+      "description": "Bất cứ khi nào deploy: Tăng vĩnh viễn +3/+3 cho đồng minh bên phải.",
       "abilities": [
         {
           "trigger": 6,
@@ -206,14 +211,14 @@
       "baseATK": 8,
       "baseHP": 8,
       "cost": 3,
-      "description": "Aura: Tăng vĩnh viễn +3/+2 cho bản thân.",
+      "description": "Mỗi khi nhận chỉ số vĩnh viễn: Tăng thêm vĩnh viễn +2/+1 cho bản thân.",
       "abilities": [
         {
-          "trigger": 11,
+          "trigger": 13,
           "target": 1,
           "effect": 1,
-          "effectValue1": 3,
-          "effectValue2": 2,
+          "effectValue1": 2,
+          "effectValue2": 1,
           "isPermanent": true
         }
       ]
@@ -245,12 +250,20 @@
       "baseATK": 8,
       "baseHP": 8,
       "cost": 3,
-      "description": "OnDeploy: Tăng vĩnh viễn +0/+0 cho 1 đồng minh ngẫu nhiên.",
+      "description": "OnDeploy (1 lần): Nuốt chửng đồng minh bên trái và bên phải, lấy toàn bộ chỉ số của chúng.",
       "abilities": [
         {
           "trigger": 6,
-          "target": 2,
-          "effect": 1,
+          "target": 7,
+          "effect": 11,
+          "isConsume": true,
+          "isPermanent": true
+        },
+        {
+          "trigger": 6,
+          "target": 8,
+          "effect": 11,
+          "isConsume": true,
           "isPermanent": true
         }
       ]
@@ -263,10 +276,10 @@
       "baseATK": 3,
       "baseHP": 3,
       "cost": 3,
+      "hasTaunt": true,
       "description": "Taunt. Khi bị đánh: Tăng +1/+2 cho toàn bộ đồng minh Babylon trong trận đấu này.",
       "abilities": [
         {
-          "isTaunt": true,
           "trigger": 1,
           "target": 10,
           "effect": 1,
@@ -284,7 +297,7 @@
       "baseATK": 1,
       "baseHP": 5,
       "cost": 3,
-      "description": "Trigger 12: Tăng vĩnh viễn +1/+0 cho toàn bộ đồng minh Babylon.",
+      "description": "OnAllySell: Tăng vĩnh viễn +1/+0 cho toàn bộ đồng minh Babylon.",
       "abilities": [
         {
           "trigger": 12,
@@ -322,13 +335,10 @@
       "baseATK": 2,
       "baseHP": 2,
       "cost": 3,
+      "hasTaunt": true,
+      "hasReborn": true,
       "description": "Taunt. Reborn.",
-      "abilities": [
-        {
-          "isTaunt": true,
-          "isReborn": true
-        }
-      ]
+      "abilities": []
     },
     {
       "cardID": "U_18_Babylon",
@@ -338,7 +348,7 @@
       "baseATK": 5,
       "baseHP": 1,
       "cost": 3,
-      "description": "Trigger 12: Tăng vĩnh viễn +0/+1 cho toàn bộ đồng minh Babylon.",
+      "description": "OnAllySell: Tăng vĩnh viễn +0/+1 cho toàn bộ đồng minh Babylon.",
       "abilities": [
         {
           "trigger": 12,
@@ -357,7 +367,7 @@
       "baseATK": 3,
       "baseHP": 3,
       "cost": 3,
-      "description": "OnSell: Triệu hồi 1 đơn vị.",
+      "description": "OnSell: Nhận 1 đơn vị ngẫu nhiên Tier ≥ 2 vào Hand.",
       "abilities": [
         {
           "trigger": 7,
@@ -415,16 +425,28 @@
       "baseATK": 3,
       "baseHP": 2,
       "cost": 3,
-      "description": "OnDeploy: Nhận 1 Coin.",
+      "description": "OnDeploy: Nhận 1 Ancient Coin.",
       "abilities": [
         {
           "trigger": 6,
           "target": 1,
-          "effect": 6,
-          "effectValue1": 1,
+          "effect": 10,
+          "summonCardID": "S_01",
           "isPermanent": false
         }
       ]
+    },
+    {
+      "cardID": "U_23_Babylon",
+      "cardName": "Galla",
+      "tribe": 1,
+      "tier": 1,
+      "baseATK": 2,
+      "baseHP": 2,
+      "cost": 0,
+      "isToken": true,
+      "description": "Token Babylon.",
+      "abilities": []
     },
     {
       "comment": "Nile",
@@ -753,12 +775,12 @@
         {
           "trigger": 6,
           "target": 1,
-          "effect": 6,
-          "effectValue1": 1,
+          "effect": 10,
+          "summonCardID": "S_01",
           "isPermanent": false
         }
       ],
-      "description": "OnDeploy: Nhận 1 Coin."
+      "description": "OnDeploy: Nhận 1 Ancient Coin."
     },
     {
       "cardID": "U_17_Niles",

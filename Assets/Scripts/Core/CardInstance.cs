@@ -49,6 +49,9 @@ using UnityEngine;
     // 9. Đánh dấu unit được tạo ra bởi SummonUnit trong Battle — không được phép Merge
     public bool isBattleSpawned = false;
 
+    // 10. Giới hạn OnDeploy 1 lần per merge level: reset khi merge, KHÔNG reset bởi ResetStats
+    public bool hasDeployed = false;
+
     public CardInstance(CardDefinition data, int slot)
     {
         // BUG FIX: Clone abilities list để tránh AddAbility spell mutate CardDefinition chung

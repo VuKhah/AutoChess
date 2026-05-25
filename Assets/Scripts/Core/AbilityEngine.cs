@@ -27,6 +27,9 @@ public partial class AbilityEngine
     }
     private readonly Queue<PendingSummonEntry> _pendingSummons = new Queue<PendingSummonEntry>();
 
+    // Guard: prevents AddStats from firing OnStatGain recursively when Gilgamesh reacts to its own gain
+    private bool _firingOnStatGain = false;
+
     public bool HasPendingSummons => _pendingSummons.Count > 0;
     public void ClearPendingSummons() => _pendingSummons.Clear();
 
@@ -57,7 +60,14 @@ public partial class AbilityEngine
             AbilityData ability = source.Data.abilities[i];
             if (ability == null || ability.trigger != triggerContext) continue;
 
-            if (ability.triggerLimit > 0 && source.abilityTriggerCounts[i] >= ability.triggerLimit) continue;
+            int effectiveLimit = ability.isScaledTriggerLimit
+                ? ability.triggerLimit * scaleFactor : ability.triggerLimit;
+            if (effectiveLimit > 0 && source.abilityTriggerCounts[i] >= effectiveLimit) continue;
+
+            // subjectTribe filter: OnAllySell / OnAllyDeploy chỉ phản ứng đúng bộ tộc (0 = bất kỳ)
+            if (ability.subjectTribe != 0
+                && (ability.trigger == TriggerType.OnAllySell || ability.trigger == TriggerType.OnAllyDeploy)
+                && (directEnemy == null || (int)directEnemy.Data.tribe != ability.subjectTribe)) continue;
 
             // StartOfBattle + AddStats = Growth (tăng trưởng vĩnh viễn)
             bool isGrowth = triggerContext == TriggerType.StartOfBattle && ability.effect == EffectType.AddStats;
@@ -141,6 +151,13 @@ public partial class AbilityEngine
                 }
                 CLog($"<color=cyan>[ABILITY]</color> {target.Data.cardName} được buff +{atk}ATK / +{hp}HP");
                 onStatChanged?.Invoke(target, allyBoard, (atk > 0 || hp > 0) ? FlashType.Buff : FlashType.Debuff);
+                // Kích hoạt OnStatGain sau visual callback để Gilgamesh flash theo đúng thứ tự
+                if (ability.isPermanent && (atk > 0 || hp > 0) && !_firingOnStatGain)
+                {
+                    _firingOnStatGain = true;
+                    try { TriggerAbility(TriggerType.OnStatGain, target, directEnemy, allyBoard, enemyBoard); }
+                    finally { _firingOnStatGain = false; }
+                }
                 break;
             }
 
@@ -199,21 +216,52 @@ public partial class AbilityEngine
             case EffectType.Summon:
             {
                 int summonCount = (ability.effectValue1 > 0 ? ability.effectValue1 : 1) * scaleFactor;
-                // Summon unit đầu tiên ngay lập tức
-                CardInstance first = SummonUnit(ability.summonCardID, allyBoard);
-                if (first != null)
+                bool isShopPhase = GameManager.Instance != null && !GameManager.Instance.isCombatActive;
+
+                if (isShopPhase)
                 {
-                    CLog($"<color=green>[SUMMON]</color> {source.Data.cardName} triệu hồi {first.Data.cardName} (1/{summonCount})!");
-                    TriggerAbility(TriggerType.OnDeploy, first, null, allyBoard, enemyBoard);
-                    BroadcastAllyEvent(TriggerType.OnAllySummon, first, allyBoard, enemyBoard);
+                    // Shop phase: thêm vào Hand thay vì Board trực tiếp
+                    for (int s = 0; s < summonCount; s++)
+                    {
+                        CardDefinition toAdd;
+                        if (string.IsNullOrEmpty(ability.summonCardID))
+                        {
+                            // Ngẫu nhiên unit: tier >= tier của source, lọc theo targetTribe nếu có
+                            var pool = CardDatabase.Instance.GetAllUnits()
+                                .FindAll(c => c.tier >= source.Data.tier
+                                    && (ability.targetTribe == 0 || (int)c.tribe == ability.targetTribe));
+                            if (pool.Count == 0)
+                                pool = CardDatabase.Instance.GetAllUnits()
+                                    .FindAll(c => ability.targetTribe == 0 || (int)c.tribe == ability.targetTribe);
+                            if (pool.Count == 0) pool = CardDatabase.Instance.GetAllUnits();
+                            toAdd = pool.Count > 0 ? pool[Random.Range(0, pool.Count)] : null;
+                        }
+                        else
+                        {
+                            toAdd = CardDatabase.Instance?.GetCard(ability.summonCardID);
+                        }
+                        if (toAdd != null)
+                        {
+                            GameManager.Instance.AddUnitToHand(toAdd);
+                            CLog($"<color=green>[SUMMON]</color> {source.Data.cardName} thêm {toAdd.cardName} vào Hand!");
+                        }
+                    }
                 }
-                // BUG FIX: stack-based summon — các unit tiếp theo đi vào pending queue.
-                // CombatResolver.FlushDeathStack chỉ pop 1 unit SAU KHI death chain của unit
-                // trước đó (bao gồm cả Sekhmet consume + OnDeath chain) đã resolve hoàn toàn.
-                // Tránh tình huống Sekhmet nuốt cả NW1 lẫn NW2 trong cùng một lượt broadcast.
-                for (int s = 1; s < summonCount; s++)
-                    _pendingSummons.Enqueue(new PendingSummonEntry
-                        { cardID = ability.summonCardID, allyBoard = allyBoard, enemyBoard = enemyBoard });
+                else
+                {
+                    // Combat phase: triệu hồi trực tiếp lên board (behavior gốc)
+                    CardInstance first = SummonUnit(ability.summonCardID, allyBoard);
+                    if (first != null)
+                    {
+                        CLog($"<color=green>[SUMMON]</color> {source.Data.cardName} triệu hồi {first.Data.cardName} (1/{summonCount})!");
+                        TriggerAbility(TriggerType.OnDeploy, first, null, allyBoard, enemyBoard);
+                        BroadcastAllyEvent(TriggerType.OnAllySummon, first, allyBoard, enemyBoard);
+                    }
+                    // Stack-based summon: các unit tiếp theo vào pending queue để tránh chain nuốt nhau
+                    for (int s = 1; s < summonCount; s++)
+                        _pendingSummons.Enqueue(new PendingSummonEntry
+                            { cardID = ability.summonCardID, allyBoard = allyBoard, enemyBoard = enemyBoard });
+                }
                 break;
             }
 
@@ -234,6 +282,65 @@ public partial class AbilityEngine
                         TriggerAbility(TriggerType.OnDeath, target, directEnemy, allyBoard, enemyBoard);
                 }
                 break;
+
+            case EffectType.GiveCard:
+            {
+                CardDefinition cardDef = CardDatabase.Instance?.GetCard(ability.summonCardID);
+                if (cardDef != null)
+                    GameManager.Instance?.AddUnitToHand(cardDef);
+                else
+                    CLogW($"[ABILITY] GiveCard: không tìm thấy card '{ability.summonCardID}'");
+                break;
+            }
+
+            case EffectType.AbsorbStats:
+            {
+                // source hấp thụ toàn bộ chỉ số hiện tại của target (vĩnh viễn)
+                int gainATK = target.currentATK;
+                int gainHP  = target.maxHP;
+                source.currentATK        += gainATK;
+                source.currentHP         += gainHP;
+                source.maxHP             += gainHP;
+                source.permanentATKBonus += gainATK;
+                source.permanentHPBonus  += gainHP;
+                // isConsume: phá hủy target sau khi hấp thụ (VD: Asag devour đồng minh 2 bên)
+                if (ability.isConsume && !target.IsDead)
+                {
+                    target.currentHP     = 0;
+                    target.lastAttacker  = source;
+                    target.hasRebornUsed = true; // chặn Reborn của unit bị tiêu thụ
+                }
+                CLog($"<color=magenta>[ABSORB]</color> {source.Data.cardName} hấp thụ +{gainATK}ATK/+{gainHP}HP từ {target.Data.cardName}{(ability.isConsume ? " (devoured)" : "")}");
+                onStatChanged?.Invoke(source, allyBoard, FlashType.Buff);
+                if (!_firingOnStatGain)
+                {
+                    _firingOnStatGain = true;
+                    try { TriggerAbility(TriggerType.OnStatGain, source, directEnemy, allyBoard, enemyBoard); }
+                    finally { _firingOnStatGain = false; }
+                }
+                break;
+            }
+
+            case EffectType.GiveStats:
+            {
+                // target nhận toàn bộ chỉ số hiện tại của source (vĩnh viễn)
+                int giveATK = source.currentATK;
+                int giveHP  = source.maxHP;
+                target.currentATK        += giveATK;
+                target.currentHP         += giveHP;
+                target.maxHP             += giveHP;
+                target.permanentATKBonus += giveATK;
+                target.permanentHPBonus  += giveHP;
+                CLog($"<color=magenta>[GIVE]</color> {source.Data.cardName} trao +{giveATK}ATK/+{giveHP}HP cho {target.Data.cardName}");
+                onStatChanged?.Invoke(target, allyBoard, FlashType.Buff);
+                if (!_firingOnStatGain)
+                {
+                    _firingOnStatGain = true;
+                    try { TriggerAbility(TriggerType.OnStatGain, target, directEnemy, allyBoard, enemyBoard); }
+                    finally { _firingOnStatGain = false; }
+                }
+                break;
+            }
 
             case EffectType.SummonConsumed:
                 if (source.consumedCardIDs != null && source.consumedCardIDs.Count > 0)

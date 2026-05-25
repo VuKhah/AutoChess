@@ -90,7 +90,10 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            resourceText.text = coins.ToString() + "G";
+            int incomeBonus = GameManager.Instance.permanentIncomeBonus;
+            resourceText.text = incomeBonus > 0
+                ? $"{coins}G (+{incomeBonus})"
+                : coins.ToString() + "G";
         }
     }
 

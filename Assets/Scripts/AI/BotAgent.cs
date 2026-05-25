@@ -10,6 +10,7 @@ public class BotAgent
 
     private const int FrontlineCount = 4;
     private int _shopTier = 1;
+    private List<CardDefinition> _currentUnitShop = new List<CardDefinition>();
 
     public int startingCoins = 10;
 
@@ -82,6 +83,7 @@ public class BotAgent
     {
         if (brain == null) return;
         _shopTier = shopTier;
+        _currentUnitShop = unitShop != null ? new List<CardDefinition>(unitShop) : new List<CardDefinition>();
 
         economy.ResetEconomy();
         int coinDiff = 10 - startingCoins;
@@ -229,6 +231,12 @@ public class BotAgent
                     break;
                 case 10: // GetRandomUnit
                     score += brain.genes[2] * 6f;
+                    break;
+                case 11: // StealFromShop — giá trị tương đương GetRandomUnit nhưng cùng tier shop
+                    score += brain.genes[2] * 7f;
+                    break;
+                case 13: // GetSameRealmUnit — lấy unit cùng tribe, hỗ trợ synergy
+                    score += brain.genes[2] * 5f + brain.genes[7] * 4f;
                     break;
                 case 12: // GainIncome
                     score += fx.effectValue1 * brain.genes[16] * brain.genes[31]
@@ -384,8 +392,33 @@ public class BotAgent
                     }
                     break;
                 }
-                // 11=StealFromShop, 13=GetSameRealmUnit, 14=LoseLife, 15=TransferStats,
-                // 16=ConditionalCoinGain: bỏ qua — không phù hợp với context bot
+                case 11: // StealFromShop — lấy unit ngẫu nhiên từ shop hiện tại đặt lên board
+                {
+                    var available = _currentUnitShop.FindAll(c => c != null);
+                    if (available.Count > 0 && HasEmptySlot())
+                    {
+                        int idx = Random.Range(0, available.Count);
+                        CardDefinition stolen = available[idx];
+                        _currentUnitShop.Remove(stolen);
+                        PlaceOnBoard(new CardInstance(stolen, 0));
+                    }
+                    break;
+                }
+
+                case 13: // GetSameRealmUnit — nhận unit cùng Tộc với unit tốt nhất trên board
+                {
+                    CardInstance refUnit = FindBestSpellTarget();
+                    if (refUnit != null && HasEmptySlot())
+                    {
+                        var pool = CardDatabase.Instance.GetAllUnits()
+                            .FindAll(c => c.tribe == refUnit.Data.tribe && c.cardID != refUnit.Data.cardID);
+                        if (pool.Count > 0)
+                            PlaceOnBoard(new CardInstance(pool[Random.Range(0, pool.Count)], 0));
+                    }
+                    break;
+                }
+
+                // 14=LoseLife, 15=TransferStats, 16=ConditionalCoinGain: bỏ qua — không phù hợp với context bot
             }
         }
     }

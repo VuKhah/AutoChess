@@ -15,6 +15,9 @@ public enum TriggerType
     OnAllySummon = 9,   // Khi đồng minh được triệu hồi (Đặc biệt, chỉ kích hoạt khi đồng minh cùng bộ tộc được triệu hồi)
     OnAllyReborn = 10,   // Khi đồng minh hồi sinh (Đặc biệt, chỉ kích hoạt khi đồng minh cùng bộ tộc hồi sinh)
     Aura = 11,           // Hiệu ứng Aura (Các hiệu ứng khác lập lại 1 lần khi thẻ này tồn tại trên bàn)
+    OnAllySell = 12,     // Khi một đồng minh bị bán trong Shop Phase
+    OnStatGain = 13,     // Khi đơn vị này nhận chỉ số vĩnh viễn (từ AbsorbStats / GiveStats / AddStats permanent)
+    OnAllyDeploy = 14,   // Khi một đồng minh khác được deploy lên Board trong Shop Phase
 }
 // Target: Kỹ năng nhắm vào ai?
 public enum TargetType
@@ -48,6 +51,9 @@ public enum EffectType
     Reborn = 7,         // Hồi sinh (Đặc biệt)
     TriggerAbility = 8,   // Kích hoạt ability của target
     SummonConsumed = 9,   // Triệu hồi lại tất cả unit đã bị Consume bởi source (dùng với OnDeath)
+    GiveCard = 10,        // Thêm card cụ thể vào Hand (dùng summonCardID để chỉ định card)
+    AbsorbStats = 11,     // Source hấp thụ toàn bộ ATK + HP hiện tại của target (vĩnh viễn)
+    GiveStats = 12,       // Source cho target toàn bộ ATK + HP của mình (vĩnh viễn)
 }
 
 [System.Serializable]
@@ -75,7 +81,9 @@ public class AbilityData
     public bool isReborn;       // GiveBuff: grant Reborn cho target
     public bool isSafeguard;    // GiveBuff: grant Safeguard cho target
     public bool isConsume;      // Destroy: "nuốt" unit — lưu cardID để SummonConsumed dùng sau
+    public bool isScaledTriggerLimit; // Giới hạn kích hoạt tăng theo mergeLevel: effectiveLimit = triggerLimit × (mergeLevel+1)
     public int targetTribe;    // Bộ tộc mục tiêu — cast sang Tribe enum: 0=All, 1=Babylon, 2=Olympus, 3=Niles
+    public int subjectTribe;   // Lọc trigger OnAllySell: chỉ kích hoạt khi unit bị bán thuộc bộ tộc này (0=Any)
 
     // Hàm hỗ trợ kiểm tra xem kỹ năng có tác dụng vĩnh viễn không
     public string GetDescription()

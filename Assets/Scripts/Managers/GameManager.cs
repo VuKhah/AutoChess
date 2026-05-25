@@ -14,6 +14,7 @@ public partial class GameManager : MonoBehaviour
 
     private readonly EconomyManager economy = new EconomyManager();
     public int playerCoins => economy.CurrentCoin;
+    public int permanentIncomeBonus => economy.PermanentIncomeBonus;
 
     // Dùng bởi AbilityEngine khi kỹ năng cộng coin ngay lập tức
     public void AddCoin(int amount) { economy.Earn(amount); UpdateCoinUI(); }
@@ -105,6 +106,7 @@ public partial class GameManager : MonoBehaviour
         playerCups  = 0;
         economy.ResetEconomy();
         SetDifficulty(selectedDifficulty);
+        SetupShopSummonObserver();
         UIManager.Instance.UpdateStats(playerHP, playerCups, playerCoins);
         UIManager.Instance.UpdateUIState(false);
         RefreshShop();

@@ -33,26 +33,19 @@ public class CardSlot : MonoBehaviour, IDropHandler
 
     private void HandleSpellDrop(CardDraggable spellCard, CardUI spellUI, CardSlot sourceSlot)
     {
-        // Tìm xem ô này có lính (Unit) nào đang đứng không
         CardUI targetUnitUI = GetComponentInChildren<CardUI>();
 
         // TH 1: Thả bài phép lên một Unit (để kích hoạt phép)
         if (targetUnitUI != null && targetUnitUI.currentInstance.Data.cardType == CardType.Unit)
         {
-            // Nếu mua từ Shop thì phải trừ tiền trước
             if (sourceSlot != null && sourceSlot.slotType == SlotType.Shop)
             {
                 if (!GameManager.Instance.TryBuyCard(spellUI.currentInstance.Data.cost)) return;
             }
 
-            // Kích hoạt hiệu ứng
             GameManager.Instance.resolver.ApplySpellToUnit(spellUI.currentInstance, targetUnitUI.currentInstance);
             AudioManager.Instance?.Spell();
-
-            // Cập nhật lại hiển thị cho Unit (để nhảy số ATK/HP mới)
             targetUnitUI.Setup(targetUnitUI.currentInstance);
-
-            // Xóa lá bài phép sau khi dùng
             Destroy(spellCard.gameObject);
             Debug.Log("<color=purple>Spell:</color> Đã sử dụng phép lên " + targetUnitUI.currentInstance.Data.cardName);
         }
@@ -62,20 +55,42 @@ public class CardSlot : MonoBehaviour, IDropHandler
             if (sourceSlot != null && sourceSlot.slotType == SlotType.Shop)
             {
                 if (GameManager.Instance.TryBuyCard(spellUI.currentInstance.Data.cost))
-                {
                     spellCard.parentReturnTo = this.transform;
-                }
             }
             else
             {
                 spellCard.parentReturnTo = this.transform;
             }
         }
-        // TH 3: Thả bài phép vào ô Board trống -> KHÔNG CHO PHÉP
+        // TH 3: Spell không cần target → cast ngay khi thả vào ô trống (Board hoặc Hand)
+        else if (IsTargetlessSpell(spellUI.currentInstance.Data))
+        {
+            if (sourceSlot != null && sourceSlot.slotType == SlotType.Shop)
+            {
+                if (!GameManager.Instance.TryBuyCard(spellUI.currentInstance.Data.cost)) return;
+            }
+            GameManager.Instance.resolver.ApplySpellToUnit(spellUI.currentInstance, null);
+            AudioManager.Instance?.Spell();
+            Destroy(spellCard.gameObject);
+            Debug.Log("<color=purple>Spell:</color> Đã kích hoạt " + spellUI.currentInstance.Data.cardName + " (không cần target).");
+        }
         else
         {
             Debug.Log("Bài phép phải dùng lên Unit hoặc để trong Hand!");
         }
+    }
+
+    // Spell không cần chọn unit target: effects chỉ thuộc nhóm economy/random (6, 10, 11, 12, 14, 16)
+    private static bool IsTargetlessSpell(CardDefinition data)
+    {
+        if (data?.spellEffects == null || data.spellEffects.Count == 0) return false;
+        foreach (var fx in data.spellEffects)
+        {
+            int e = fx.effect;
+            if (e != 6 && e != 10 && e != 11 && e != 12 && e != 14 && e != 16)
+                return false;
+        }
+        return true;
     }
 
     private void HandleUnitDrop(CardDraggable unitCard, CardUI unitUI, CardSlot sourceSlot)
@@ -85,10 +100,9 @@ public class CardSlot : MonoBehaviour, IDropHandler
         {
             if (sourceSlot != null && sourceSlot.slotType != SlotType.Shop)
             {
-                // [THÊM MỚI] BẮN SỰ KIỆN ONSELL TRƯỚC KHI BAY MÀU
+                // Bắn OnSell + broadcast OnAllySell trước khi hủy card
                 if (unitUI.currentInstance != null)
                 {
-                    // Sync trước khi bắn: lá bài vẫn đang nằm ở slot cũ nên SyncBoards bắt được
                     GameManager.Instance.SyncBoards();
                     Debug.Log($"<color=red>[EVENT]</color> Bắn sự kiện OnSell cho {unitUI.currentInstance.Data.cardName}");
                     GameManager.Instance.resolver.TriggerAbility(
@@ -96,7 +110,13 @@ public class CardSlot : MonoBehaviour, IDropHandler
                         unitUI.currentInstance,
                         null,
                         GameManager.Instance.playerBoard,
-                        GameManager.Instance.enemyBoard  // BUG FIX: enemyBoard luôn là list 6-null, không bao giờ null
+                        GameManager.Instance.enemyBoard
+                    );
+                    GameManager.Instance.resolver.BroadcastAllyEvent(
+                        TriggerType.OnAllySell,
+                        unitUI.currentInstance,
+                        GameManager.Instance.playerBoard,
+                        GameManager.Instance.enemyBoard
                     );
                 }
 
@@ -162,11 +182,32 @@ public class CardSlot : MonoBehaviour, IDropHandler
         yield return null; // Chờ OnEndDrag reparent lá bài vào slot mới
         if (shouldDeploy && deployedUI != null)
         {
-            // Sync board từ UI hiện tại (lá bài đã ở slot mới sau yield) — cập nhật slotIndex
-            GameManager.Instance.SyncBoards();
-            TriggerOnDeploy(deployedUI);
-            // Xóa UI của unit bị Consume/Destroy bởi OnDeploy ability (ví dụ: Upamaki)
-            GameManager.Instance.CleanupDeadBoardUnitsUI();
+            bool isRepeating = deployedUI.currentInstance.Data.isRepeatingDeploy;
+            bool alreadyDeployed = !isRepeating && deployedUI.currentInstance.hasDeployed;
+
+            if (alreadyDeployed)
+            {
+                // Đã deploy rồi (cùng merge level) — chỉ sync vị trí, không kích OnDeploy lại
+                GameManager.Instance.SyncBoards();
+            }
+            else
+            {
+                if (!isRepeating) deployedUI.currentInstance.hasDeployed = true;
+                // Sync board từ UI hiện tại (lá bài đã ở slot mới sau yield) — cập nhật slotIndex
+                GameManager.Instance.SyncBoards();
+                TriggerOnDeploy(deployedUI);
+                // Broadcast OnAllyDeploy cho các unit khác trên board (VD: Utu phản ứng)
+                GameManager.Instance.resolver.BroadcastAllyEvent(
+                    TriggerType.OnAllyDeploy,
+                    deployedUI.currentInstance,
+                    GameManager.Instance.playerBoard,
+                    GameManager.Instance.enemyBoard);
+                // Flush pending summons từ OnDeploy (VD: shop-phase summon cards)
+                GameManager.Instance.resolver.FlushShopPendingSummons(
+                    GameManager.Instance.playerBoard, GameManager.Instance.enemyBoard);
+                // Xóa UI của unit bị Consume/Destroy bởi OnDeploy ability (ví dụ: Asag, Upamaki)
+                GameManager.Instance.CleanupDeadBoardUnitsUI();
+            }
         }
         CheckForMerge(cardID, mergeLevel);
         // Đảm bảo shop blink hint luôn cập nhật sau buy/move (kể cả khi vào Hand)
@@ -230,6 +271,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
         CardUI keeper = cards[keeperIdx];
         keeper.currentInstance.mergeLevel++;
         keeper.currentInstance.ResetStats();
+        keeper.currentInstance.hasDeployed = false; // Cho phép OnDeploy lại sau khi merge
         keeper.Setup(keeper.currentInstance);
 
         for (int i = 0; i < cards.Count; i++)

@@ -13,6 +13,39 @@ public partial class GameManager
         }
     }
 
+    // Tạo CardUI cho unit vừa được summon trong shop phase.
+    // SummonUnit() chỉ ghi vào playerBoard[], không tạo UI — phương thức này bổ sung UI còn thiếu.
+    public void SpawnUnitOnBoard(CardInstance unit, List<CardInstance> board)
+    {
+        int slotIdx = board.IndexOf(unit);
+        if (slotIdx < 0 || slotIdx >= playerSlots.Length) return;
+        if (playerSlots[slotIdx].childCount > 0) return; // slot UI đã tồn tại
+
+        GameObject go = Instantiate(cardPrefab, playerSlots[slotIdx]);
+        RectTransform rt = go.GetComponent<RectTransform>();
+        CardSlotFitter.FitToSlot(rt, playerSlots[slotIdx]);
+        StartCoroutine(FitCardAfterLayout(rt, playerSlots[slotIdx]));
+        go.GetComponent<CardUI>()?.Setup(unit);
+        go.GetComponent<CardVisuals>()?.SetBoardPose();
+    }
+
+    // Observer tạo UI cho unit được summon trong shop phase.
+    // Combat phase tự ghi đè bằng observer riêng trong ResolveTurn;
+    // phải gọi lại sau mỗi combat để restore.
+    public void SetupShopSummonObserver()
+    {
+        resolver.SetSummonObserver((unit, board) =>
+        {
+            if (ReferenceEquals(board, playerBoard))
+                SpawnUnitOnBoard(unit, board);
+        });
+        resolver.SetStatChangeObserver((unit, board, flash) =>
+        {
+            if (unit != null && ReferenceEquals(board, playerBoard))
+                RefreshCardUI(unit);
+        });
+    }
+
     public void EndCombatAndPrepareNextTurn()
     {
         // Xóa summoned units, restore unit gốc từ snapshot
@@ -23,6 +56,8 @@ public partial class GameManager
         CleanupEnemySlots();
         // Sync lại sau CleanupEnemySlots để enemyBoard không còn dead units từ trận vừa xong
         SyncBoards();
+        // Restore shop-phase observer (ResolveTurn đã ghi đè bằng combat observer)
+        SetupShopSummonObserver();
         ExecuteNextTurn();
     }
 

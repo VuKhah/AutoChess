@@ -274,6 +274,7 @@ public partial class GameManager
         }
         CardUI target = candidates[Random.Range(0, candidates.Count)];
         target.currentInstance.mergeLevel = Mathf.Min(target.currentInstance.mergeLevel + 1, 2);
+        target.currentInstance.hasDeployed = false;
         target.currentInstance.ResetStats();
         target.Setup(target.currentInstance);
         Debug.Log($"<color=cyan>[SPELL]</color> Đã nâng cấp {target.currentInstance.Data.cardName} lên sao {target.currentInstance.mergeLevel + 1}!");
@@ -294,7 +295,7 @@ public partial class GameManager
         }
     }
 
-    private void RefreshCardUI(CardInstance unit)
+    public void RefreshCardUI(CardInstance unit)
     {
         if (unit == null) return;
         foreach (var slot in playerSlots)

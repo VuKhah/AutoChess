@@ -3,6 +3,7 @@ public class EconomyManager
     public int CurrentCoin { get; private set; }
     private int bonusNextTurn = 0;
     private int permanentIncomeBonus = 0;
+    public int PermanentIncomeBonus => permanentIncomeBonus;
 
     public void ResetEconomy()
     {

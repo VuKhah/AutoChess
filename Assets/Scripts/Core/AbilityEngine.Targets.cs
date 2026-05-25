@@ -57,22 +57,30 @@ public partial class AbilityEngine
                 break;
 
             case TargetType.LeftAlly:
+            {
                 int leftIndex = source.slotIndex - 1;
                 if (leftIndex >= 0)
                 {
                     CardInstance leftUnit = allyBoard[leftIndex];
-                    if (leftUnit != null && !leftUnit.IsDead) validTargets.Add(leftUnit);
+                    if (leftUnit != null && !leftUnit.IsDead
+                        && (ability.targetTribe == 0 || (int)leftUnit.Data.tribe == ability.targetTribe))
+                        validTargets.Add(leftUnit);
                 }
                 break;
+            }
 
             case TargetType.RightAlly:
+            {
                 int rightIndex = source.slotIndex + 1;
                 if (rightIndex < allyBoard.Count)
                 {
                     CardInstance rightUnit = allyBoard[rightIndex];
-                    if (rightUnit != null && !rightUnit.IsDead) validTargets.Add(rightUnit);
+                    if (rightUnit != null && !rightUnit.IsDead
+                        && (ability.targetTribe == 0 || (int)rightUnit.Data.tribe == ability.targetTribe))
+                        validTargets.Add(rightUnit);
                 }
                 break;
+            }
 
             case TargetType.AllNilesAllies:
                 validTargets.AddRange(allyBoard.FindAll(u => u != null && !u.IsDead && u.Data.tribe == Tribe.Niles));

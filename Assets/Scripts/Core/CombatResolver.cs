@@ -42,6 +42,24 @@ public class CombatResolver
         List<CardInstance> allyBoard, List<CardInstance> enemyBoard)
         => engine.TriggerAbility(trigger, source, directEnemy, allyBoard, enemyBoard);
 
+    public void BroadcastAllyEvent(TriggerType trigger, CardInstance subject,
+        List<CardInstance> allyBoard, List<CardInstance> enemyBoard)
+        => engine.BroadcastAllyEvent(trigger, subject, allyBoard, enemyBoard);
+
+    public void SetSummonObserver(System.Action<CardInstance, List<CardInstance>> observer)
+        => engine.SetSummonObserver(observer);
+
+    public void SetStatChangeObserver(System.Action<CardInstance, List<CardInstance>, FlashType> observer)
+        => engine.SetStatChangeObserver(observer);
+
+    // Xử lý toàn bộ pending summons ngay lập tức — dùng cho shop phase
+    // (combat dùng FlushDeathStack để đảm bảo death chain resolve trước)
+    public void FlushShopPendingSummons(List<CardInstance> allyBoard, List<CardInstance> enemyBoard)
+    {
+        while (engine.HasPendingSummons)
+            engine.ProcessNextPendingSummon();
+    }
+
     public void ApplySpellToUnit(CardInstance spell, CardInstance targetUnit)
         => engine.ApplySpellToUnit(spell, targetUnit);
 
@@ -69,9 +87,6 @@ public class CombatResolver
         });
 
         // --- Phase 1: Setup ---
-        ApplyTribeSynergies(pBoard, true, log);
-        ApplyTribeSynergies(eBoard, false, log);
-
         int setupSlotCount = Mathf.Min(pBoard.Count, eBoard.Count);
         for (int i = 0; i < setupSlotCount; i++)
         {

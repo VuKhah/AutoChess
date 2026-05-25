@@ -68,11 +68,11 @@ public class CardDatabase : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             int rolledTier = RollTier(currentShopLevel);
-            List<CardDefinition> tierPool = unitList.Where(c => c.tier == rolledTier).ToList();
+            List<CardDefinition> tierPool = unitList.Where(c => c.tier == rolledTier && !c.isToken).ToList();
             if (tierPool.Count == 0)
             {
                 Debug.LogWarning($"[DATABASE] Không có unit nào ở Tier {rolledTier}. Đang lấy unit Tier thấp hơn bù vào!");
-                tierPool = unitList.Where(c => c.tier <= rolledTier).ToList();
+                tierPool = unitList.Where(c => c.tier <= rolledTier && !c.isToken).ToList();
             }
             if (tierPool.Count > 0)
                 shop.Add(tierPool[Random.Range(0, tierPool.Count)]);
@@ -136,6 +136,7 @@ public class CardDatabase : MonoBehaviour
         return rates;
     }
 
-    public List<CardDefinition> GetAllUnits()  => unitList;
+    // Trả về tất cả unit không phải token (dùng cho spell và bot)
+    public List<CardDefinition> GetAllUnits()  => unitList.FindAll(c => !c.isToken);
     public List<CardDefinition> GetAllSpells() => spellList;
 }
