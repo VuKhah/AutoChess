@@ -368,60 +368,6 @@ public class CombatResolver
     }
 
     // ==========================================
-    // TRIBE SYNERGIES
-    // Babylon  ≥2: +1 HP  — nền văn minh, phòng thủ vững chắc
-    // Olympus  ≥2: +1 ATK — thần linh, công kích thần thánh
-    // Niles    ≥3: +2 HP  — dòng sông sự sống, hồi phục mạnh hơn nhưng yêu cầu đội hình lớn hơn
-    // ==========================================
-
-    private void ApplyTribeSynergies(List<CardInstance> board, bool isPlayerSide, TurnRecord log)
-    {
-        var alive = board.FindAll(u => u != null && !u.IsDead);
-
-        // Babylon ≥2 → +1 HP
-        int babylonCount = alive.FindAll(u => u.Data.tribe == Tribe.Babylon).Count;
-        if (babylonCount >= 2)
-        {
-            foreach (var u in alive)
-            {
-                if (u.Data.tribe != Tribe.Babylon) continue;
-                u.currentHP += 1; u.maxHP += 1;
-                int idx = board.IndexOf(u);
-                if (idx >= 0) log?.AddAction(CombatAction.StatChange(idx, isPlayerSide, u.currentATK, u.currentHP, FlashType.SynergyBabylon));
-            }
-            if (!Application.isBatchMode) Debug.Log($"<color=yellow>[SYNERGY]</color> Babylon x{babylonCount}: mỗi Babylon unit +1 HP");
-        }
-
-        // Olympus ≥2 → +1 ATK
-        int olympusCount = alive.FindAll(u => u.Data.tribe == Tribe.Olympus).Count;
-        if (olympusCount >= 2)
-        {
-            foreach (var u in alive)
-            {
-                if (u.Data.tribe != Tribe.Olympus) continue;
-                u.currentATK += 1;
-                int idx = board.IndexOf(u);
-                if (idx >= 0) log?.AddAction(CombatAction.StatChange(idx, isPlayerSide, u.currentATK, u.currentHP, FlashType.SynergyOlympus));
-            }
-            if (!Application.isBatchMode) Debug.Log($"<color=cyan>[SYNERGY]</color> Olympus x{olympusCount}: mỗi Olympus unit +1 ATK");
-        }
-
-        // Niles ≥3 → +2 HP
-        int nilesCount = alive.FindAll(u => u.Data.tribe == Tribe.Niles).Count;
-        if (nilesCount >= 3)
-        {
-            foreach (var u in alive)
-            {
-                if (u.Data.tribe != Tribe.Niles) continue;
-                u.currentHP += 2; u.maxHP += 2;
-                int idx = board.IndexOf(u);
-                if (idx >= 0) log?.AddAction(CombatAction.StatChange(idx, isPlayerSide, u.currentATK, u.currentHP, FlashType.SynergyNiles));
-            }
-            if (!Application.isBatchMode) Debug.Log($"<color=green>[SYNERGY]</color> Niles x{nilesCount}: mỗi Niles unit +2 HP");
-        }
-    }
-
-    // ==========================================
     // TARGET SELECTION
     // Layout: Frontline = index 0-3 | Backline = index 4-6
     // Ưu tiên 1: Taunt — bypass mọi thứ, kể cả frontline protection
@@ -500,13 +446,7 @@ public class CombatResolver
     // HELPERS
     // ==========================================
 
-    private int ComputeRevivedHP(CardInstance unit)
-    {
-        const float keepRatio = 0.7f;
-        int tier = unit.mergeLevel + 1;
-        return Mathf.RoundToInt(unit.Data.baseHP * tier
-               + keepRatio * (unit.growthHPBonus + unit.permanentHPBonus));
-    }
+    private int ComputeRevivedHP(CardInstance unit) => 1;
 
     private bool IsSideEliminated(List<CardInstance> board)
         => !board.Exists(u => u != null && !u.IsDead);

@@ -52,6 +52,10 @@ using UnityEngine;
     // 10. Giới hạn OnDeploy 1 lần per merge level: reset khi merge, KHÔNG reset bởi ResetStats
     public bool hasDeployed = false;
 
+    // 11. Global permanent tribe buff (từ các card như Thoth) — KHÔNG qua keepRatio, KHÔNG reset bởi ResetStats
+    public int globalPermATKBonus = 0;
+    public int globalPermHPBonus  = 0;
+
     public CardInstance(CardDefinition data, int slot)
     {
         // BUG FIX: Clone abilities list để tránh AddAbility spell mutate CardDefinition chung
@@ -65,9 +69,9 @@ using UnityEngine;
         const float keepRatio = 0.7f;
         int tier = mergeLevel + 1;
         currentATK = Mathf.RoundToInt(Data.baseATK * tier
-                + keepRatio * (growthATKBonus + permanentATKBonus)) + tempSpellATKBonus;
+                + keepRatio * (growthATKBonus + permanentATKBonus)) + tempSpellATKBonus + globalPermATKBonus;
         maxHP      = Mathf.RoundToInt(Data.baseHP  * tier
-                 + keepRatio * (growthHPBonus  + permanentHPBonus)) + tempSpellHPBonus;
+                 + keepRatio * (growthHPBonus  + permanentHPBonus)) + tempSpellHPBonus + globalPermHPBonus;
         currentHP  = maxHP;
         tempSpellATKBonus = 0;
         tempSpellHPBonus  = 0;
@@ -93,18 +97,11 @@ using UnityEngine;
         lastAttacker     = null;
     }
 
-    // Passive Reborn: hồi sinh với chỉ số mặc định (ATK + HP đầy như đầu combat),
-    // xóa flag isReborn (round đó không revive nữa), giữ nguyên ability counters/buff combat.
+    // Passive Reborn: hồi sinh với 1 HP (chuẩn thiết kế — Reborn luôn về 1 máu)
     public void ReviveDefault()
     {
-        const float keepRatio = 0.7f;
-        int tier = mergeLevel + 1;
-        currentATK = Mathf.RoundToInt(Data.baseATK * tier
-                   + keepRatio * (growthATKBonus + permanentATKBonus));
-        maxHP      = Mathf.RoundToInt(Data.baseHP  * tier
-                   + keepRatio * (growthHPBonus  + permanentHPBonus));
-        currentHP  = maxHP;
-        isReborn   = false;   // mất passive trong round này
+        currentHP        = 1;
+        isReborn         = false;
         hasRebornUsed    = true;
         onDeathProcessed = false;
         lastAttacker     = null;

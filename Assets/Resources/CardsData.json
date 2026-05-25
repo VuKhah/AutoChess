@@ -30,14 +30,14 @@
       "baseATK": 9,
       "baseHP": 9,
       "cost": 3,
-      "description": "OnDeploy (mỗi 3 lần): Nhận 1 Ancient Coin.",
+      "description": "Khi đồng minh deploy (mỗi 2 lần): Nhận 1 Ancient Coin.",
       "abilities": [
         {
-          "trigger": 6,
+          "trigger": 14,
           "target": 1,
           "effect": 10,
           "summonCardID": "S_01",
-          "conditionCount": 3,
+          "conditionCount": 2,
           "isPermanent": false
         }
       ]
@@ -50,14 +50,15 @@
       "baseATK": 8,
       "baseHP": 8,
       "cost": 3,
-      "description": "Khi một đồng minh deploy: Tăng vĩnh viễn +1/+1 cho toàn bộ đồng minh Babylon.",
+      "description": "Khi một đồng minh Babylon deploy: Tăng vĩnh viễn +2/+2 cho toàn bộ đồng minh Babylon.",
       "abilities": [
         {
           "trigger": 14,
           "target": 10,
           "effect": 1,
-          "effectValue1": 1,
-          "effectValue2": 1,
+          "effectValue1": 2,
+          "effectValue2": 2,
+          "subjectTribe": 1,
           "isPermanent": true
         }
       ]
@@ -70,14 +71,18 @@
       "baseATK": 6,
       "baseHP": 6,
       "cost": 3,
-      "description": "OnDeploy: Tăng vĩnh viễn +3/+3 cho 1 đồng minh ngẫu nhiên.",
+      "description": "Bất cứ khi nào đồng minh Babylon deploy (lần 2/4/6): Tăng vĩnh viễn +3/+3 cho đồng minh yếu nhất.",
       "abilities": [
         {
-          "trigger": 6,
-          "target": 2,
+          "trigger": 14,
+          "target": 6,
           "effect": 1,
           "effectValue1": 3,
           "effectValue2": 3,
+          "subjectTribe": 1,
+          "conditionCount": 2,
+          "triggerLimit": 1,
+          "isScaledTriggerLimit": true,
           "isPermanent": true
         }
       ]
@@ -109,14 +114,14 @@
       "baseATK": 6,
       "baseHP": 6,
       "cost": 3,
-      "description": "Khi bất kỳ đồng minh bị bán: Tăng vĩnh viễn +3/+3 cho toàn bộ đồng minh.",
+      "description": "Khi bất kỳ đồng minh bị bán: Tăng vĩnh viễn +1/+2 cho toàn bộ đồng minh.",
       "abilities": [
         {
           "trigger": 12,
           "target": 3,
           "effect": 1,
-          "effectValue1": 3,
-          "effectValue2": 3,
+          "effectValue1": 1,
+          "effectValue2": 2,
           "isPermanent": true
         }
       ]
@@ -130,7 +135,7 @@
       "baseHP": 15,
       "cost": 3,
       "hasTaunt": true,
-      "description": "Taunt. Khi bị đánh: Phản 5 sát thương cho kẻ địch trực tiếp.",
+      "description": "Taunt. Khi bị đánh: Phản 5/10/15 sát thương cho kẻ địch trực tiếp.",
       "abilities": [
         {
           "trigger": 1,
@@ -150,14 +155,14 @@
       "baseHP": 10,
       "cost": 3,
       "hasTaunt": true,
-      "description": "Taunt. OnDeploy: Tăng vĩnh viễn +20/+20 cho bản thân.",
+      "description": "Taunt. OnDeploy: Tăng vĩnh viễn +10/+10 cho bản thân.",
       "abilities": [
         {
           "trigger": 6,
           "target": 1,
           "effect": 1,
-          "effectValue1": 20,
-          "effectValue2": 20,
+          "effectValue1": 10,
+          "effectValue2": 10,
           "isPermanent": true
         }
       ]
@@ -170,7 +175,7 @@
       "baseATK": 5,
       "baseHP": 5,
       "cost": 3,
-      "description": "OnDeploy (1 lần): Nhận 2 đơn vị Babylon ngẫu nhiên Tier ≥ 4 vào Hand.",
+      "description": "OnDeploy (1 lần): Nhận 2 đơn vị Babylon ngẫu nhiên đến Tier Shop vào Hand.",
       "abilities": [
         {
           "trigger": 6,
@@ -178,6 +183,7 @@
           "effect": 4,
           "effectValue1": 2,
           "targetTribe": 1,
+          "triggerLimit": 1,
           "isPermanent": false
         }
       ]
@@ -190,15 +196,15 @@
       "baseATK": 5,
       "baseHP": 5,
       "cost": 3,
-      "isRepeatingDeploy": true,
-      "description": "Bất cứ khi nào deploy: Tăng vĩnh viễn +3/+3 cho đồng minh bên phải.",
+      "description": "Bất cứ khi nào một đồng minh Babylon deploy: Tăng vĩnh viễn +1/+2 cho đồng minh bên phải.",
       "abilities": [
         {
-          "trigger": 6,
+          "trigger": 14,
           "target": 8,
           "effect": 1,
-          "effectValue1": 3,
-          "effectValue2": 3,
+          "effectValue1": 1,
+          "effectValue2": 2,
+          "subjectTribe": 1,
           "isPermanent": true
         }
       ]
@@ -250,12 +256,13 @@
       "baseATK": 8,
       "baseHP": 8,
       "cost": 3,
-      "description": "OnDeploy (1 lần): Nuốt chửng đồng minh bên trái và bên phải, lấy toàn bộ chỉ số của chúng.",
+      "description": "OnDeploy (1 lần): Nuốt chửng đồng minh Babylon bên trái và bên phải, lấy toàn bộ chỉ số của chúng.",
       "abilities": [
         {
           "trigger": 6,
           "target": 7,
           "effect": 11,
+          "targetTribe": 1,
           "isConsume": true,
           "isPermanent": true
         },
@@ -263,6 +270,7 @@
           "trigger": 6,
           "target": 8,
           "effect": 11,
+          "targetTribe": 1,
           "isConsume": true,
           "isPermanent": true
         }
@@ -277,14 +285,14 @@
       "baseHP": 3,
       "cost": 3,
       "hasTaunt": true,
-      "description": "Taunt. Khi bị đánh: Tăng +1/+2 cho toàn bộ đồng minh Babylon trong trận đấu này.",
+      "description": "Taunt. Khi bị đánh: Tăng +1/+1 cho toàn bộ đồng minh Babylon trong trận đấu này.",
       "abilities": [
         {
           "trigger": 1,
           "target": 10,
           "effect": 1,
           "effectValue1": 1,
-          "effectValue2": 2,
+          "effectValue2": 1,
           "isPermanent": false
         }
       ]
@@ -367,13 +375,15 @@
       "baseATK": 3,
       "baseHP": 3,
       "cost": 3,
-      "description": "OnSell: Nhận 1 đơn vị ngẫu nhiên Tier ≥ 2 vào Hand.",
+      "description": "OnSell: Nhận 1 đơn vị Babylon ngẫu nhiên đến Tier 2 vào Hand.",
       "abilities": [
         {
           "trigger": 7,
           "target": 1,
           "effect": 4,
           "effectValue1": 1,
+          "targetTribe": 1,
+          "maxTier": 2,
           "isPermanent": false
         }
       ]
@@ -386,10 +396,10 @@
       "baseATK": 3,
       "baseHP": 3,
       "cost": 3,
-      "description": "OnSell: Tăng vĩnh viễn +1/+1 cho bản thân.",
+      "description": "Bất cứ khi nào bán đồng minh: Tăng vĩnh viễn +1/+1 cho bản thân.",
       "abilities": [
         {
-          "trigger": 7,
+          "trigger": 12,
           "target": 1,
           "effect": 1,
           "effectValue1": 1,
@@ -404,15 +414,16 @@
       "tribe": 1,
       "tier": 1,
       "baseATK": 2,
-      "baseHP": 4,
+      "baseHP": 3,
       "cost": 3,
-      "description": "OnDeploy: Tăng vĩnh viễn +0/+1 cho bản thân.",
+      "description": "Bất cứ khi nào đồng minh Babylon deploy: Tăng vĩnh viễn +0/+1 cho bản thân.",
       "abilities": [
         {
-          "trigger": 6,
+          "trigger": 14,
           "target": 1,
           "effect": 1,
           "effectValue2": 1,
+          "subjectTribe": 1,
           "isPermanent": true
         }
       ]
@@ -422,8 +433,8 @@
       "cardName": "Sumerian Scholar",
       "tribe": 1,
       "tier": 1,
-      "baseATK": 3,
-      "baseHP": 2,
+      "baseATK": 2,
+      "baseHP": 3,
       "cost": 3,
       "description": "OnDeploy: Nhận 1 Ancient Coin.",
       "abilities": [
@@ -495,7 +506,7 @@
           "isPermanent": false
         }
       ],
-      "description": "OnAllySummon: Consume unit đó (tối đa 2 lần). Slain: triệu hồi lại tất cả unit đã Consume."
+      "description": "OnAllySummon (tối đa 2 lần): Nuốt đồng minh đó. Demise: Triệu hồi lại tất cả đơn vị đã nuốt."
     },
     {
       "cardID": "U_03_Niles",
@@ -509,13 +520,12 @@
         {
           "trigger": 10,
           "target": 11,
-          "effect": 1,
-          "effectValue1": 30,
-          "effectValue2": 30,
+          "effect": 13,
+          "effectValue1": 1,
           "isPermanent": true
         }
       ],
-      "description": "OnAllyReborn: Tăng +30/+30 cho đồng minh đó."
+      "description": "OnAllyReborn: Nhân đôi/ba/bốn chỉ số của đồng minh đó (x1/x2/x3 theo merge)."
     },
     {
       "cardID": "U_04_Niles",
@@ -532,10 +542,20 @@
           "effect": 1,
           "effectValue1": 1,
           "effectValue2": 2,
+          "anyAllyTrigger": true,
+          "isPermanent": true
+        },
+        {
+          "trigger": 10,
+          "target": 1,
+          "effect": 1,
+          "effectValue1": 1,
+          "effectValue2": 2,
+          "anyAllyTrigger": true,
           "isPermanent": true
         }
       ],
-      "description": "OnAllySummon: Tăng vĩnh viễn +1/+2 cho bản thân."
+      "description": "Bất kể khi nào đồng minh summon/reborn: Tăng vĩnh viễn +1/+2 cho bản thân."
     },
     {
       "cardID": "U_05_Niles",
@@ -571,14 +591,16 @@
       "abilities": [
         {
           "trigger": 3,
-          "target": 9,
+          "target": 1,
           "effect": 1,
           "effectValue1": 2,
           "effectValue2": 0,
+          "targetTribe": 3,
+          "globalTribeBuff": true,
           "isPermanent": true
         }
       ],
-      "description": "Slain: Tăng vĩnh viễn +2/+0 cho toàn bộ đồng minh Niles."
+      "description": "Slain: Vĩnh viễn +2 ATK cho toàn bộ đơn vị Niles (board/hand/shop/future). Tích lũy qua các lượt."
     },
     {
       "cardID": "U_07_Niles",
@@ -628,17 +650,17 @@
       "baseATK": 4,
       "baseHP": 2,
       "cost": 3,
-      "hasReborn": true,
       "abilities": [
         {
           "trigger": 3,
           "target": 2,
           "effect": 3,
+          "targetTribe": 3,
           "isPermanent": false,
           "isReborn": true
         }
       ],
-      "description": "Slain: Ban Reborn cho 1 đồng minh ngẫu nhiên."
+      "description": "Slain: Ban Reborn cho 1 đồng minh Niles ngẫu nhiên."
     },
     {
       "cardID": "U_10_Niles",
@@ -673,6 +695,7 @@
           "trigger": 6,
           "target": 7,
           "effect": 5,
+          "targetTribe": 3,
           "isPermanent": false,
           "isConsume": true
         },
@@ -683,7 +706,7 @@
           "isPermanent": false
         }
       ],
-      "description": "OnDeploy: Consume đồng minh bên trái. Slain: Triệu hồi lại tất cả unit đã bị Consume."
+      "description": "OnDeploy: Remove đồng minh Niles bên trái, ghi nhớ nó. Slain: Sinh ra bản sao của đơn vị đã ghi nhớ."
     },
     {
       "cardID": "U_12_Niles",
@@ -817,10 +840,20 @@
           "effect": 1,
           "effectValue1": 1,
           "effectValue2": 1,
+          "anyAllyTrigger": true,
+          "isPermanent": false
+        },
+        {
+          "trigger": 10,
+          "target": 1,
+          "effect": 1,
+          "effectValue1": 1,
+          "effectValue2": 1,
+          "anyAllyTrigger": true,
           "isPermanent": false
         }
       ],
-      "description": "OnAllySummon: Tăng +1/+1 cho bản thân trong trận đấu này."
+      "description": "Bất kể khi nào đồng minh summon/reborn: Tăng +1/+1 cho bản thân trong trận đấu này."
     },
     {
       "cardID": "U_19_Niles",
@@ -883,6 +916,7 @@
       "baseATK": 1,
       "baseHP": 1,
       "cost": 3,
+      "isToken": true,
       "abilities": [
         {
           "trigger": 0
@@ -898,6 +932,7 @@
       "baseATK": 3,
       "baseHP": 2,
       "cost": 3,
+      "isToken": true,
       "abilities": [
         {
           "trigger": 0
@@ -913,6 +948,7 @@
       "baseATK": 3,
       "baseHP": 2,
       "cost": 3,
+      "isToken": true,
       "abilities": [
         {
           "trigger": 0

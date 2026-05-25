@@ -57,6 +57,55 @@ public partial class GameManager : MonoBehaviour
 
     public CombatResolver resolver = new CombatResolver();
 
+    // Global permanent tribe buff accumulator — index = tribeID (0=all, 1=Babylon, 2=Olympus, 3=Niles)
+    // Cộng dồn vĩnh viễn qua các lượt, không reset. Board units được xử lý trực tiếp trong AbilityEngine.
+    private readonly int[] _globalTribeATKBonus = new int[4];
+    private readonly int[] _globalTribeHPBonus  = new int[4];
+
+    // Gọi bởi AbilityEngine khi global buff fire: tích lũy accumulator + áp delta lên hand/shop hiện tại.
+    public void ApplyGlobalTribeBuff(int tribeID, int atk, int hp)
+    {
+        if ((uint)tribeID < (uint)_globalTribeATKBonus.Length)
+        {
+            _globalTribeATKBonus[tribeID] += atk;
+            _globalTribeHPBonus[tribeID]  += hp;
+        }
+        ApplyGlobalBuffToSlots(handSlots, tribeID, atk, hp);
+        ApplyGlobalBuffToSlots(shopSlots, tribeID, atk, hp);
+    }
+
+    private void ApplyGlobalBuffToSlots(Transform[] slots, int tribeID, int atk, int hp)
+    {
+        if (slots == null) return;
+        foreach (var slot in slots)
+        {
+            CardUI ui = slot.GetComponentInChildren<CardUI>();
+            CardInstance unit = ui?.currentInstance;
+            if (unit == null) continue;
+            if (tribeID != 0 && (int)unit.Data.tribe != tribeID) continue;
+            unit.globalPermATKBonus += atk;
+            unit.globalPermHPBonus  += hp;
+            unit.ResetStats();
+            RefreshCardUI(unit);
+        }
+    }
+
+    // Gọi khi tạo mới CardInstance bất kỳ đâu — áp tổng accumulated bonus theo tộc của unit.
+    public void ApplyGlobalPermBuffToNewUnit(CardInstance unit)
+    {
+        if (unit?.Data == null) return;
+        int tribeID = (int)unit.Data.tribe;
+        // index 0 = buff all-tribes; index tribeID = buff riêng tộc đó
+        int totalATK = _globalTribeATKBonus[0]
+                     + ((uint)tribeID < (uint)_globalTribeATKBonus.Length ? _globalTribeATKBonus[tribeID] : 0);
+        int totalHP  = _globalTribeHPBonus[0]
+                     + ((uint)tribeID < (uint)_globalTribeHPBonus.Length  ? _globalTribeHPBonus[tribeID]  : 0);
+        if (totalATK == 0 && totalHP == 0) return;
+        unit.globalPermATKBonus = totalATK;
+        unit.globalPermHPBonus  = totalHP;
+        unit.ResetStats();
+    }
+
     public List<CardInstance> playerBoard = new List<CardInstance>(new CardInstance[BoardSlotCount]);
     public List<CardInstance> enemyBoard  = new List<CardInstance>(new CardInstance[BoardSlotCount]);
 

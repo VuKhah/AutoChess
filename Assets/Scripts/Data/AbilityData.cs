@@ -54,6 +54,7 @@ public enum EffectType
     GiveCard = 10,        // Thêm card cụ thể vào Hand (dùng summonCardID để chỉ định card)
     AbsorbStats = 11,     // Source hấp thụ toàn bộ ATK + HP hiện tại của target (vĩnh viễn)
     GiveStats = 12,       // Source cho target toàn bộ ATK + HP của mình (vĩnh viễn)
+    ScaleTargetStats = 13, // Tăng cho target (effectValue1 × scaleFactor) × chỉ số hiện tại của chính nó
 }
 
 [System.Serializable]
@@ -84,6 +85,10 @@ public class AbilityData
     public bool isScaledTriggerLimit; // Giới hạn kích hoạt tăng theo mergeLevel: effectiveLimit = triggerLimit × (mergeLevel+1)
     public int targetTribe;    // Bộ tộc mục tiêu — cast sang Tribe enum: 0=All, 1=Babylon, 2=Olympus, 3=Niles
     public int subjectTribe;   // Lọc trigger OnAllySell: chỉ kích hoạt khi unit bị bán thuộc bộ tộc này (0=Any)
+    public int maxTier;        // Summon effect: tier tối đa của unit random (0 = dùng shop tier hiện tại)
+    public bool copiesAbilitiesOnConsume; // Destroy+isConsume: sao chép abilities của target sang source
+    public bool anyAllyTrigger;          // OnAllySummon/OnAllyReborn: bỏ qua lọc tribe, kích hoạt với bất kỳ đồng minh nào
+    public bool globalTribeBuff;         // bypass target system: cộng vĩnh viễn cho toàn bộ đơn vị tribe (board+hand+shop+future), không qua keepRatio
 
     // Hàm hỗ trợ kiểm tra xem kỹ năng có tác dụng vĩnh viễn không
     public string GetDescription()

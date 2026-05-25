@@ -128,7 +128,9 @@ public partial class GameManager
         RectTransform cardRect = cardObj.GetComponent<RectTransform>();
         CardSlotFitter.FitToSlot(cardRect, slot);
         StartCoroutine(FitCardAfterLayout(cardRect, slot));
-        cardObj.GetComponent<CardUI>().Setup(new CardInstance(data, 0));
+        CardInstance instance = new CardInstance(data, 0);
+        ApplyGlobalPermBuffToNewUnit(instance); // áp global tribe buff tích lũy nếu có
+        cardObj.GetComponent<CardUI>().Setup(instance);
         cardObj.GetComponent<CardVisuals>()?.SetUprightPose();
     }
 

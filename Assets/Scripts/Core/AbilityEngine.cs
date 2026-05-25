@@ -69,12 +69,40 @@ public partial class AbilityEngine
                 && (ability.trigger == TriggerType.OnAllySell || ability.trigger == TriggerType.OnAllyDeploy)
                 && (directEnemy == null || (int)directEnemy.Data.tribe != ability.subjectTribe)) continue;
 
+            int esc = (ability.isEscalating && i < source.abilityEscalationBonuses.Count)
+                      ? source.abilityEscalationBonuses[i] : 0;
+
+            // globalTribeBuff (Thoth): bypass target system, áp dụng trực tiếp lên board + gọi GameManager cho hand/shop/future
+            if (ability.globalTribeBuff)
+            {
+                source.abilityTriggerCounts[i]++;
+                int gAtk = (ability.effectValue1 + esc) * scaleFactor;
+                int gHp  = (ability.effectValue2 + esc) * scaleFactor;
+                foreach (var unit in allyBoard)
+                {
+                    if (unit == null) continue;
+                    if (ability.targetTribe != 0 && (int)unit.Data.tribe != ability.targetTribe) continue;
+                    // Áp ATK cho tất cả (kể cả dead — đảm bảo unit Reborn có chỉ số đúng sau khi hồi sinh)
+                    unit.globalPermATKBonus += gAtk;
+                    unit.currentATK         += gAtk;
+                    // HP và visual chỉ áp khi unit đang sống
+                    if (!unit.IsDead)
+                    {
+                        unit.globalPermHPBonus += gHp;
+                        if (gHp > 0) { unit.currentHP += gHp; unit.maxHP += gHp; }
+                        onStatChanged?.Invoke(unit, allyBoard, FlashType.Buff);
+                    }
+                }
+                GameManager.Instance?.ApplyGlobalTribeBuff(ability.targetTribe, gAtk, gHp);
+                if (ability.isEscalating && i < source.abilityEscalationBonuses.Count)
+                    source.abilityEscalationBonuses[i]++;
+                continue;
+            }
+
             // StartOfBattle + AddStats = Growth (tăng trưởng vĩnh viễn)
             bool isGrowth = triggerContext == TriggerType.StartOfBattle && ability.effect == EffectType.AddStats;
 
             List<CardInstance> targets = FindTargets(ability, source, directEnemy, allyBoard, enemyBoard);
-            int esc = (ability.isEscalating && i < source.abilityEscalationBonuses.Count)
-                      ? source.abilityEscalationBonuses[i] : 0;
 
             // triggerLimit: chỉ đếm khi thực sự có mục tiêu hợp lệ.
             // Tránh tình huống unit thứ hai (SekhmetB) bị trừ lượt khi mục tiêu đã bị
@@ -195,9 +223,20 @@ public partial class AbilityEngine
                 {
                     source.consumedCardIDs.Add(target.Data.cardID);
                     // BUG FIX: Unit bị Consume không được phép hồi sinh qua Reborn passive.
-                    // Nếu không chặn, CleanupBoard sẽ revive unit đó → unit vừa sống trên board
-                    // vừa nằm trong consumedCardIDs, gây nhân bản khi consumer chết.
                     target.hasRebornUsed = true;
+                    // Upamaki mechanic: sao chép abilities của unit bị nuốt vào source (vĩnh viễn)
+                    if (ability.copiesAbilitiesOnConsume && target.Data.abilities != null)
+                    {
+                        if (source.Data.abilities == null)
+                            source.Data.abilities = new System.Collections.Generic.List<AbilityData>();
+                        foreach (var ab in target.Data.abilities)
+                        {
+                            source.Data.abilities.Add(ab);
+                            source.abilityTriggerCounts.Add(0);
+                            source.abilityEscalationBonuses.Add(0);
+                        }
+                        CLog($"<color=cyan>[CONSUME]</color> {source.Data.cardName} học được {target.Data.abilities.Count} kỹ năng từ {target.Data.cardName}!");
+                    }
                 }
                 CLog($"<color=red>[ABILITY]</color> {source.Data.cardName} tiêu diệt {target.Data.cardName}{(ability.isConsume ? " (Consumed!)" : "")}");
                 break;
@@ -221,19 +260,21 @@ public partial class AbilityEngine
                 if (isShopPhase)
                 {
                     // Shop phase: thêm vào Hand thay vì Board trực tiếp
+                    int shopTier = GameManager.Instance?.GetCurrentShopTier() ?? 6;
+                    int tierCap  = ability.maxTier > 0 ? ability.maxTier : shopTier;
                     for (int s = 0; s < summonCount; s++)
                     {
                         CardDefinition toAdd;
                         if (string.IsNullOrEmpty(ability.summonCardID))
                         {
-                            // Ngẫu nhiên unit: tier >= tier của source, lọc theo targetTribe nếu có
+                            // Random unit: tier <= tierCap, lọc token và tribe
                             var pool = CardDatabase.Instance.GetAllUnits()
-                                .FindAll(c => c.tier >= source.Data.tier
+                                .FindAll(c => !c.isToken && c.tier <= tierCap
                                     && (ability.targetTribe == 0 || (int)c.tribe == ability.targetTribe));
                             if (pool.Count == 0)
                                 pool = CardDatabase.Instance.GetAllUnits()
-                                    .FindAll(c => ability.targetTribe == 0 || (int)c.tribe == ability.targetTribe);
-                            if (pool.Count == 0) pool = CardDatabase.Instance.GetAllUnits();
+                                    .FindAll(c => !c.isToken && (ability.targetTribe == 0 || (int)c.tribe == ability.targetTribe));
+                            if (pool.Count == 0) pool = CardDatabase.Instance.GetAllUnits().FindAll(c => !c.isToken);
                             toAdd = pool.Count > 0 ? pool[Random.Range(0, pool.Count)] : null;
                         }
                         else
@@ -342,6 +383,30 @@ public partial class AbilityEngine
                 break;
             }
 
+            case EffectType.ScaleTargetStats:
+            {
+                // Osiris: tăng (effectValue1 × scaleFactor) × chỉ số hiện tại của target cho chính nó
+                int multATK = target.currentATK * ability.effectValue1 * scaleFactor;
+                int multHP  = target.maxHP      * ability.effectValue1 * scaleFactor;
+                target.currentATK        += multATK;
+                target.currentHP         += multHP;
+                target.maxHP             += multHP;
+                if (ability.isPermanent)
+                {
+                    target.permanentATKBonus += multATK;
+                    target.permanentHPBonus  += multHP;
+                }
+                CLog($"<color=cyan>[SCALE]</color> {target.Data.cardName}: +{multATK}ATK/+{multHP}HP (x{ability.effectValue1 * scaleFactor})");
+                onStatChanged?.Invoke(target, allyBoard, FlashType.Buff);
+                if (ability.isPermanent && !_firingOnStatGain)
+                {
+                    _firingOnStatGain = true;
+                    try { TriggerAbility(TriggerType.OnStatGain, target, directEnemy, allyBoard, enemyBoard); }
+                    finally { _firingOnStatGain = false; }
+                }
+                break;
+            }
+
             case EffectType.SummonConsumed:
                 if (source.consumedCardIDs != null && source.consumedCardIDs.Count > 0)
                 {
@@ -355,7 +420,7 @@ public partial class AbilityEngine
                             BroadcastAllyEvent(TriggerType.OnAllySummon, released, allyBoard, enemyBoard);
                         }
                     }
-                    source.consumedCardIDs.Clear();
+                    // Không Clear() — consumedCardIDs tích lũy qua các lượt
                 }
                 break;
         }
@@ -368,10 +433,15 @@ public partial class AbilityEngine
         foreach (var unit in snapshot)
         {
             if (unit == null || unit.IsDead || unit == subject) continue;
-            // BUG FIX: OnAllySummon / OnAllyReborn chỉ kích hoạt khi đồng minh CÙNG BỘ TỘC liên quan
-            // (theo đặc tả trong AbilityData.cs enum comment)
+            // OnAllySummon / OnAllyReborn chỉ kích hoạt khi đồng minh CÙNG BỘ TỘC liên quan,
+            // TRỪ KHI unit có ability với anyAllyTrigger=true cho context đó (ví dụ: Niles Commander).
             if ((context == TriggerType.OnAllySummon || context == TriggerType.OnAllyReborn)
-                && unit.Data.tribe != subject.Data.tribe) continue;
+                && unit.Data.tribe != subject.Data.tribe)
+            {
+                bool hasAnyTrigger = unit.Data.abilities != null &&
+                    unit.Data.abilities.Exists(a => a.trigger == context && a.anyAllyTrigger);
+                if (!hasAnyTrigger) continue;
+            }
             TriggerAbility(context, unit, subject, allyBoard, enemyBoard);
         }
     }
@@ -381,12 +451,16 @@ public partial class AbilityEngine
         CardDefinition data = CardDatabase.Instance.GetCard(cardID);
         if (data == null) return null;
 
+        bool isPlayerBoard = GameManager.Instance != null
+            && ReferenceEquals(board, GameManager.Instance.playerBoard);
+
         // Ưu tiên 1: slot trống hoàn toàn
         for (int i = 0; i < board.Count; i++)
         {
             if (board[i] == null)
             {
                 board[i] = new CardInstance(data, i) { isBattleSpawned = true };
+                if (isPlayerBoard) GameManager.Instance.ApplyGlobalPermBuffToNewUnit(board[i]);
                 CLog($"<color=green>[SUMMON]</color> Đã triệu hồi {data.cardName} vào slot {i}");
                 onUnitSummoned?.Invoke(board[i], board);
                 return board[i];
@@ -400,6 +474,7 @@ public partial class AbilityEngine
             if (board[i] != null && board[i].IsDead && board[i].onDeathProcessed && !board[i].isReborn)
             {
                 board[i] = new CardInstance(data, i) { isBattleSpawned = true };
+                if (isPlayerBoard) GameManager.Instance.ApplyGlobalPermBuffToNewUnit(board[i]);
                 CLog($"<color=green>[SUMMON]</color> Đã triệu hồi {data.cardName} vào slot {i} (thay chỗ dead)");
                 onUnitSummoned?.Invoke(board[i], board);
                 return board[i];
@@ -483,12 +558,16 @@ public partial class AbilityEngine
                 CLog($"<color=yellow>[SPELL]</color> Thu nhập {(fx.isPermanent ? "vĩnh viễn" : "tạm thời")} +{fx.effectValue1}.");
                 break;
 
-            case 13: // GetSameRealmUnit — nhận unit cùng Tộc với unit đã chọn
+            case 13: // GetSameRealmUnit — nhận unit cùng Tộc với unit đã chọn (tier <= shopTier)
             {
                 if (targetUnit == null) break;
                 Tribe tribe = targetUnit.Data.tribe;
+                int shopTierCap = GameManager.Instance?.GetCurrentShopTier() ?? 6;
                 var pool = CardDatabase.Instance.GetAllUnits()
-                    .FindAll(c => c.tribe == tribe && c.cardID != targetUnit.Data.cardID);
+                    .FindAll(c => !c.isToken && c.tribe == tribe && c.cardID != targetUnit.Data.cardID && c.tier <= shopTierCap);
+                if (pool.Count == 0)
+                    pool = CardDatabase.Instance.GetAllUnits()
+                        .FindAll(c => !c.isToken && c.tribe == tribe && c.cardID != targetUnit.Data.cardID);
                 if (pool.Count > 0)
                     GameManager.Instance.AddUnitToHand(pool[Random.Range(0, pool.Count)]);
                 else
@@ -548,8 +627,11 @@ public partial class AbilityEngine
             {
                 if (targetUnit == null) break;
                 int shopTier = GameManager.Instance.GetCurrentShopTier();
-                targetUnit.permanentATKBonus += shopTier;
-                targetUnit.permanentHPBonus  += shopTier;
+                // keepRatio=0.7 trong ResetStats làm giảm permanent bonus xuống 70%.
+                // Lưu shopTier/0.7 để sau ResetStats kết quả thực bằng đúng shopTier.
+                int storedBonus = Mathf.RoundToInt(shopTier / 0.7f);
+                targetUnit.permanentATKBonus += storedBonus;
+                targetUnit.permanentHPBonus  += storedBonus;
                 CLog($"<color=cyan>[SPELL]</color> {targetUnit.Data.cardName}: +{shopTier}/+{shopTier} (Shop Tier {shopTier}).");
                 break;
             }
