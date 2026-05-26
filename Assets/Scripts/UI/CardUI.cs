@@ -50,6 +50,11 @@ public class CardUI : MonoBehaviour, IPointerClickHandler
     private Color frameOriginalColor;
     private bool frameOriginalCached;
 
+    private int _prevATK = -1;
+    private int _prevHP  = -1;
+    private Coroutine _atkPunchRoutine;
+    private Coroutine _hpPunchRoutine;
+
     private float _lastClickTime = -999f;
     private const float DoubleClickThreshold = 0.3f;
 
@@ -63,6 +68,8 @@ public class CardUI : MonoBehaviour, IPointerClickHandler
             return;
         }
 
+        // Reset theo dõi khi đổi sang card instance khác
+        if (currentInstance != instance) { _prevATK = -1; _prevHP = -1; }
         currentInstance = instance;
 
         // --- Name ---
@@ -82,16 +89,28 @@ public class CardUI : MonoBehaviour, IPointerClickHandler
         // --- Stats ---
         if (isSpell)
         {
-            // Spell không có ATK/HP — hiện cost thay vào ô ATK, ẩn HP
-            atkText.text = instance.Data.cost.ToString();
-            hpText.text = "";
+            int newCost = instance.Data.cost;
+            atkText.text = newCost.ToString();
+            hpText.text  = "";
             hpText.color = normalHealthColor;
+            if (_prevATK >= 0 && newCost != _prevATK)
+                TriggerStatChange(ref _atkPunchRoutine, atkText.transform, atkText, newCost > _prevATK);
+            _prevATK = newCost;
         }
         else
         {
-            atkText.text = instance.currentATK.ToString();
-            hpText.text = instance.currentHP.ToString();
+            int newATK = instance.currentATK;
+            int newHP  = instance.currentHP;
+            // Set text & colour TRƯỚC để coroutine đọc được settled colour ngay khi start
+            atkText.text = newATK.ToString();
+            hpText.text  = newHP.ToString();
             hpText.color = instance.IsDamaged ? damagedHealthColor : normalHealthColor;
+            if (_prevATK >= 0 && newATK != _prevATK)
+                TriggerStatChange(ref _atkPunchRoutine, atkText.transform, atkText, newATK > _prevATK);
+            if (_prevHP  >= 0 && newHP  != _prevHP)
+                TriggerStatChange(ref _hpPunchRoutine,  hpText.transform,  hpText,  newHP  > _prevHP);
+            _prevATK = newATK;
+            _prevHP  = newHP;
         }
 
         // --- TTE Ability icon (chỉ effect của TTE, không lẫn passive) ---
@@ -193,9 +212,68 @@ public class CardUI : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    private static readonly Color StatIncreaseColor = new Color(0.25f, 1f, 0.35f);
+    private static readonly Color StatDecreaseColor = new Color(1f, 0.15f, 0.15f);
+
+    private void TriggerStatChange(ref Coroutine slot, Transform target, TextMeshProUGUI text, bool increased)
+    {
+        if (!isActiveAndEnabled) return;
+        if (slot != null) StopCoroutine(slot);
+        slot = StartCoroutine(StatChangeRoutine(target, text, increased));
+    }
+
+    private IEnumerator StatChangeRoutine(Transform target, TextMeshProUGUI text, bool increased)
+    {
+        // text.color đã được Setup() set trước khi coroutine này chạy
+        Color settledColor = text.color;
+        Color flashColor   = increased ? StatIncreaseColor : StatDecreaseColor;
+
+        if (increased)
+        {
+            Vector3 original = target.localScale;
+            Vector3 big      = original * 1.45f;
+            float   upTime   = 0.07f;
+            float   downTime = 0.15f;
+            float   elapsed  = 0f;
+
+            text.color = flashColor;
+            while (elapsed < upTime)
+            {
+                elapsed += Time.deltaTime;
+                target.localScale = Vector3.Lerp(original, big, elapsed / upTime);
+                yield return null;
+            }
+            elapsed = 0f;
+            while (elapsed < downTime)
+            {
+                elapsed += Time.deltaTime;
+                float t = elapsed / downTime;
+                target.localScale = Vector3.Lerp(big, original, t);
+                text.color        = Color.Lerp(flashColor, settledColor, t);
+                yield return null;
+            }
+            target.localScale = original;
+        }
+        else
+        {
+            float elapsed  = 0f;
+            float duration = 0.28f;
+            text.color = flashColor;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                text.color = Color.Lerp(flashColor, settledColor, elapsed / duration);
+                yield return null;
+            }
+        }
+        text.color = settledColor;
+    }
+
     private void OnDisable()
     {
-        if (blinkRoutine != null) { StopCoroutine(blinkRoutine); blinkRoutine = null; }
+        if (blinkRoutine != null)    { StopCoroutine(blinkRoutine);    blinkRoutine    = null; }
+        if (_atkPunchRoutine != null) { StopCoroutine(_atkPunchRoutine); _atkPunchRoutine = null; }
+        if (_hpPunchRoutine  != null) { StopCoroutine(_hpPunchRoutine);  _hpPunchRoutine  = null; }
         if (frameOriginalCached && frameBackground != null) frameBackground.color = frameOriginalColor;
     }
 

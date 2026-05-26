@@ -113,6 +113,17 @@ public partial class GameManager
             yield break;
         }
 
+        if (action.actionType == CombatActionType.Death)
+        {
+            Transform[] dSlots = action.statIsPlayerSide ? playerSlots : enemySlots;
+            if (action.statSlotIdx >= 0 && action.statSlotIdx < dSlots.Length)
+            {
+                CardVisuals dVis = dSlots[action.statSlotIdx].GetComponentInChildren<CardVisuals>(true);
+                if (dVis != null) yield return StartCoroutine(dVis.DieAnimation());
+            }
+            yield break;
+        }
+
         CardVisuals attackerVis = (action.isPlayerAttacking ? playerSlots : enemySlots)[action.attackerIdx].GetComponentInChildren<CardVisuals>(true);
         CardVisuals targetVis   = (action.isPlayerAttacking ? enemySlots  : playerSlots)[action.targetIdx].GetComponentInChildren<CardVisuals>(true);
 
@@ -233,7 +244,11 @@ public partial class GameManager
         yield return new WaitForSeconds(0.25f);
 
         // 3. Khôi phục HP + dữ liệu hiển thị, vẫn giữ card ẩn để RebornAnimation tự fade-in
-        ui.currentInstance.currentHP = revivedHP;
+        // Mirror ReviveDefault(): Reborn passive đã bị tiêu thụ — phải đồng bộ visual instance
+        // (VisualizeSummon tạo CardInstance riêng, không nhận update trực tiếp từ engine)
+        ui.currentInstance.currentHP   = revivedHP;
+        ui.currentInstance.isReborn    = false;
+        ui.currentInstance.hasRebornUsed = true;
         ui.Setup(ui.currentInstance);
 
         // 4. Diễn hiệu ứng hồi sinh tại đúng slot cũ (card vẫn nằm trong slot parent)

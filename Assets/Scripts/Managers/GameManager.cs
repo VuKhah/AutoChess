@@ -47,7 +47,8 @@ public partial class GameManager : MonoBehaviour
     private bool isGameEnded   = false;
 
     // Snapshot sân player cuối Shop Phase — đảm bảo chỉ các unit gốc tồn tại qua turn
-    private (int slotIdx, CardInstance unit)[] preCombatSnapshot;
+    // consumedIDs: bản sao consumedCardIDs tại thời điểm snapshot để restore đúng cho Upamaki/Sekhmet
+    private (int slotIdx, CardInstance unit, List<string> consumedIDs)[] preCombatSnapshot;
 
     [Header("AI Difficulty")]
     public string selectedDifficulty = "Medium";

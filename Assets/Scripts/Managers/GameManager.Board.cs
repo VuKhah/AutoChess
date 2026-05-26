@@ -5,11 +5,15 @@ public partial class GameManager
 {
     private void SnapshotPreCombatBoard()
     {
-        preCombatSnapshot = new (int, CardInstance)[playerSlots.Length];
+        preCombatSnapshot = new (int, CardInstance, List<string>)[playerSlots.Length];
         for (int i = 0; i < playerSlots.Length; i++)
         {
             CardUI ui = playerSlots[i].GetComponentInChildren<CardUI>();
-            preCombatSnapshot[i] = (i, ui?.currentInstance);
+            CardInstance inst = ui?.currentInstance;
+            var consumed = (inst?.consumedCardIDs != null)
+                ? new List<string>(inst.consumedCardIDs)
+                : new List<string>();
+            preCombatSnapshot[i] = (i, inst, consumed);
         }
     }
 
@@ -68,11 +72,16 @@ public partial class GameManager
 
         if (preCombatSnapshot == null) return;
 
-        foreach (var (slotIdx, unit) in preCombatSnapshot)
+        foreach (var (slotIdx, unit, preCombatConsumed) in preCombatSnapshot)
         {
             if (unit == null) continue;
             // Reset HP/ATK về full; growthBonus/permanentBonus giữ nguyên → stat không bao giờ giảm
             unit.ResetStats();
+            // Khôi phục consumedCardIDs về trạng thái trước combat:
+            // - Upamaki: giữ lại unit đã consume trong shop phase nếu chưa release
+            // - Sekhmet: xóa unit consume mid-battle (snapshot lúc đó còn rỗng)
+            unit.consumedCardIDs.Clear();
+            unit.consumedCardIDs.AddRange(preCombatConsumed);
 
             GameObject go = Instantiate(cardPrefab, playerSlots[slotIdx]);
             RectTransform cardRect = go.GetComponent<RectTransform>();

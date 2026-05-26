@@ -10,6 +10,9 @@ public partial class AbilityEngine
     private System.Action<CardInstance, List<CardInstance>> onUnitSummoned;
     private System.Action<CardInstance, List<CardInstance>, FlashType> onStatChanged;
 
+    private bool _isCombatPhase = false;
+    public void SetCombatPhase(bool active) => _isCombatPhase = active;
+
     public void SetSummonObserver(System.Action<CardInstance, List<CardInstance>> observer)
         => onUnitSummoned = observer;
 
@@ -69,6 +72,9 @@ public partial class AbilityEngine
                 && (ability.trigger == TriggerType.OnAllySell || ability.trigger == TriggerType.OnAllyDeploy)
                 && (directEnemy == null || (int)directEnemy.Data.tribe != ability.subjectTribe)) continue;
 
+            // OnAllySummon + isConsume chỉ hoạt động trong battle phase (Sekhmet không được ăn unit ở shop phase)
+            if (ability.trigger == TriggerType.OnAllySummon && ability.isConsume && !_isCombatPhase) continue;
+
             int esc = (ability.isEscalating && i < source.abilityEscalationBonuses.Count)
                       ? source.abilityEscalationBonuses[i] : 0;
 
@@ -93,7 +99,12 @@ public partial class AbilityEngine
                         onStatChanged?.Invoke(unit, allyBoard, FlashType.Buff);
                     }
                 }
-                GameManager.Instance?.ApplyGlobalTribeBuff(ability.targetTribe, gAtk, gHp);
+                // Chỉ cập nhật accumulator player khi đây là board của player
+                // (enemy Thoth không được buff tích lũy của player)
+                bool isPlayerSideGlobal = GameManager.Instance != null
+                    && ReferenceEquals(allyBoard, GameManager.Instance.playerBoard);
+                if (isPlayerSideGlobal)
+                    GameManager.Instance.ApplyGlobalTribeBuff(ability.targetTribe, gAtk, gHp);
                 if (ability.isEscalating && i < source.abilityEscalationBonuses.Count)
                     source.abilityEscalationBonuses[i]++;
                 continue;
@@ -159,7 +170,8 @@ public partial class AbilityEngine
                               || ability.effect == EffectType.Summon
                               || ability.effect == EffectType.SummonConsumed
                               || ability.effect == EffectType.GiveBuff;
-        if (target.IsDead && !isDeathSafeEffect) return;
+        // Cho phép effect tự kích hoạt lên chính mình dù đã chết (OnDeath → Self)
+        if (target.IsDead && !isDeathSafeEffect && target != source) return;
 
         switch (ability.effect)
         {
@@ -221,9 +233,12 @@ public partial class AbilityEngine
                 target.lastAttacker = source;
                 if (ability.isConsume)
                 {
-                    source.consumedCardIDs.Add(target.Data.cardID);
-                    // BUG FIX: Unit bị Consume không được phép hồi sinh qua Reborn passive.
-                    target.hasRebornUsed = true;
+                    // Battle phase + unit còn Reborn chưa dùng: chưa tính là tiêu thụ thật sự.
+                    // Reborn hồi sinh unit (= sự kiện sinh ra) → Sekhmet trigger lần 2 → khi đó mới thêm.
+                    // Shop phase (Upamaki): luôn thêm ngay — không có combat Reborn flow.
+                    bool skipForPendingReborn = _isCombatPhase && target.isReborn && !target.hasRebornUsed;
+                    if (!skipForPendingReborn)
+                        source.consumedCardIDs.Add(target.Data.cardID);
                     // Upamaki mechanic: sao chép abilities của unit bị nuốt vào source (vĩnh viễn)
                     if (ability.copiesAbilitiesOnConsume && target.Data.abilities != null)
                     {
@@ -249,6 +264,7 @@ public partial class AbilityEngine
                     target.Revive(reviveHP);
                     CLog($"<color=magenta>[ABILITY]</color> {target.Data.cardName} HỒI SINH với {reviveHP} HP!");
                     BroadcastAllyEvent(TriggerType.OnAllyReborn, target, allyBoard, enemyBoard);
+                    BroadcastAllyEvent(TriggerType.OnAllySummon, target, allyBoard, enemyBoard);
                 }
                 break;
 
@@ -420,7 +436,7 @@ public partial class AbilityEngine
                             BroadcastAllyEvent(TriggerType.OnAllySummon, released, allyBoard, enemyBoard);
                         }
                     }
-                    // Không Clear() — consumedCardIDs tích lũy qua các lượt
+                    source.consumedCardIDs.Clear();
                 }
                 break;
         }

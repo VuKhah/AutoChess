@@ -26,7 +26,8 @@ public enum CombatActionType
 {
     Clash,
     Summon,
-    StatChange  // Cập nhật chỉ số từ ability (buff/debuff/growth) — không có delay khi visualize
+    StatChange,  // Cập nhật chỉ số từ ability (buff/debuff/growth) — không có delay khi visualize
+    Death        // Unit chết từ ability/effect, không phải từ Clash — visualizer cần DieAnimation riêng
 }
 
 public enum FlashType
@@ -98,6 +99,16 @@ public class CombatAction
             summonCardID = unit.Data.cardID,
             summonHP = unit.currentHP,
             summonATK = unit.currentATK
+        };
+    }
+
+    public static CombatAction Death(int slotIdx, bool isPlayerSide)
+    {
+        return new CombatAction(-1, -1, isPlayerSide, null, null, 0, 0, 0, 0)
+        {
+            actionType       = CombatActionType.Death,
+            statSlotIdx      = slotIdx,
+            statIsPlayerSide = isPlayerSide
         };
     }
 

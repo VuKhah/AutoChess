@@ -34,6 +34,11 @@ public class CombatResolver
 
     private readonly Stack<DeathEvent> deathStack = new Stack<DeathEvent>();
 
+    // Dùng trong ResolveTurn để CleanupBoard có thể log Death action khi cần
+    private TurnRecord              _currentLog;
+    private List<CardInstance>      _pBoard;
+    private readonly HashSet<CardInstance> _clashDeaths = new HashSet<CardInstance>();
+
     // ==========================================
     // PUBLIC API — gọi từ CardSlot / GameManager
     // ==========================================
@@ -69,7 +74,11 @@ public class CombatResolver
 
     public void ResolveTurn(List<CardInstance> pBoard, List<CardInstance> eBoard, TurnRecord log)
     {
+        _currentLog = log;
+        _pBoard     = pBoard;
+        _clashDeaths.Clear();
         deathStack.Clear();
+        engine.SetCombatPhase(true);
         engine.ClearPendingSummons();
         engine.SetSummonObserver((unit, board) =>
         {
@@ -157,6 +166,9 @@ public class CombatResolver
         RecordSnapshots(pBoard, eBoard, log);
         engine.SetSummonObserver(null);
         engine.SetStatChangeObserver(null);
+        engine.SetCombatPhase(false);
+        _currentLog = null;
+        _pBoard     = null;
     }
 
     // ==========================================
@@ -241,6 +253,10 @@ public class CombatResolver
         var act = new CombatAction(atkIdx, defIdx, isPlayerAttacking,
             attacker.Data.cardName, defender.Data.cardName,
             aBefore, attacker.currentHP, dBefore, defender.currentHP);
+
+        // Đánh dấu: death này sẽ được Clash action xử lý — CleanupBoard không cần log thêm Death action
+        if (attacker.IsDead) _clashDeaths.Add(attacker);
+        if (defender.IsDead) _clashDeaths.Add(defender);
 
         // Đánh dấu Reborn để visualizer hồi sinh card sau DieAnimation
         if (defender.IsDead && defender.isReborn && !defender.hasRebornUsed)
@@ -342,6 +358,7 @@ public class CombatResolver
 
     private void CleanupBoard(List<CardInstance> allyBoard, List<CardInstance> enemyBoard)
     {
+        bool isPlayerBoard = _pBoard != null && ReferenceEquals(allyBoard, _pBoard);
         for (int i = 0; i < allyBoard.Count; i++)
         {
             var unit = allyBoard[i];
@@ -350,8 +367,13 @@ public class CombatResolver
             if (unit.isReborn && !unit.hasRebornUsed)
             {
                 unit.ReviveDefault();
+                // Xóa khỏi _clashDeaths: unit đã hồi sinh nên không còn là "clash death" nữa.
+                // Nếu bị giết lại sau Reborn (ví dụ Sekhmet), CleanupBoard sẽ log Death action đúng.
+                _clashDeaths.Remove(unit);
                 if (!Application.isBatchMode) Debug.Log($"<color=magenta>[REBORN]</color> {unit.Data.cardName} hồi sinh với chỉ số mặc định (ATK {unit.currentATK} / HP {unit.currentHP})!");
                 engine.BroadcastAllyEvent(TriggerType.OnAllyReborn, unit, allyBoard, enemyBoard);
+                // Reborn = đơn vị "xuất hiện lại" → Sekhmet và các listener OnAllySummon cũng phản ứng
+                engine.BroadcastAllyEvent(TriggerType.OnAllySummon, unit, allyBoard, enemyBoard);
                 // BUG FIX: OnAllyReborn có thể kill unit ở slot sau trong cùng pass này.
                 // Scan ngay để đăng ký vào death stack — tránh CleanupBoard null chúng trước khi
                 // OnDeath/OnAllyDeath kịp fire.
@@ -359,9 +381,10 @@ public class CombatResolver
             }
             else if (unit.onDeathProcessed)
             {
-                // BUG FIX: Chỉ null unit đã qua death stack. Unit chết từ BroadcastAllyReborn
-                // (onDeathProcessed=false) được giữ lại để ScanAllBoardsForNewDeaths bắt được,
-                // FlushDeathStack xử lý OnDeath/OnAllyDeath, rồi CleanupBoard pass sau mới null.
+                // Nếu unit không chết từ Clash trực tiếp, visualizer chưa có action nào để chạy
+                // DieAnimation — log thêm Death action để xóa card khỏi UI.
+                if (_currentLog != null && !_clashDeaths.Contains(unit))
+                    _currentLog.AddAction(CombatAction.Death(i, isPlayerBoard));
                 allyBoard[i] = null;
             }
         }
