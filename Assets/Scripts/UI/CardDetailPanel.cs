@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using TMPro;
 
 public class CardDetailPanel : MonoBehaviour
@@ -20,10 +21,12 @@ public class CardDetailPanel : MonoBehaviour
     public Image descBoxImage;
 
     private GameObject cardClone;
+    private RectTransform rectTransform;
 
     private void Awake()
     {
         Instance = this;
+        rectTransform = GetComponent<RectTransform>();
         if (contentPanelImage != null)
             contentPanelImage.sprite = CreateRoundedSprite(128, 128, 24);
         if (descBoxImage != null)
@@ -49,6 +52,12 @@ public class CardDetailPanel : MonoBehaviour
         tex.Apply();
         return Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f),
             100f, 0, SpriteMeshType.FullRect, new Vector4(r, r, r, r));
+    }
+
+    private void Update()
+    {
+        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+            Hide();
     }
 
     public void Show(CardInstance instance)
@@ -93,6 +102,10 @@ public class CardDetailPanel : MonoBehaviour
             var cg = cardClone.GetComponent<CanvasGroup>();
             if (cg != null) { cg.blocksRaycasts = false; cg.interactable = false; }
         }
+
+        // Zero out the design-time offset so the full-screen panel sits centered
+        if (rectTransform != null)
+            rectTransform.anchoredPosition = Vector2.zero;
 
         gameObject.SetActive(true);
     }

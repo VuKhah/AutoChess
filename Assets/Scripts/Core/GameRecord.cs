@@ -74,6 +74,10 @@ public class CombatAction
     public int       statNewATK;
     public int       statNewHP;
     public FlashType flashType;
+    // Status flags — truyền trạng thái passive để visualizer update icon đúng lúc
+    public bool statIsReborn;
+    public bool statIsTaunt;
+    public bool statSafeguard;
 
     public CombatAction(int atk, int target, bool isPlayer, string aName, string tName, int aBefore, int aAfter, int dBefore, int dAfter)
     {
@@ -113,7 +117,8 @@ public class CombatAction
     }
 
     public static CombatAction StatChange(int slotIdx, bool isPlayerSide, int newATK, int newHP,
-                                          FlashType flash = FlashType.None)
+                                          FlashType flash = FlashType.None,
+                                          bool isReborn = false, bool isTaunt = false, bool safeguard = false)
     {
         return new CombatAction(-1, -1, isPlayerSide, null, null, 0, 0, 0, 0)
         {
@@ -122,7 +127,10 @@ public class CombatAction
             statIsPlayerSide = isPlayerSide,
             statNewATK       = newATK,
             statNewHP        = newHP,
-            flashType        = flash
+            flashType        = flash,
+            statIsReborn     = isReborn,
+            statIsTaunt      = isTaunt,
+            statSafeguard    = safeguard
         };
     }
 }

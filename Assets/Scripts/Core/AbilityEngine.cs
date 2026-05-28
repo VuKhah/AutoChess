@@ -91,10 +91,10 @@ public partial class AbilityEngine
                     // Áp ATK cho tất cả (kể cả dead — đảm bảo unit Reborn có chỉ số đúng sau khi hồi sinh)
                     unit.globalPermATKBonus += gAtk;
                     unit.currentATK         += gAtk;
-                    // HP và visual chỉ áp khi unit đang sống
+                    // HP bonus tích lũy kể cả dead unit — đảm bảo RestorePreCombatPlayerBoard tính maxHP đúng
+                    unit.globalPermHPBonus += gHp;
                     if (!unit.IsDead)
                     {
-                        unit.globalPermHPBonus += gHp;
                         if (gHp > 0) { unit.currentHP += gHp; unit.maxHP += gHp; }
                         onStatChanged?.Invoke(unit, allyBoard, FlashType.Buff);
                     }
@@ -123,6 +123,8 @@ public partial class AbilityEngine
             {
                 if (targets.Count == 0) continue;
                 source.abilityTriggerCounts[i]++;
+                // conditionCount: cũng phải check khi có triggerLimit (VD: Ki fire mỗi 2 deploy)
+                if (ability.conditionCount > 0 && source.abilityTriggerCounts[i] % ability.conditionCount != 0) continue;
             }
             else
             {
@@ -606,6 +608,18 @@ public partial class AbilityEngine
             case 17: // UpgradeTierUnit — nâng cấp 1 unit cùng Tộc lên +1 sao
                 GameManager.Instance.UpgradeSameTribeUnit(targetUnit);
                 break;
+
+            case 22: // GetUnitAtNextTier — nhận 1 unit ngẫu nhiên ở ShopTier+1 vào Hand (capped 6)
+            {
+                int shopTier   = GameManager.Instance?.GetCurrentShopTier() ?? 1;
+                int targetTier = Mathf.Min(shopTier + 1, 6);
+                var pool = CardDatabase.Instance.GetAllUnits().FindAll(c => c.tier == targetTier);
+                if (pool.Count == 0)
+                    pool = CardDatabase.Instance.GetAllUnits().FindAll(c => c.tier <= targetTier);
+                if (pool.Count > 0)
+                    GameManager.Instance.AddUnitToHand(pool[Random.Range(0, pool.Count)]);
+                break;
+            }
 
             case 18: // GiveDoubleAtkAndSafeguard — nhân đôi ATK + Safeguard
             {

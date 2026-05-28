@@ -86,9 +86,9 @@ public class CardDatabase : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             int rolledTier = RollTier(currentShopLevel);
-            List<CardDefinition> tierPool = spellList.Where(c => c.tier == rolledTier).ToList();
+            List<CardDefinition> tierPool = spellList.Where(c => c.tier == rolledTier && !c.isToken).ToList();
             if (tierPool.Count == 0)
-                tierPool = spellList.ToList(); // fallback: lấy bất kỳ spell nào
+                tierPool = spellList.Where(c => !c.isToken).ToList(); // fallback: lấy bất kỳ spell nào
             if (tierPool.Count > 0)
                 shop.Add(tierPool[Random.Range(0, tierPool.Count)]);
         }

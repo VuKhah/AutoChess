@@ -464,7 +464,7 @@
       "cardID": "U_01_Niles",
       "cardName": "Anubis",
       "tribe": 3,
-      "tier": 6,
+      "tier": 1,
       "baseATK": 5,
       "baseHP": 5,
       "cost": 3,
@@ -477,7 +477,8 @@
           "effectValue2": 0,
           "isReborn": true,
           "triggerLimit": 2,
-          "isPermanent": false
+          "isPermanent": false,
+          "anyAllyTrigger": true
         }
       ],
       "description": "OnAllyDeath: ban Reborn cho LowestHealthAlly (tối đa 2 lần)"
@@ -523,7 +524,8 @@
           "target": 11,
           "effect": 13,
           "effectValue1": 1,
-          "isPermanent": true
+          "isPermanent": true,
+          "anyAllyTrigger": true
         }
       ],
       "description": "OnAllyReborn: Nhân đôi/ba/bốn chỉ số của đồng minh đó (x1/x2/x3 theo merge)."
@@ -1304,6 +1306,23 @@
         }
       ],
       "description": "Ban cho 1 đồng minh ATK và HP bằng Tier hiện tại của Shop.",
+      "cardType": 1
+    },
+    {
+      "cardID": "S_00",
+      "cardName": "Tinh Hoa Hợp Nhất",
+      "tribe": 0,
+      "tier": 1,
+      "cost": 0,
+      "isToken": true,
+      "fileName": "spell-art_00",
+      "spellEffects": [
+        {
+          "effect": 22,
+          "targetCount": 1
+        }
+      ],
+      "description": "Nhận ngẫu nhiên 1 đơn vị cao hơn Shop Tier 1 cấp. Tối đa Tier 6.",
       "cardType": 1
     }
   ]

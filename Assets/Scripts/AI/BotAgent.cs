@@ -14,6 +14,11 @@ public class BotAgent
 
     public int startingCoins = 10;
 
+    // Freeze: giữ nguyên shop từ lượt này sang lượt sau (giống player bấm Freeze)
+    public bool                 isShopFrozen    = false;
+    public List<CardDefinition> frozenUnitShop  = null;
+    public List<CardDefinition> frozenSpellShop = null;
+
     public BotAgent(Chromosome brain, int coinsPerTurn = 10)
     {
         this.brain         = brain;
@@ -83,6 +88,17 @@ public class BotAgent
     {
         if (brain == null) return;
         _shopTier = shopTier;
+
+        // Áp frozen shop từ lượt trước (nếu có) rồi xóa flag
+        if (isShopFrozen && frozenUnitShop != null)
+        {
+            unitShop  = frozenUnitShop;
+            spellShop = frozenSpellShop;
+        }
+        isShopFrozen    = false;
+        frozenUnitShop  = null;
+        frozenSpellShop = null;
+
         _currentUnitShop = unitShop != null ? new List<CardDefinition>(unitShop) : new List<CardDefinition>();
 
         economy.ResetEconomy();
@@ -104,6 +120,100 @@ public class BotAgent
 
         // 5. Merge
         TryMerge();
+
+        // 6. Sắp xếp lại board tối ưu (giống player kéo unit vào đúng vị trí)
+        RepositionPhase();
+
+        // 7. Freeze shop nếu còn unit đáng mua mà chưa đủ coin
+        FreezePhase(unitShop, spellShop);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // FREEZE PHASE — lưu shop lại cho lượt sau nếu có unit muốn nhưng chưa đủ tiền
+    // ──────────────────────────────────────────────────────────────────────────
+    private void FreezePhase(List<CardDefinition> unitShop, List<CardDefinition> spellShop)
+    {
+        // Bot thích reroll nhiều (gene[24] cao) → ít có xu hướng freeze
+        float freezeTendency = 1f - brain.genes[24];
+        if (freezeTendency < 0.35f) return;
+
+        float saveThreshold = brain.genes[23] * 3f;
+        // Có unit tốt trong shop nhưng không đủ coin để mua lượt này → freeze để giữ lại
+        bool wantedButCantAfford = unitShop != null && unitShop.Exists(c =>
+            c != null && c.cost > economy.CurrentCoin && Evaluate(c) >= saveThreshold);
+
+        if (wantedButCantAfford)
+        {
+            isShopFrozen    = true;
+            frozenUnitShop  = new List<CardDefinition>(unitShop);
+            frozenSpellShop = spellShop != null ? new List<CardDefinition>(spellShop) : null;
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // REPOSITION PHASE — sắp xếp lại board sau khi mua/bán/merge xong
+    //   Giống player kéo unit vào đúng vị trí: Taunt lên frontline trước,
+    //   rồi sắp xếp theo điểm mạnh giảm dần để unit tốt nhất tấn công sớm hơn.
+    // ──────────────────────────────────────────────────────────────────────────
+    private void RepositionPhase()
+    {
+        var units = board.Where(u => u != null && !u.IsDead).ToList();
+        if (units.Count == 0) return;
+
+        // Taunt lên đầu (explicit frontline), sau đó theo PositionScore
+        units = units
+            .OrderByDescending(u => u.isTaunt
+                ? brain.genes[22] * 20f + PositionScore(u)
+                : PositionScore(u))
+            .ToList();
+
+        for (int i = 0; i < board.Count; i++) board[i] = null;
+
+        int frontSlot = 0, backSlot = FrontlineCount;
+        foreach (var unit in units)
+        {
+            if (frontSlot < FrontlineCount)
+            {
+                unit.slotIndex = frontSlot;
+                board[frontSlot++] = unit;
+            }
+            else if (backSlot < board.Count)
+            {
+                unit.slotIndex = backSlot;
+                board[backSlot++] = unit;
+            }
+        }
+    }
+
+    // Điểm vị trí: tách biệt với EvaluateInstance — có tính đến role của ability.
+    // Unit cần sống lâu (Aura, OnAllyDeath accumulator) bị giảm điểm → đẩy về backline.
+    // Unit muốn chết nhanh (deathrattle OnDeath) được tăng điểm → lên frontline.
+    // Gene[17] (eGiveBuff/support value) kiểm soát mức độ ưu tiên này.
+    private float PositionScore(CardInstance unit)
+    {
+        float score = EvaluateInstance(unit);
+        if (unit.Data.abilities == null) return score;
+
+        foreach (var ability in unit.Data.abilities)
+        {
+            if (ability == null) continue;
+            switch (ability.trigger)
+            {
+                // Unit cần sống để phát huy tác dụng → backline (giảm điểm frontline)
+                case TriggerType.Aura:
+                case TriggerType.OnAllyDeath:
+                case TriggerType.OnAllyReborn:
+                case TriggerType.OnAllySummon:
+                case TriggerType.EndTurnShop:
+                    score -= brain.genes[17] * 15f;
+                    break;
+                // Deathrattle → muốn chết để kích → frontline ổn (tăng điểm nhẹ)
+                case TriggerType.OnDeath:
+                    score += brain.genes[8] * 5f;
+                    break;
+            }
+        }
+        return score;
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -174,6 +284,9 @@ public class BotAgent
                 float sellBar    = worstScore * (1.5f + brain.genes[23]);
                 if (worstIdx >= 0 && bestScore > sellBar)
                 {
+                    var worstUnit = board[worstIdx];
+                    FireTrigger(TriggerType.OnSell, worstUnit);
+                    BroadcastAllyTrigger(TriggerType.OnAllySell, worstUnit);
                     board[worstIdx] = null;
                     economy.Sell();
                 }
@@ -244,6 +357,9 @@ public class BotAgent
                     break;
                 case 17: // UpgradeTierUnit
                     score += brain.genes[2] * 12f;
+                    break;
+                case 22: // GetUnitAtNextTier — unit cao hơn tier hiện tại, giá trị cao hơn case 10
+                    score += brain.genes[2] * (7f + _shopTier * 0.4f);
                     break;
                 case 18: // GiveDoubleAtkAndSafeguard
                     score += brain.genes[0] * 8f + brain.genes[6] * 8f;
@@ -418,6 +534,17 @@ public class BotAgent
                     break;
                 }
 
+                case 22: // GetUnitAtNextTier — đặt unit ngẫu nhiên Tier+1 lên board
+                {
+                    int targetTier = Mathf.Min(_shopTier + 1, 6);
+                    var pool = CardDatabase.Instance.GetAllUnits().FindAll(c => c.tier == targetTier);
+                    if (pool.Count == 0)
+                        pool = CardDatabase.Instance.GetAllUnits().FindAll(c => c.tier <= targetTier);
+                    if (pool.Count > 0 && HasEmptySlot())
+                        PlaceOnBoard(new CardInstance(pool[Random.Range(0, pool.Count)], 0));
+                    break;
+                }
+
                 // 14=LoseLife, 15=TransferStats, 16=ConditionalCoinGain: bỏ qua — không phù hợp với context bot
             }
         }
@@ -474,6 +601,8 @@ public class BotAgent
             if (unit == null || unit.IsDead || unit.isBattleSpawned) continue;
             if (EvaluateInstance(unit) < sellBelow)
             {
+                FireTrigger(TriggerType.OnSell, unit);
+                BroadcastAllyTrigger(TriggerType.OnAllySell, unit);
                 board[i] = null;
                 economy.Sell();
             }
@@ -524,10 +653,101 @@ public class BotAgent
                 foreach (int idx in copies)
                     if (idx != keepIdx) board[idx] = null;
 
+                SimulateMergeReward();
                 merged = true;
                 break;
             }
         }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // ABILITY TRIGGER — fire shop-phase triggers (OnDeploy, OnSell, OnAllyDeploy, OnAllySell)
+    //   Bot không dùng AbilityEngine để giữ simulator độc lập với MonoBehaviour.
+    //   Chỉ xử lý các effect phổ biến trong shop phase.
+    // ──────────────────────────────────────────────────────────────────────────
+    private void FireTrigger(TriggerType trigger, CardInstance source, CardInstance subject = null)
+    {
+        if (source?.Data?.abilities == null) return;
+        int scaleFactor = source.mergeLevel + 1;
+        for (int i = 0; i < source.Data.abilities.Count; i++)
+        {
+            var ability = source.Data.abilities[i];
+            if (ability == null || ability.trigger != trigger) continue;
+
+            // Đảm bảo mảng đếm đủ phần tử
+            while (source.abilityTriggerCounts.Count <= i) source.abilityTriggerCounts.Add(0);
+
+            int effectiveLimit = ability.isScaledTriggerLimit
+                ? ability.triggerLimit * scaleFactor : ability.triggerLimit;
+            if (effectiveLimit > 0 && source.abilityTriggerCounts[i] >= effectiveLimit) continue;
+
+            // subjectTribe filter cho OnAllyDeploy / OnAllySell
+            if (ability.subjectTribe != 0 && subject != null
+                && (int)subject.Data.tribe != ability.subjectTribe) continue;
+
+            source.abilityTriggerCounts[i]++;
+            if (ability.conditionCount > 0 && source.abilityTriggerCounts[i] % ability.conditionCount != 0) continue;
+
+            foreach (var target in ResolveBotTargets(ability, source, subject))
+                ApplyBotEffect(ability, target, source, scaleFactor);
+        }
+    }
+
+    private List<CardInstance> ResolveBotTargets(AbilityData ability, CardInstance source, CardInstance subject)
+    {
+        var alive = board.Where(u => u != null && !u.IsDead).ToList();
+        switch (ability.target)
+        {
+            case TargetType.Self:                return new List<CardInstance> { source };
+            case TargetType.AllAllies:           return alive.Where(u => u != source).ToList();
+            case TargetType.AllAlliesExceptSelf: return alive.Where(u => u != source).ToList();
+            case TargetType.TriggerSubject:      return subject != null ? new List<CardInstance> { subject } : new List<CardInstance>();
+            case TargetType.AllBabylonAllies:    return alive.Where(u => u.Data.tribe == Tribe.Babylon).ToList();
+            case TargetType.AllNilesAllies:      return alive.Where(u => u.Data.tribe == Tribe.Niles).ToList();
+            case TargetType.LowestHealthAlly:
+            {
+                var t = alive.Where(u => u != source).OrderBy(u => u.currentHP).FirstOrDefault();
+                return t != null ? new List<CardInstance> { t } : new List<CardInstance>();
+            }
+            case TargetType.RandomAlly:
+            {
+                var others = alive.Where(u => u != source).ToList();
+                if (others.Count == 0) return new List<CardInstance>();
+                return new List<CardInstance> { others[Random.Range(0, others.Count)] };
+            }
+            default: return new List<CardInstance>();
+        }
+    }
+
+    private void ApplyBotEffect(AbilityData ability, CardInstance target, CardInstance source, int scaleFactor)
+    {
+        if (target == null) return;
+        switch (ability.effect)
+        {
+            case EffectType.AddStats:
+                if (ability.isPermanent)
+                {
+                    target.permanentATKBonus += ability.effectValue1 * scaleFactor;
+                    target.permanentHPBonus  += ability.effectValue2 * scaleFactor;
+                }
+                target.ResetStats();
+                break;
+            case EffectType.GiveBuff:
+                if (ability.isReborn)    { target.isReborn = true; target.hasRebornUsed = false; }
+                if (ability.isTaunt)     { target.isTaunt = true; target.Data.hasTaunt = true; }
+                if (ability.isSafeguard)   target.safeguardActive = true;
+                break;
+            case EffectType.GainCoin:
+                economy.Earn(ability.effectValue1 * scaleFactor);
+                break;
+        }
+    }
+
+    private void BroadcastAllyTrigger(TriggerType trigger, CardInstance subject)
+    {
+        var snapshot = board.Where(u => u != null && !u.IsDead && u != subject).ToList();
+        foreach (var ally in snapshot)
+            FireTrigger(trigger, ally, subject);
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -644,6 +864,10 @@ public class BotAgent
             case TriggerType.OnAllySummon:
             case TriggerType.OnAllyReborn:  return brain.genes[12] * 0.8f;
             case TriggerType.Aura:          return brain.genes[7]  * 0.6f;
+            case TriggerType.OnSell:        return brain.genes[8]  * 0.5f;   // giống OnDeath nhưng ít ổn định hơn
+            case TriggerType.OnAllySell:    return brain.genes[12] * 0.6f;
+            case TriggerType.OnStatGain:    return brain.genes[13] * 0.4f;
+            case TriggerType.OnAllyDeploy:  return brain.genes[12] * 0.7f;
             default: return 0f;
         }
     }
@@ -662,6 +886,10 @@ public class BotAgent
             case EffectType.GiveBuff:        return brain.genes[17];
             case EffectType.Reborn:          return brain.genes[17] * 1.1f;
             case EffectType.TriggerAbility:  return brain.genes[13] * 0.5f;
+            case EffectType.AbsorbStats:     return brain.genes[13] * 1.5f;  // hút toàn bộ chỉ số target
+            case EffectType.GiveStats:       return brain.genes[13] * 1.2f;
+            case EffectType.ScaleTargetStats:return brain.genes[13] * 1.3f;  // nhân chỉ số (Osiris)
+            case EffectType.GiveCard:        return brain.genes[14] * 0.8f;
             default: return 0f;
         }
     }
@@ -696,15 +924,32 @@ public class BotAgent
 
         if (idx >= 0)
         {
-            board[idx] = new CardInstance(c, idx);
+            var newUnit = new CardInstance(c, idx);
+            board[idx] = newUnit;
             economy.TryBuy(c.cost);
+            FireTrigger(TriggerType.OnDeploy, newUnit);
+            BroadcastAllyTrigger(TriggerType.OnAllyDeploy, newUnit);
         }
+    }
+
+    // Mô phỏng hiệu ứng "Tinh Hoa Hợp Nhất": đặt 1 unit ngẫu nhiên Tier+1 lên board
+    private void SimulateMergeReward()
+    {
+        if (!HasEmptySlot()) return;
+        int targetTier = Mathf.Min(_shopTier + 1, 6);
+        var pool = CardDatabase.Instance?.GetAllUnits().FindAll(c => c.tier == targetTier);
+        if (pool == null || pool.Count == 0) return;
+        PlaceOnBoard(new CardInstance(pool[Random.Range(0, pool.Count)], 0));
     }
 
     private void PlaceOnBoard(CardInstance unit)
     {
         int idx = FindEmptySlot(0, board.Count);
-        if (idx >= 0) { unit.slotIndex = idx; board[idx] = unit; }
+        if (idx < 0) return;
+        unit.slotIndex = idx;
+        board[idx] = unit;
+        FireTrigger(TriggerType.OnDeploy, unit);
+        BroadcastAllyTrigger(TriggerType.OnAllyDeploy, unit);
     }
 
     private int FindEmptySlot(int from, int to)

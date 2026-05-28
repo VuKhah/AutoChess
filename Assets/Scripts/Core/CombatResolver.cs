@@ -92,7 +92,8 @@ public class CombatResolver
             bool isPlayerSide = ReferenceEquals(board, pBoard);
             int slotIdx = board.IndexOf(unit);
             if (slotIdx < 0) return;
-            log.AddAction(CombatAction.StatChange(slotIdx, isPlayerSide, unit.currentATK, unit.currentHP, flash));
+            log.AddAction(CombatAction.StatChange(slotIdx, isPlayerSide, unit.currentATK, unit.currentHP, flash,
+                unit.isReborn, unit.isTaunt, unit.safeguardActive));
         });
 
         // --- Phase 1: Setup ---
@@ -319,9 +320,14 @@ public class CombatResolver
                 foreach (var ally in allySnapshot)
                 {
                     if (ally == null || ally.IsDead || ally == evt.victim) continue;
-                    // BUG FIX: OnAllyDeath chỉ kích hoạt khi đồng minh CÙNG BỘ TỘC chết
-                    // (theo đặc tả trong AbilityData.cs enum comment)
-                    if (ally.Data.tribe != evt.victim.Data.tribe) continue;
+                    // OnAllyDeath chỉ kích hoạt khi đồng minh CÙNG BỘ TỘC chết,
+                    // TRỪ KHI ability có anyAllyTrigger = true (VD: Anubis react với bất kỳ ally chết)
+                    if (ally.Data.tribe != evt.victim.Data.tribe)
+                    {
+                        bool hasAnyTrigger = ally.Data.abilities != null &&
+                            ally.Data.abilities.Exists(a => a.trigger == TriggerType.OnAllyDeath && a.anyAllyTrigger);
+                        if (!hasAnyTrigger) continue;
+                    }
                     engine.TriggerAbility(TriggerType.OnAllyDeath, ally, evt.victim,
                                           evt.victimBoard, evt.killerBoard);
                     ScanAllBoardsForNewDeaths(pBoard, eBoard);

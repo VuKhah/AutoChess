@@ -171,6 +171,10 @@ public partial class GameManager
         if (ui?.currentInstance == null) return;
         ui.currentInstance.currentATK = action.statNewATK;
         ui.currentInstance.currentHP  = action.statNewHP;
+        // Sync passive flags so icons (Reborn bình thuốc, Taunt khiên, Safeguard) hiển thị đúng lúc
+        if (action.statIsReborn)  ui.currentInstance.isReborn        = true;
+        if (action.statIsTaunt)   ui.currentInstance.isTaunt         = true;
+        if (action.statSafeguard) ui.currentInstance.safeguardActive = true;
         ui.Setup(ui.currentInstance);
 
         if (action.flashType != FlashType.None)

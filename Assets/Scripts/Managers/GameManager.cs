@@ -186,8 +186,15 @@ public partial class GameManager : MonoBehaviour
         // Kích EndTurnShop cho tất cả đối thủ (growth tích lũy giống player)
         foreach (var bot in enemyBots) bot.TriggerEndTurnShop();
 
-        if (!isShopFrozen) RefreshShop();
-        else isShopFrozen = false;
+        if (!isShopFrozen)
+        {
+            RefreshShop();
+        }
+        else
+        {
+            FillEmptyShopSlots();
+            isShopFrozen = false;
+        }
         UIManager.Instance.UpdateStats(playerHP, playerCups, playerCoins);
         UIManager.Instance.UpdateUIState(false);
     }

@@ -56,6 +56,38 @@ public partial class GameManager
         StartCoroutine(UpdateShopMergeHintsNextFrame());
     }
 
+    // Giữ các card còn lại, chỉ điền vào ô trống — dùng khi shop đang bị đóng băng.
+    public void FillEmptyShopSlots()
+    {
+        int currentTier = GetCurrentShopTier();
+        int unitCount   = Mathf.Min(shopUnitCount, shopSlots.Length);
+
+        var emptyUnitIndices  = new List<int>();
+        var emptySpellIndices = new List<int>();
+
+        for (int i = 0; i < unitCount; i++)
+            if (shopSlots[i].childCount == 0) emptyUnitIndices.Add(i);
+
+        for (int i = unitCount; i < shopSlots.Length; i++)
+            if (shopSlots[i].childCount == 0) emptySpellIndices.Add(i);
+
+        if (emptyUnitIndices.Count > 0)
+        {
+            List<CardDefinition> newUnits = CardDatabase.Instance.GetRandomUnitShop(emptyUnitIndices.Count, currentTier);
+            for (int i = 0; i < newUnits.Count; i++)
+                CreateCardInSlot(newUnits[i], shopSlots[emptyUnitIndices[i]]);
+        }
+
+        if (emptySpellIndices.Count > 0)
+        {
+            List<CardDefinition> newSpells = CardDatabase.Instance.GetRandomSpellShop(emptySpellIndices.Count, currentTier);
+            for (int i = 0; i < newSpells.Count; i++)
+                CreateCardInSlot(newSpells[i], shopSlots[emptySpellIndices[i]]);
+        }
+
+        StartCoroutine(UpdateShopMergeHintsNextFrame());
+    }
+
     private IEnumerator UpdateShopMergeHintsNextFrame()
     {
         yield return null;

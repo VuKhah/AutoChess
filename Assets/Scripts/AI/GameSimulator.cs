@@ -14,11 +14,15 @@ public class GameSimulator
             int currentTurn = i + 1;
             int shopTier = Mathf.Clamp((currentTurn + 1) / 2, 1, 6);
 
-            // Cả 2 bot nhận unit shop + spell shop (giống người chơi thật)
-            var unitShopA  = CardDatabase.Instance.GetRandomUnitShop(5, shopTier);
-            var spellShopA = CardDatabase.Instance.GetRandomSpellShop(2, shopTier);
-            var unitShopB  = CardDatabase.Instance.GetRandomUnitShop(5, shopTier);
-            var spellShopB = CardDatabase.Instance.GetRandomSpellShop(2, shopTier);
+            // Cả 2 bot nhận shop mới, TRỪ KHI đã freeze lượt trước → giữ nguyên shop cũ
+            var unitShopA  = (botA.isShopFrozen && botA.frozenUnitShop  != null)
+                ? botA.frozenUnitShop  : CardDatabase.Instance.GetRandomUnitShop(5, shopTier);
+            var spellShopA = (botA.isShopFrozen && botA.frozenSpellShop != null)
+                ? botA.frozenSpellShop : CardDatabase.Instance.GetRandomSpellShop(2, shopTier);
+            var unitShopB  = (botB.isShopFrozen && botB.frozenUnitShop  != null)
+                ? botB.frozenUnitShop  : CardDatabase.Instance.GetRandomUnitShop(5, shopTier);
+            var spellShopB = (botB.isShopFrozen && botB.frozenSpellShop != null)
+                ? botB.frozenSpellShop : CardDatabase.Instance.GetRandomSpellShop(2, shopTier);
 
             botA.DecidePrepPhase(unitShopA, spellShopA, shopTier);
             botB.DecidePrepPhase(unitShopB, spellShopB, shopTier);

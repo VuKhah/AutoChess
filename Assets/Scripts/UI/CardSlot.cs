@@ -87,7 +87,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
         foreach (var fx in data.spellEffects)
         {
             int e = fx.effect;
-            if (e != 6 && e != 10 && e != 11 && e != 12 && e != 14 && e != 16)
+            if (e != 6 && e != 10 && e != 11 && e != 12 && e != 14 && e != 16 && e != 22)
                 return false;
         }
         return true;
@@ -282,6 +282,13 @@ public class CardSlot : MonoBehaviour, IDropHandler
         Debug.Log($"<color=gold>[MERGE]</color> {cards.Count}x {keeper.currentInstance.Data.cardName} hợp nhất thành cấp {keeper.currentInstance.mergeLevel + 1}! (keeper: slot bonus={bestBonus})");
 
         AudioManager.Instance?.StarUp();
+
+        // Phần thưởng hợp nhất: thêm "Tinh Hoa Hợp Nhất" vào Hand
+        if (GameManager.Instance != null)
+        {
+            CardDefinition mergeReward = CardDatabase.Instance?.GetCard("S_00");
+            if (mergeReward != null) GameManager.Instance.AddUnitToHand(mergeReward);
+        }
 
         CardVisuals vis = keeper.GetComponent<CardVisuals>();
         if (vis != null) StartCoroutine(vis.BurstAnimation());
