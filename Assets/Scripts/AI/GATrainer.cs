@@ -7,9 +7,9 @@ using UnityEngine;
 public class GATrainer : MonoBehaviour
 {
     [Header("Cấu hình huấn luyện")]
-    public int populationSize  = 30;   // test nhanh: 30 | production: 100
-    public int generations     = 40;   // test nhanh: 40 | production: 150
-    public int matchesPerChrom = 5;    // test nhanh: 5  | production: 15
+    public int populationSize  = 30;   // test nhanh: 30 | production: 120
+    public int generations     = 40;   // test nhanh: 40 | production: 120
+    public int matchesPerChrom = 5;    // test nhanh: 5  | production: 20
     [Range(0.05f, 0.25f)]
     public float mutationRate  = 0.08f;
     [Range(0.05f, 0.2f)]
@@ -119,6 +119,11 @@ public class GATrainer : MonoBehaviour
         Debug.Log($"=== HUẤN LUYỆN AI === Genes:{Chromosome.GeneCount} | Pop:{populationSize} | Gen:{generations} ===");
         Debug.Log($"[GATrainer] CSV → {csvPath}");
 
+        const int   PLATEAU_PATIENCE = 15;   // số gen liên tiếp không đổi → dừng
+        const float PLATEAU_EPS      = 0.5f; // ngưỡng thay đổi std_dev tính là "không đổi"
+        int   plateauCount = 0;
+        float prevStdDev   = -1f;
+
         for (int g = 0; g < generations; g++)
         {
             // ── Đánh giá Fitness ─────────────────────────────────────────────
@@ -159,6 +164,19 @@ public class GATrainer : MonoBehaviour
             csv.WriteLine($"{g},{best:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1}");
             Debug.Log($"Gen {g,3}/{generations}  Best={best,5:F0}  Avg={avg,5:F1}  Worst={worst,5:F0}  " +
                       $"Std={stdDev:F1}  B={pctB:F0}% N={pctN:F0}% O={pctO:F0}%");
+
+            // ── Early stopping — std_dev plateau ─────────────────────────────
+            if (prevStdDev >= 0f && Mathf.Abs(stdDev - prevStdDev) < PLATEAU_EPS)
+                plateauCount++;
+            else
+                plateauCount = 0;
+            prevStdDev = stdDev;
+
+            if (plateauCount >= PLATEAU_PATIENCE)
+            {
+                Debug.LogWarning($"[GATrainer] Early stop tại gen {g} — std_dev plateau {PLATEAU_PATIENCE} gen liên tiếp (Δ<{PLATEAU_EPS}).");
+                break;
+            }
 
             // ── Elitism + breed ───────────────────────────────────────────────
             int eliteCount    = Mathf.Max(2, populationSize / 10);
@@ -253,9 +271,16 @@ public class GATrainer : MonoBehaviour
     private Chromosome CrossoverAndMutate(Chromosome a, Chromosome b)
     {
         Chromosome child = new Chromosome();
+
+        // 2-point crossover: bảo toàn co-adapted gene complexes (epistasis)
+        // child = [a|b|a] — đoạn giữa [pt1, pt2) lấy từ b, hai đầu từ a
+        int pt1 = Random.Range(0, Chromosome.GeneCount);
+        int pt2 = Random.Range(0, Chromosome.GeneCount);
+        if (pt1 > pt2) { int tmp = pt1; pt1 = pt2; pt2 = tmp; }
+
         for (int i = 0; i < Chromosome.GeneCount; i++)
         {
-            child.genes[i] = Random.value > 0.5f ? a.genes[i] : b.genes[i];
+            child.genes[i] = (i >= pt1 && i < pt2) ? b.genes[i] : a.genes[i];
             if (Random.value < mutationRate)
             {
                 float u1 = Mathf.Max(1e-6f, Random.value);

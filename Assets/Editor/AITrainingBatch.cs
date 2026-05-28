@@ -21,9 +21,9 @@ public static class AITrainingBatch
     private const int   QUICK_GEN      = 40;
     private const int   QUICK_MATCHES  = 5;
 
-    private const int   PROD_POP       = 100;
-    private const int   PROD_GEN       = 150;
-    private const int   PROD_MATCHES   = 15;
+    private const int   PROD_POP       = 120;
+    private const int   PROD_GEN       = 120;
+    private const int   PROD_MATCHES   = 20;
 
     private const float MUTATION_RATE  = 0.08f;
     private const float MUTATION_MAG   = 0.12f;
@@ -32,7 +32,7 @@ public static class AITrainingBatch
     [MenuItem("Tools/AI/Train AI — Quick (30 pop × 40 gen)")]
     public static void RunQuickFromMenu() => RunQuick();
 
-    [MenuItem("Tools/AI/Train AI — Production (100 pop × 150 gen)")]
+    [MenuItem("Tools/AI/Train AI — Production (120 pop × 120 gen)")]
     public static void RunProductionFromMenu() => RunProduction();
 
     public static void RunQuick()      => Execute(QUICK_POP, QUICK_GEN, QUICK_MATCHES);
@@ -133,6 +133,11 @@ public static class AITrainingBatch
         }
 
         // ── GA loop ───────────────────────────────────────────────────────────
+        const int   PLATEAU_PATIENCE = 15;
+        const float PLATEAU_EPS      = 0.5f;
+        int   plateauCount = 0;
+        float prevStdDev   = -1f;
+
         for (int g = 0; g < generations; g++)
         {
             Debug.Log($"[AITraining] >> Gen {g}/{generations} bắt đầu đánh giá fitness...");
@@ -167,6 +172,19 @@ public static class AITrainingBatch
 
             csv.WriteLine($"{g},{best:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1}");
             Debug.Log($"[AITraining] Gen {g}/{generations}  Best={best:F0}  Avg={avg:F1}  Worst={worst:F0}  Std={stdDev:F1}  B={pctB:F0}% N={pctN:F0}% O={pctO:F0}%");
+
+            // ── Early stopping — std_dev plateau ─────────────────────────────
+            if (prevStdDev >= 0f && Mathf.Abs(stdDev - prevStdDev) < PLATEAU_EPS)
+                plateauCount++;
+            else
+                plateauCount = 0;
+            prevStdDev = stdDev;
+
+            if (plateauCount >= PLATEAU_PATIENCE)
+            {
+                Debug.LogWarning($"[AITraining] Early stop tại gen {g} — std_dev plateau {PLATEAU_PATIENCE} gen liên tiếp (Δ<{PLATEAU_EPS}).");
+                break;
+            }
 
             population = BreedNextGen(population, popSize);
         }
@@ -231,9 +249,15 @@ public static class AITrainingBatch
         var a = TournamentSelect(pool);
         var b = TournamentSelect(pool);
         var child = new Chromosome();
+
+        // 2-point crossover: bảo toàn co-adapted gene complexes (epistasis)
+        int pt1 = Random.Range(0, Chromosome.GeneCount);
+        int pt2 = Random.Range(0, Chromosome.GeneCount);
+        if (pt1 > pt2) { int tmp = pt1; pt1 = pt2; pt2 = tmp; }
+
         for (int i = 0; i < Chromosome.GeneCount; i++)
         {
-            child.genes[i] = Random.value > 0.5f ? a.genes[i] : b.genes[i];
+            child.genes[i] = (i >= pt1 && i < pt2) ? b.genes[i] : a.genes[i];
             if (Random.value < MUTATION_RATE)
             {
                 float u1 = Mathf.Max(1e-6f, Random.value);
