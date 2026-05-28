@@ -71,7 +71,8 @@ public class CardDatabase : MonoBehaviour
             List<CardDefinition> tierPool = unitList.Where(c => c.tier == rolledTier && !c.isToken).ToList();
             if (tierPool.Count == 0)
             {
-                Debug.LogWarning($"[DATABASE] Không có unit nào ở Tier {rolledTier}. Đang lấy unit Tier thấp hơn bù vào!");
+                if (!Application.isBatchMode)
+                    Debug.LogWarning($"[DATABASE] Không có unit nào ở Tier {rolledTier}. Đang lấy unit Tier thấp hơn bù vào!");
                 tierPool = unitList.Where(c => c.tier <= rolledTier && !c.isToken).ToList();
             }
             if (tierPool.Count > 0)

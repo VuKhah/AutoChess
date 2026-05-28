@@ -614,8 +614,9 @@ public class BotAgent
     // ──────────────────────────────────────────────────────────────────────────
     private void TryMerge()
     {
+        int safety = 0;
         bool merged = true;
-        while (merged)
+        while (merged && safety++ < 200)
         {
             merged = false;
             for (int i = 0; i < board.Count; i++)

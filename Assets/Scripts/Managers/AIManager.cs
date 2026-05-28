@@ -17,18 +17,20 @@ public class AIManager : MonoBehaviour
         if (file != null)
         {
             loadedLibrary = JsonUtility.FromJson<AILibrary>(file.text);
-            Debug.Log("Đã nạp dữ liệu AI: Dễ/Vừa/Khó sẵn sàng!");
+            Debug.Log("[AIManager] AI_Library nạp thành công: Hard / Babylon / Nile / Aggressor / Resilient");
         }
     }
 
-    // Hàm để lấy Gen theo độ khó
-    public Chromosome GetBrain(string difficulty)
+    public Chromosome GetBrain(string botName)
     {
-        switch (difficulty)
+        if (loadedLibrary == null) return null;
+        switch (botName)
         {
-            case "Easy": return loadedLibrary.easyBot;
-            case "Medium": return loadedLibrary.mediumBot;
-            default: return loadedLibrary.hardBot;
+            case "Babylon":   return loadedLibrary.babylonBot;
+            case "Nile":      return loadedLibrary.nileBot;
+            case "Aggressor": return loadedLibrary.aggressorBot;
+            case "Resilient": return loadedLibrary.resilientBot;
+            default:          return loadedLibrary.hardBot;
         }
     }
 }

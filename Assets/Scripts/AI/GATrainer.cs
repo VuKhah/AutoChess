@@ -29,21 +29,24 @@ public class GATrainer : MonoBehaviour
         BeginTraining();
     }
 
+    private StreamWriter _csv; // giữ reference để đóng khi ForceRetrain gián đoạn
+
     [ContextMenu("Retrain AI (Force)")]
     public void ForceRetrain()
     {
         StopAllCoroutines();
+        _csv?.Close();
+        _csv = null;
         BeginTraining();
     }
 
+    // Chỉ yêu cầu hardBot — các specialist bot là bonus, không bắt buộc.
     private bool IsLibraryValid()
     {
         TextAsset file = Resources.Load<TextAsset>("AI_Library");
         if (file == null) return false;
         var lib = JsonUtility.FromJson<AILibrary>(file.text);
-        return lib?.easyBot?.genes   != null && lib.easyBot.genes.Length   >= Chromosome.GeneCount
-            && lib.mediumBot?.genes  != null && lib.mediumBot.genes.Length  >= Chromosome.GeneCount
-            && lib.hardBot?.genes    != null && lib.hardBot.genes.Length    >= Chromosome.GeneCount;
+        return lib?.hardBot?.genes != null && lib.hardBot.genes.Length >= Chromosome.GeneCount;
     }
 
     private void BeginTraining()
@@ -57,25 +60,42 @@ public class GATrainer : MonoBehaviour
         population.Clear();
         library = new AILibrary();
 
-        // Seeded sub-population: 20% Babylon + 20% Niles + 60% random
-        // Giúp GA giữ đa dạng tribe để tìm được specialist cuối training.
-        int babylonSeed = populationSize / 5;
-        int nilesSeed   = populationSize / 5;
+        // ── 5 seeded sub-population (mỗi nhóm 20%) ───────────────────────────
+        // Duy trì diversity để GA tìm được specialist cho từng archetype.
+        int groupSize = Mathf.Max(1, populationSize / 5);
 
         for (int i = 0; i < populationSize; i++)
         {
             var c = new Chromosome();
-            if (i < babylonSeed)
+            int group = Mathf.Min(i / groupSize, 4); // 0-4, nhóm 4 = random
+
+            switch (group)
             {
-                c.genes[18] = Random.Range(0.7f, 1.0f); // sBabylon cao
-                c.genes[19] = Random.Range(0.0f, 0.3f);
-                c.genes[20] = Random.Range(0.0f, 0.3f);
-            }
-            else if (i < babylonSeed + nilesSeed)
-            {
-                c.genes[20] = Random.Range(0.7f, 1.0f); // sNiles cao
-                c.genes[18] = Random.Range(0.0f, 0.3f);
-                c.genes[19] = Random.Range(0.0f, 0.3f);
+                case 0: // Babylon tribe seed
+                    c.genes[18] = Random.Range(0.7f, 1.0f);
+                    c.genes[19] = Random.Range(0.0f, 0.3f);
+                    c.genes[20] = Random.Range(0.0f, 0.3f);
+                    break;
+                case 1: // Niles tribe seed
+                    c.genes[20] = Random.Range(0.7f, 1.0f);
+                    c.genes[18] = Random.Range(0.0f, 0.3f);
+                    c.genes[19] = Random.Range(0.0f, 0.3f);
+                    break;
+                case 2: // Aggressor seed — ATK rush, reroll hết tiền, bỏ growth
+                    c.genes[0]  = Random.Range(0.75f, 1.0f); // wATK
+                    c.genes[9]  = Random.Range(0.70f, 1.0f); // tOnAttack
+                    c.genes[24] = Random.Range(0.75f, 1.0f); // wRerollThresh
+                    c.genes[11] = Random.Range(0.00f, 0.2f); // tEndTurnShop (thấp)
+                    c.genes[26] = Random.Range(0.00f, 0.2f); // wRerollKeep (thấp — tiêu tiền nhanh)
+                    break;
+                case 3: // Resilient seed — bền bỉ, phản đòn, không chết dễ
+                    c.genes[1]  = Random.Range(0.75f, 1.0f); // wHP
+                    c.genes[4]  = Random.Range(0.70f, 1.0f); // wTaunt
+                    c.genes[5]  = Random.Range(0.70f, 1.0f); // wReborn
+                    c.genes[6]  = Random.Range(0.70f, 1.0f); // wSafeguard
+                    c.genes[10] = Random.Range(0.70f, 1.0f); // tOnTakeDmg
+                    break;
+                // case 4: random hoàn toàn — đóng góp cho hardBot
             }
             population.Add(c);
         }
@@ -86,14 +106,15 @@ public class GATrainer : MonoBehaviour
 
     IEnumerator TrainRoutine()
     {
-        // Mở CSV log — ghi thẳng từ C#, không qua Unity logFile
-        string csvDir = Path.Combine(Application.dataPath, "Document", "02_Data");
+        // ── Mở CSV log ────────────────────────────────────────────────────────
+        string csvDir  = Path.Combine(Application.dataPath, "Document", "02_Data", "Train");
         Directory.CreateDirectory(csvDir);
-        string timestamp = System.DateTime.Now.ToString("yyyyMMdd_HHmmss");
-        string csvPath   = Path.Combine(csvDir, $"training_{timestamp}.csv");
+        string stamp   = System.DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        string csvPath = Path.Combine(csvDir, $"training_{stamp}.csv");
 
-        var csv = new StreamWriter(csvPath, false, System.Text.Encoding.UTF8) { AutoFlush = true };
-        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_olympus");
+        _csv = new StreamWriter(csvPath, false, System.Text.Encoding.UTF8) { AutoFlush = true };
+        var csv = _csv;
+        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other");
 
         Debug.Log($"=== HUẤN LUYỆN AI === Genes:{Chromosome.GeneCount} | Pop:{populationSize} | Gen:{generations} ===");
         Debug.Log($"[GATrainer] CSV → {csvPath}");
@@ -110,8 +131,8 @@ public class GATrainer : MonoBehaviour
                     int selfIdx      = population.IndexOf(chromo);
                     int oppIdx       = Random.Range(0, population.Count - 1);
                     if (oppIdx >= selfIdx) oppIdx++;
-                    BotAgent opponent = new BotAgent(population[oppIdx]);
-                    int result        = sim.SimulateMatch(me, opponent);
+                    BotAgent opp     = new BotAgent(population[oppIdx]);
+                    int result       = sim.SimulateMatch(me, opp);
 
                     if (result ==  1) chromo.fitness += 10f;
                     else if (result == 0) chromo.fitness +=  2f;
@@ -124,11 +145,9 @@ public class GATrainer : MonoBehaviour
             float best  = population[0].fitness;
             float avg   = population.Average(c => c.fitness);
             float worst = population[population.Count - 1].fitness;
+            float stdDev = Mathf.Sqrt(population.Average(c => (c.fitness - avg) * (c.fitness - avg)));
 
-            float variance = population.Average(c => (c.fitness - avg) * (c.fitness - avg));
-            float stdDev   = Mathf.Sqrt(variance);
-
-            // ── Tribe distribution — đo đa dạng tribe trong population ───────
+            // ── Tribe distribution ───────────────────────────────────────────
             int cntB = population.Count(c => c.genes[18] > c.genes[19] && c.genes[18] > c.genes[20]);
             int cntN = population.Count(c => c.genes[20] > c.genes[19] && c.genes[20] > c.genes[18]);
             int cntO = populationSize - cntB - cntN;
@@ -138,19 +157,17 @@ public class GATrainer : MonoBehaviour
 
             // ── Ghi CSV ──────────────────────────────────────────────────────
             csv.WriteLine($"{g},{best:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1}");
-
             Debug.Log($"Gen {g,3}/{generations}  Best={best,5:F0}  Avg={avg,5:F1}  Worst={worst,5:F0}  " +
                       $"Std={stdDev:F1}  B={pctB:F0}% N={pctN:F0}% O={pctO:F0}%");
 
             // ── Elitism + breed ───────────────────────────────────────────────
-            int eliteCount = Mathf.Max(2, populationSize / 10);
-            List<Chromosome> elite  = population.Take(eliteCount).Select(c => c.Clone()).ToList();
-            List<Chromosome> nextGen = new List<Chromosome>(elite);
+            int eliteCount    = Mathf.Max(2, populationSize / 10);
+            List<Chromosome> nextGen = population.Take(eliteCount).Select(c => c.Clone()).ToList();
             while (nextGen.Count < populationSize)
             {
-                Chromosome parentA = TournamentSelect(population, 3);
-                Chromosome parentB = TournamentSelect(population, 3);
-                nextGen.Add(CrossoverAndMutate(parentA, parentB));
+                nextGen.Add(CrossoverAndMutate(
+                    TournamentSelect(population, 3),
+                    TournamentSelect(population, 3)));
             }
             population = nextGen;
             yield return null;
@@ -158,48 +175,77 @@ public class GATrainer : MonoBehaviour
 
         // ── Sort lần cuối ─────────────────────────────────────────────────────
         population = population.OrderByDescending(c => c.fitness).ToList();
+        float avgFinal    = population.Average(c => c.fitness);
+        float threshold   = avgFinal * 0.8f; // ngưỡng "đủ tốt" để chọn specialist
+        var   viable      = population.Where(c => c.fitness >= threshold).ToList();
 
-        // ── Rank-based: 3 bot theo thứ hạng fitness ──────────────────────────
-        library.hardBot   = population[0].Clone();
-        library.mediumBot = population[Mathf.Min(populationSize / 3,     populationSize - 1)].Clone();
-        library.easyBot   = population[Mathf.Min(populationSize * 2 / 3, populationSize - 1)].Clone();
+        // ── Chọn 5 bot ───────────────────────────────────────────────────────
+        library.hardBot = population[0].Clone();
 
-        // ── Tribe-filtered: best chromosome có tribe gene tương ứng cao nhất ─
         library.babylonBot = population
             .FirstOrDefault(c => c.genes[18] > c.genes[19] && c.genes[18] > c.genes[20])
             ?.Clone();
+
         library.nileBot = population
             .FirstOrDefault(c => c.genes[20] > c.genes[19] && c.genes[20] > c.genes[18])
             ?.Clone();
 
+        library.aggressorBot = viable
+            .OrderByDescending(c => AggressorScore(c))
+            .FirstOrDefault()?.Clone();
+
+        library.resilientBot = viable
+            .OrderByDescending(c => ResilientScore(c))
+            .FirstOrDefault()?.Clone();
+
         // ── Log kết quả ──────────────────────────────────────────────────────
-        Debug.Log($"<color=red>►  Hard Bot</color>    rank=1      fitness={library.hardBot.fitness:F0}");
-        Debug.Log($"<color=yellow>►  Medium Bot</color>  rank={populationSize/3}     fitness={library.mediumBot.fitness:F0}");
-        Debug.Log($"<color=green>►  Easy Bot</color>    rank={populationSize*2/3}     fitness={library.easyBot.fitness:F0}");
-
-        if (library.babylonBot != null)
-            Debug.Log($"<color=orange>►  Babylon Bot</color>          fitness={library.babylonBot.fitness:F0}  sBabylon={library.babylonBot.genes[18]:F3}");
-        else
-            Debug.LogWarning("[GATrainer] Babylon specialist không tồn tại trong population cuối — babylonBot sẽ null.");
-
-        if (library.nileBot != null)
-            Debug.Log($"<color=cyan>►  Nile Bot</color>             fitness={library.nileBot.fitness:F0}  sNiles={library.nileBot.genes[20]:F3}");
-        else
-            Debug.LogWarning("[GATrainer] Nile specialist không tồn tại trong population cuối — nileBot sẽ null.");
+        LogBot("Hard",      library.hardBot,      "rank=1");
+        LogBot("Babylon",   library.babylonBot,   library.babylonBot   != null ? $"sBabylon={library.babylonBot.genes[18]:F3}"    : "");
+        LogBot("Nile",      library.nileBot,       library.nileBot      != null ? $"sNiles={library.nileBot.genes[20]:F3}"          : "");
+        LogBot("Aggressor", library.aggressorBot, library.aggressorBot != null ? $"score={AggressorScore(library.aggressorBot):F2}" : "");
+        LogBot("Resilient", library.resilientBot, library.resilientBot != null ? $"score={ResilientScore(library.resilientBot):F2}" : "");
 
         csv.Close();
         SaveLibrary();
         Debug.Log($"=== HUẤN LUYỆN HOÀN TẤT === CSV: {csvPath}");
     }
 
+    // ── Scoring functions cho archetype selection ─────────────────────────────
+    private static float AggressorScore(Chromosome c)
+    {
+        if (c == null) return float.MinValue;
+        return c.genes[0] * 2f    // wATK — quan trọng nhất
+             + c.genes[9]         // tOnAttack
+             + c.genes[24]        // wRerollThresh
+             - c.genes[11] * 0.5f; // tEndTurnShop thấp là tốt
+    }
+
+    private static float ResilientScore(Chromosome c)
+    {
+        if (c == null) return float.MinValue;
+        return c.genes[1]         // wHP
+             + c.genes[4]         // wTaunt
+             + c.genes[5] * 1.5f  // wReborn — quan trọng nhất
+             + c.genes[6]         // wSafeguard
+             + c.genes[10];       // tOnTakeDmg
+    }
+
+    private void LogBot(string name, Chromosome bot, string extra)
+    {
+        if (bot != null)
+            Debug.Log($"► <b>{name} Bot</b>  fitness={bot.fitness:F0}  {extra}");
+        else
+            Debug.LogWarning($"[GATrainer] {name} specialist không tìm thấy trong population cuối.");
+    }
+
+    // ── GA helpers ────────────────────────────────────────────────────────────
     private Chromosome TournamentSelect(List<Chromosome> pool, int k)
     {
         Chromosome best = null;
         for (int i = 0; i < k; i++)
         {
-            Chromosome candidate = pool[Random.Range(0, pool.Count)];
-            if (best == null || candidate.fitness > best.fitness)
-                best = candidate;
+            var c = pool[Random.Range(0, pool.Count)];
+            if (best == null || c.fitness > best.fitness) best = c;
         }
         return best;
     }
@@ -210,29 +256,24 @@ public class GATrainer : MonoBehaviour
         for (int i = 0; i < Chromosome.GeneCount; i++)
         {
             child.genes[i] = Random.value > 0.5f ? a.genes[i] : b.genes[i];
-
             if (Random.value < mutationRate)
             {
                 float u1 = Mathf.Max(1e-6f, Random.value);
                 float z  = Mathf.Sqrt(-2f * Mathf.Log(u1)) * Mathf.Cos(2f * Mathf.PI * Random.value);
                 child.genes[i] += z * mutationMag;
             }
-
             child.genes[i] = Mathf.Clamp01(child.genes[i]);
         }
         return child;
     }
 
-    void SaveLibrary()
+    private void SaveLibrary()
     {
         string dirPath = Path.Combine(Application.dataPath, "Resources");
         if (!Directory.Exists(dirPath)) Directory.CreateDirectory(dirPath);
-
-        string json = JsonUtility.ToJson(library, true);
         string path = Path.Combine(dirPath, "AI_Library.json");
-        File.WriteAllText(path, json);
+        File.WriteAllText(path, JsonUtility.ToJson(library, true));
         Debug.Log("<b>Đã lưu AI_Library.json:</b> " + path);
-
 #if UNITY_EDITOR
         UnityEditor.AssetDatabase.Refresh();
 #endif

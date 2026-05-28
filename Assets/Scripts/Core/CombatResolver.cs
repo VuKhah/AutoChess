@@ -300,10 +300,12 @@ public class CombatResolver
 
     private void FlushDeathStack(List<CardInstance> pBoard, List<CardInstance> eBoard)
     {
-        // Lặp cho đến khi cả death stack lẫn CleanupBoard không còn sinh ra death mới
+        int safetyCounter = 0;
         bool hasMore = true;
-        while (hasMore)
+        while (hasMore && safetyCounter++ < 500)
         {
+            if (safetyCounter == 499)
+                Debug.LogError("[CombatResolver] FlushDeathStack hit safety limit (500) — infinite loop detected! Check OnAllySummon/Summon chains.");
             // --- Xử lý toàn bộ death stack (LIFO: death mới nhất được xử lý trước) ---
             while (deathStack.Count > 0)
             {
