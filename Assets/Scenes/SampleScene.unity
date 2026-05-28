@@ -345,10 +345,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1519840563}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &36327993
 MonoBehaviour:
@@ -412,7 +412,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -924,7 +924,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 2114, y: -32}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &271765435
@@ -1359,10 +1359,10 @@ RectTransform:
   - {fileID: 1452792740}
   m_Father: {fileID: 1519840563}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 283.542}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &410518429
 MonoBehaviour:
@@ -1614,7 +1614,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.08, g: 0.11, b: 0.2, a: 0.97}
+  m_Color: {r: 0.11721604, g: 0.185419, b: 0.381132, a: 0.97}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4019,6 +4019,8 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
+      isToken: 0
+      isRepeatingDeploy: 0
       fileName: 
       spellEffects: []
     permanentATKBonus: 0
@@ -4041,6 +4043,9 @@ MonoBehaviour:
     consumedCardIDs: []
     onDeathProcessed: 0
     isBattleSpawned: 0
+    hasDeployed: 0
+    globalPermATKBonus: 0
+    globalPermHPBonus: 0
   - Data:
       cardID: 
       cardName: 
@@ -4055,6 +4060,8 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
+      isToken: 0
+      isRepeatingDeploy: 0
       fileName: 
       spellEffects: []
     permanentATKBonus: 0
@@ -4077,6 +4084,9 @@ MonoBehaviour:
     consumedCardIDs: []
     onDeathProcessed: 0
     isBattleSpawned: 0
+    hasDeployed: 0
+    globalPermATKBonus: 0
+    globalPermHPBonus: 0
   - Data:
       cardID: 
       cardName: 
@@ -4091,6 +4101,8 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
+      isToken: 0
+      isRepeatingDeploy: 0
       fileName: 
       spellEffects: []
     permanentATKBonus: 0
@@ -4113,6 +4125,9 @@ MonoBehaviour:
     consumedCardIDs: []
     onDeathProcessed: 0
     isBattleSpawned: 0
+    hasDeployed: 0
+    globalPermATKBonus: 0
+    globalPermHPBonus: 0
   - Data:
       cardID: 
       cardName: 
@@ -4127,6 +4142,8 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
+      isToken: 0
+      isRepeatingDeploy: 0
       fileName: 
       spellEffects: []
     permanentATKBonus: 0
@@ -4149,6 +4166,9 @@ MonoBehaviour:
     consumedCardIDs: []
     onDeathProcessed: 0
     isBattleSpawned: 0
+    hasDeployed: 0
+    globalPermATKBonus: 0
+    globalPermHPBonus: 0
   - Data:
       cardID: 
       cardName: 
@@ -4163,6 +4183,8 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
+      isToken: 0
+      isRepeatingDeploy: 0
       fileName: 
       spellEffects: []
     permanentATKBonus: 0
@@ -4185,6 +4207,9 @@ MonoBehaviour:
     consumedCardIDs: []
     onDeathProcessed: 0
     isBattleSpawned: 0
+    hasDeployed: 0
+    globalPermATKBonus: 0
+    globalPermHPBonus: 0
   - Data:
       cardID: 
       cardName: 
@@ -4199,6 +4224,8 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
+      isToken: 0
+      isRepeatingDeploy: 0
       fileName: 
       spellEffects: []
     permanentATKBonus: 0
@@ -4221,6 +4248,9 @@ MonoBehaviour:
     consumedCardIDs: []
     onDeathProcessed: 0
     isBattleSpawned: 0
+    hasDeployed: 0
+    globalPermATKBonus: 0
+    globalPermHPBonus: 0
   enemyBoard:
   - Data:
       cardID: 
@@ -4236,6 +4266,8 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
+      isToken: 0
+      isRepeatingDeploy: 0
       fileName: 
       spellEffects: []
     permanentATKBonus: 0
@@ -4258,6 +4290,9 @@ MonoBehaviour:
     consumedCardIDs: []
     onDeathProcessed: 0
     isBattleSpawned: 0
+    hasDeployed: 0
+    globalPermATKBonus: 0
+    globalPermHPBonus: 0
   - Data:
       cardID: 
       cardName: 
@@ -4272,6 +4307,8 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
+      isToken: 0
+      isRepeatingDeploy: 0
       fileName: 
       spellEffects: []
     permanentATKBonus: 0
@@ -4294,6 +4331,9 @@ MonoBehaviour:
     consumedCardIDs: []
     onDeathProcessed: 0
     isBattleSpawned: 0
+    hasDeployed: 0
+    globalPermATKBonus: 0
+    globalPermHPBonus: 0
   - Data:
       cardID: 
       cardName: 
@@ -4308,6 +4348,8 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
+      isToken: 0
+      isRepeatingDeploy: 0
       fileName: 
       spellEffects: []
     permanentATKBonus: 0
@@ -4330,6 +4372,9 @@ MonoBehaviour:
     consumedCardIDs: []
     onDeathProcessed: 0
     isBattleSpawned: 0
+    hasDeployed: 0
+    globalPermATKBonus: 0
+    globalPermHPBonus: 0
   - Data:
       cardID: 
       cardName: 
@@ -4344,6 +4389,8 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
+      isToken: 0
+      isRepeatingDeploy: 0
       fileName: 
       spellEffects: []
     permanentATKBonus: 0
@@ -4366,6 +4413,9 @@ MonoBehaviour:
     consumedCardIDs: []
     onDeathProcessed: 0
     isBattleSpawned: 0
+    hasDeployed: 0
+    globalPermATKBonus: 0
+    globalPermHPBonus: 0
   - Data:
       cardID: 
       cardName: 
@@ -4380,6 +4430,8 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
+      isToken: 0
+      isRepeatingDeploy: 0
       fileName: 
       spellEffects: []
     permanentATKBonus: 0
@@ -4402,6 +4454,9 @@ MonoBehaviour:
     consumedCardIDs: []
     onDeathProcessed: 0
     isBattleSpawned: 0
+    hasDeployed: 0
+    globalPermATKBonus: 0
+    globalPermHPBonus: 0
   - Data:
       cardID: 
       cardName: 
@@ -4416,6 +4471,8 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
+      isToken: 0
+      isRepeatingDeploy: 0
       fileName: 
       spellEffects: []
     permanentATKBonus: 0
@@ -4438,6 +4495,9 @@ MonoBehaviour:
     consumedCardIDs: []
     onDeathProcessed: 0
     isBattleSpawned: 0
+    hasDeployed: 0
+    globalPermATKBonus: 0
+    globalPermHPBonus: 0
 --- !u!1 &970606423
 GameObject:
   m_ObjectHideFlags: 0
@@ -6105,10 +6165,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1519840563}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1445830691
 MonoBehaviour:
@@ -6247,13 +6307,13 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
-  m_fontSizeBase: 18
+  m_fontSize: 26
+  m_fontSizeBase: 26
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6723,7 +6783,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3045163549536598338, guid: 2b45526df71e4704c9ef16feffe2e617, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -12.4
+      value: -12.400024
       objectReference: {fileID: 0}
     - target: {fileID: 3045163549536598338, guid: 2b45526df71e4704c9ef16feffe2e617, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -6865,11 +6925,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3045163549536598338, guid: 2b45526df71e4704c9ef16feffe2e617, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -13.8973
+      value: -13.897278
       objectReference: {fileID: 0}
     - target: {fileID: 3045163549536598338, guid: 2b45526df71e4704c9ef16feffe2e617, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -33.767
+      value: -33.766968
       objectReference: {fileID: 0}
     - target: {fileID: 5013376245240858988, guid: 2b45526df71e4704c9ef16feffe2e617, type: 3}
       propertyPath: m_Name
@@ -8138,10 +8198,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1519840563}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1778963992
 MonoBehaviour:
@@ -8205,13 +8265,13 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -9789,7 +9849,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.87}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.8352941}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
