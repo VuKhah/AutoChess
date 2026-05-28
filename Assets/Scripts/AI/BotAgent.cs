@@ -862,12 +862,12 @@ public class BotAgent
             case TriggerType.OnDeploy:      return brain.genes[12];
             case TriggerType.OnAllyDeath:
             case TriggerType.OnAllySummon:
-            case TriggerType.OnAllyReborn:  return brain.genes[12] * 0.8f;
-            case TriggerType.Aura:          return brain.genes[7]  * 0.6f;
-            case TriggerType.OnSell:        return brain.genes[8]  * 0.5f;   // giống OnDeath nhưng ít ổn định hơn
-            case TriggerType.OnAllySell:    return brain.genes[12] * 0.6f;
+            case TriggerType.OnAllyReborn:  return brain.genes[34];
+            case TriggerType.Aura:          return brain.genes[32];
+            case TriggerType.OnSell:        return brain.genes[33];
+            case TriggerType.OnAllySell:    return brain.genes[36];
             case TriggerType.OnStatGain:    return brain.genes[13] * 0.4f;
-            case TriggerType.OnAllyDeploy:  return brain.genes[12] * 0.7f;
+            case TriggerType.OnAllyDeploy:  return brain.genes[35];
             default: return 0f;
         }
     }

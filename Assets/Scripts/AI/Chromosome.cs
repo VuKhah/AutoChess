@@ -3,7 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class Chromosome
 {
-    public const int GeneCount = 32;
+    public const int GeneCount = 37;
 
     // ── NHÓM 1: Chỉ số gốc (4 genes) ───────────────────────────────────────
     // [0]  wATK          Trọng số ATK cơ bản
@@ -52,6 +52,15 @@ public class Chromosome
     // [29] wSpellOnStrong Ưu tiên cast spell lên unit có EvaluateInstance cao nhất
     // [30] wSpellOnMerged Ưu tiên cast spell lên unit có mergeLevel cao hơn
     // [31] wSpellEconomy  Trọng số riêng cho spell kinh tế (GainCoin, GainIncome, GiveEndTurnBuff)
+
+    // ── NHÓM 9: Trigger con độc lập (5 genes) ───────────────────────────────
+    // Trước đây các trigger này dùng chung gene với trigger cha kèm multiplier cứng.
+    // Tách ra cho GA tự học tỉ lệ thực sự của từng trigger.
+    // [32] tAura          Aura — hiệu ứng thụ động liên tục (trước: gene[7] × 0.6)
+    // [33] tOnSell        OnSell — khi chính unit bị bán (trước: gene[8] × 0.5)
+    // [34] tOnAllyGroup   OnAllyDeath / OnAllySummon / OnAllyReborn (trước: gene[12] × 0.8)
+    // [35] tOnAllyDeploy  OnAllyDeploy — khi đồng minh được đặt lên sân (trước: gene[12] × 0.7)
+    // [36] tOnAllySell    OnAllySell — khi đồng minh bị bán (trước: gene[12] × 0.6)
 
     public float[] genes = new float[GeneCount];
     public float fitness = 0f;

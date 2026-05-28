@@ -134,10 +134,12 @@ public partial class GameManager : MonoBehaviour
         var lib = AIManager.Instance?.loadedLibrary;
         if (lib == null) { Debug.LogWarning("[AI] AILibrary chưa sẵn sàng — dùng đội ngẫu nhiên."); return; }
 
-        // 3 đối thủ cố định: Easy / Medium / Hard brain, handicap coin khác nhau
+        // 5 đối thủ: 3 rank-based + 2 tribe specialist
         AddBot(lib.easyBot,    7,  "Easy");
         AddBot(lib.mediumBot,  9,  "Medium");
         AddBot(lib.hardBot,   10,  "Hard");
+        AddBot(lib.babylonBot, 9,  "Babylon");
+        AddBot(lib.nileBot,    9,  "Nile");
 
         Debug.Log($"<color=cyan>[AI]</color> {enemyBots.Count} đối thủ sẵn sàng (độ khó chọn: {difficulty})");
     }
