@@ -133,7 +133,7 @@ public partial class AbilityEngine
                 if (ability.conditionCount > 0 && source.abilityTriggerCounts[i] % ability.conditionCount != 0) continue;
             }
 
-            foreach (var target in targets)
+            foreach (var target in new List<CardInstance>(targets))
             {
                 if (isGrowth) ApplyGrowth(ability, target, scaleFactor, esc, allyBoard);
                 else ExecuteEffect(ability, target, source, allyBoard, enemyBoard, scaleFactor, directEnemy, esc);
@@ -429,7 +429,9 @@ public partial class AbilityEngine
                 if (source.consumedCardIDs != null && source.consumedCardIDs.Count > 0)
                 {
                     CLog($"<color=magenta>[CONSUME]</color> {source.Data.cardName} giải phóng {source.consumedCardIDs.Count} unit đã tiêu thụ!");
-                    foreach (var cardID in source.consumedCardIDs)
+                    var releasedCardIDs = new List<string>(source.consumedCardIDs);
+                    source.consumedCardIDs.Clear();
+                    foreach (var cardID in releasedCardIDs)
                     {
                         CardInstance released = SummonUnit(cardID, allyBoard);
                         if (released != null)
@@ -438,7 +440,6 @@ public partial class AbilityEngine
                             BroadcastAllyEvent(TriggerType.OnAllySummon, released, allyBoard, enemyBoard);
                         }
                     }
-                    source.consumedCardIDs.Clear();
                 }
                 break;
         }

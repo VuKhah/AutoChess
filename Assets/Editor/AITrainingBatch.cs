@@ -28,6 +28,8 @@ public static class AITrainingBatch
     private const float MUTATION_RATE  = 0.08f;
     private const float MUTATION_MAG   = 0.12f;
     private const int   TOURNAMENT_K   = 3;
+    private const float IMMIGRANT_RATE = 0.12f;
+    private const float MIN_LIBRARY_DISTANCE = 0.18f;
 
     [MenuItem("Tools/AI/Train AI — Quick (30 pop × 40 gen)")]
     public static void RunQuickFromMenu() => RunQuick();
@@ -89,7 +91,7 @@ public static class AITrainingBatch
         string csvPath = Path.Combine(csvDir, $"training_{stamp}.csv");
 
         var csv = new StreamWriter(csvPath, false, System.Text.Encoding.UTF8) { AutoFlush = true };
-        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other");
+        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other,best_babylon,best_niles,best_aggressor,best_resilient");
         Debug.Log($"[AITraining] CSV → {csvPath}");
 
         // ── 5 seeded sub-population (mỗi nhóm 20%) ───────────────────────────
@@ -151,10 +153,12 @@ public static class AITrainingBatch
                 {
                     int oppIdx = Random.Range(0, popSize - 1);
                     if (oppIdx >= ci) oppIdx++;
-                    int result = sim.SimulateMatch(new BotAgent(chromo), new BotAgent(population[oppIdx]));
-                    if (result ==  1) chromo.fitness += 10f;
-                    else if (result == 0) chromo.fitness +=  2f;
+                    MatchResult result = sim.EvaluateMatch(new BotAgent(chromo), new BotAgent(population[oppIdx]));
+                    chromo.fitness += result.scoreA;
                 }
+
+                if ((ci + 1) % 10 == 0 || ci == popSize - 1)
+                    Debug.Log($"[AITraining] Gen {g}/{generations} fitness {ci + 1}/{popSize}");
             }
 
             population = population.OrderByDescending(c => c.fitness).ToList();
@@ -169,9 +173,16 @@ public static class AITrainingBatch
             float pctB = cntB * 100f / popSize;
             float pctN = cntN * 100f / popSize;
             float pctO = (popSize - cntB - cntN) * 100f / popSize;
+            float bestB = BestOrZero(population.Where(IsBabylon));
+            float bestN = BestOrZero(population.Where(IsNile));
+            float bestA = population.Max(AggressorScore);
+            float bestR = population.Max(ResilientScore);
 
-            csv.WriteLine($"{g},{best:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1}");
-            Debug.Log($"[AITraining] Gen {g}/{generations}  Best={best:F0}  Avg={avg:F1}  Worst={worst:F0}  Std={stdDev:F1}  B={pctB:F0}% N={pctN:F0}% O={pctO:F0}%");
+            csv.WriteLine($"{g},{best:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{bestB:F0},{bestN:F0},{bestA:F2},{bestR:F2}");
+            Debug.Log($"[AITraining] Gen {g}/{generations}  Best={best:F0}  Avg={avg:F1}  Worst={worst:F0}  Std={stdDev:F1}  B={pctB:F0}% N={pctN:F0}% O={pctO:F0}%  BestB={bestB:F0} BestN={bestN:F0}");
+
+            if (pctB < 10f || pctN < 10f)
+                Debug.LogWarning($"[AITraining] Diversity low at gen {g}: B={pctB:F0}% N={pctN:F0}%. Injecting seeded immigrants next gen.");
 
             // ── Early stopping — std_dev plateau ─────────────────────────────
             if (prevStdDev >= 0f && Mathf.Abs(stdDev - prevStdDev) < PLATEAU_EPS)
@@ -186,7 +197,7 @@ public static class AITrainingBatch
                 break;
             }
 
-            population = BreedNextGen(population, popSize);
+            population = BreedNextGen(population, popSize, pctB, pctN);
         }
 
         // ── Selection cuối ────────────────────────────────────────────────────
@@ -195,20 +206,28 @@ public static class AITrainingBatch
         float threshold = avgFinal * 0.8f;
         var   viable    = population.Where(c => c.fitness >= threshold).ToList();
 
+        var selected = new List<Chromosome>();
+        var hard = population[0];
+        selected.Add(hard);
+
+        var babylon = SelectDistinct(population.Where(IsBabylon), selected, c => c.fitness);
+        if (babylon != null) selected.Add(babylon);
+
+        var nile = SelectDistinct(population.Where(IsNile), selected, c => c.fitness);
+        if (nile != null) selected.Add(nile);
+
+        var aggressor = SelectDistinct(viable.Count > 0 ? viable : population, selected, AggressorScore);
+        if (aggressor != null) selected.Add(aggressor);
+
+        var resilient = SelectDistinct(viable.Count > 0 ? viable : population, selected, ResilientScore);
+
         var library = new AILibrary
         {
-            hardBot = population[0].Clone(),
-
-            babylonBot = population
-                .FirstOrDefault(c => c.genes[18] > c.genes[19] && c.genes[18] > c.genes[20])
-                ?.Clone(),
-
-            nileBot = population
-                .FirstOrDefault(c => c.genes[20] > c.genes[19] && c.genes[20] > c.genes[18])
-                ?.Clone(),
-
-            aggressorBot = viable.OrderByDescending(c => AggressorScore(c)).FirstOrDefault()?.Clone(),
-            resilientBot = viable.OrderByDescending(c => ResilientScore(c)).FirstOrDefault()?.Clone(),
+            hardBot = hard.Clone(),
+            babylonBot = babylon?.Clone(),
+            nileBot = nile?.Clone(),
+            aggressorBot = aggressor?.Clone(),
+            resilientBot = resilient?.Clone(),
         };
 
         // Log kết quả cuối
@@ -224,10 +243,26 @@ public static class AITrainingBatch
 
     // ──────────────────────────────────────────────────────────────────────────
     private static float AggressorScore(Chromosome c) =>
-        c.genes[0] * 2f + c.genes[9] + c.genes[24] - c.genes[11] * 0.5f;
+        c.genes[0] * 2.5f
+        + c.genes[9] * 1.5f
+        + c.genes[24]
+        + (1f - c.genes[11]) * 0.8f
+        + (1f - c.genes[26]) * 0.5f
+        - c.genes[1] * 0.6f
+        - c.genes[4] * 0.4f
+        - c.genes[5] * 0.6f
+        - c.genes[6] * 0.4f;
 
     private static float ResilientScore(Chromosome c) =>
-        c.genes[1] + c.genes[4] + c.genes[5] * 1.5f + c.genes[6] + c.genes[10];
+        c.genes[1] * 1.4f
+        + c.genes[4]
+        + c.genes[5] * 1.5f
+        + c.genes[6]
+        + c.genes[10]
+        + c.genes[11] * 0.5f
+        - c.genes[0] * 0.4f
+        - c.genes[9] * 0.5f
+        - c.genes[24] * 0.3f;
 
     private static void LogResult(string name, Chromosome bot, string extra) =>
         Debug.Log(bot != null
@@ -235,13 +270,66 @@ public static class AITrainingBatch
             : $"[AITraining] {name,-10} NOT FOUND in population");
 
     // ──────────────────────────────────────────────────────────────────────────
-    private static List<Chromosome> BreedNextGen(List<Chromosome> population, int popSize)
+    private static Chromosome SelectDistinct(IEnumerable<Chromosome> candidates, List<Chromosome> selected, System.Func<Chromosome, float> score)
     {
-        int eliteCount = Mathf.Max(2, popSize / 10);
-        var nextGen = population.Take(eliteCount).Select(c => c.Clone()).ToList();
-        while (nextGen.Count < popSize)
+        var list = candidates.ToList();
+        if (list.Count == 0) return null;
+
+        var distinct = list
+            .Where(c => selected.All(s => GeneDistance(c, s) >= MIN_LIBRARY_DISTANCE))
+            .ToList();
+
+        var pool = distinct.Count > 0 ? distinct : list;
+        return pool
+            .OrderByDescending(c => score(c) + DiversityBonus(c, selected) * 100f)
+            .FirstOrDefault();
+    }
+
+    private static float DiversityBonus(Chromosome c, List<Chromosome> selected)
+    {
+        if (selected.Count == 0) return 0f;
+        return selected.Min(s => GeneDistance(c, s));
+    }
+
+    private static float GeneDistance(Chromosome a, Chromosome b)
+    {
+        float sum = 0f;
+        for (int i = 0; i < Chromosome.GeneCount; i++)
+        {
+            float d = a.genes[i] - b.genes[i];
+            sum += d * d;
+        }
+        return Mathf.Sqrt(sum / Chromosome.GeneCount);
+    }
+
+    private static List<Chromosome> BreedNextGen(List<Chromosome> population, int popSize, float pctB, float pctN)
+    {
+        int eliteCount = Mathf.Max(2, popSize / 20);
+        int immigrantCount = Mathf.Max(2, Mathf.RoundToInt(popSize * IMMIGRANT_RATE));
+        if (pctB < 10f) immigrantCount += 2;
+        if (pctN < 10f) immigrantCount += 2;
+
+        var nextGen = new List<Chromosome>();
+        AddTopClones(nextGen, population, c => true, eliteCount);
+        AddTopClones(nextGen, population, IsBabylon, 2);
+        AddTopClones(nextGen, population, IsNile, 2);
+        AddTopClones(nextGen, population.OrderByDescending(AggressorScore), c => true, 2);
+        AddTopClones(nextGen, population.OrderByDescending(ResilientScore), c => true, 2);
+
+        int breedTarget = Mathf.Max(nextGen.Count, popSize - immigrantCount);
+        while (nextGen.Count < breedTarget)
             nextGen.Add(CrossoverAndMutate(population));
+
+        while (nextGen.Count < popSize)
+            nextGen.Add(CreateSeededChromosome(Random.Range(0, 5)));
+
         return nextGen;
+    }
+
+    private static void AddTopClones(List<Chromosome> target, IEnumerable<Chromosome> source, System.Func<Chromosome, bool> predicate, int count)
+    {
+        foreach (var c in source.Where(predicate).Take(count))
+            target.Add(c.Clone());
     }
 
     private static Chromosome CrossoverAndMutate(List<Chromosome> pool)
@@ -279,6 +367,43 @@ public static class AITrainingBatch
         }
         return best;
     }
+
+    private static Chromosome CreateSeededChromosome(int group)
+    {
+        var c = new Chromosome();
+        switch (group)
+        {
+            case 0:
+                c.genes[18] = Random.Range(0.7f, 1.0f);
+                c.genes[19] = Random.Range(0.0f, 0.3f);
+                c.genes[20] = Random.Range(0.0f, 0.3f);
+                break;
+            case 1:
+                c.genes[20] = Random.Range(0.7f, 1.0f);
+                c.genes[18] = Random.Range(0.0f, 0.3f);
+                c.genes[19] = Random.Range(0.0f, 0.3f);
+                break;
+            case 2:
+                c.genes[0]  = Random.Range(0.75f, 1.0f);
+                c.genes[9]  = Random.Range(0.70f, 1.0f);
+                c.genes[24] = Random.Range(0.75f, 1.0f);
+                c.genes[11] = Random.Range(0.00f, 0.20f);
+                c.genes[26] = Random.Range(0.00f, 0.20f);
+                break;
+            case 3:
+                c.genes[1]  = Random.Range(0.75f, 1.0f);
+                c.genes[4]  = Random.Range(0.70f, 1.0f);
+                c.genes[5]  = Random.Range(0.70f, 1.0f);
+                c.genes[6]  = Random.Range(0.70f, 1.0f);
+                c.genes[10] = Random.Range(0.70f, 1.0f);
+                break;
+        }
+        return c;
+    }
+
+    private static bool IsBabylon(Chromosome c) => c.genes[18] > c.genes[19] && c.genes[18] > c.genes[20];
+    private static bool IsNile(Chromosome c) => c.genes[20] > c.genes[19] && c.genes[20] > c.genes[18];
+    private static float BestOrZero(IEnumerable<Chromosome> pool) => pool.Any() ? pool.Max(c => c.fitness) : 0f;
 
     private static void SaveLibrary(AILibrary library)
     {
