@@ -99,14 +99,13 @@ public class BotAgent
         frozenUnitShop  = null;
         frozenSpellShop = null;
 
-        _currentUnitShop = unitShop != null ? new List<CardDefinition>(unitShop) : new List<CardDefinition>();
-
         economy.ResetEconomy();
         int coinDiff = 10 - startingCoins;
         if (coinDiff > 0) economy.TrySpend(coinDiff);
 
         // 1. Reroll
         RerollPhase(ref unitShop, ref spellShop);
+        _currentUnitShop = unitShop != null ? new List<CardDefinition>(unitShop) : new List<CardDefinition>();
 
         // 2. Mua unit
         BuyUnitsPhase(unitShop);
@@ -260,18 +259,24 @@ public class BotAgent
     // ──────────────────────────────────────────────────────────────────────────
     private void BuyUnitsPhase(List<CardDefinition> unitShop)
     {
+        if (unitShop == null || unitShop.Count == 0) return;
+
+        const int MaxBuyActions = 20;
+        int actions = 0;
         bool bought = true;
-        while (bought)
+        while (bought && actions++ < MaxBuyActions)
         {
             bought = false;
             CardDefinition bestCard  = null;
             float          bestScore = float.MinValue;
+            int            bestIndex = -1;
 
-            foreach (var card in unitShop)
+            for (int i = 0; i < unitShop.Count; i++)
             {
+                var card = unitShop[i];
                 if (card == null || card.cost > economy.CurrentCoin) continue;
                 float score = Evaluate(card);
-                if (score > bestScore) { bestScore = score; bestCard = card; }
+                if (score > bestScore) { bestScore = score; bestCard = card; bestIndex = i; }
             }
 
             float saveThreshold = brain.genes[23] * 3f;
@@ -294,8 +299,12 @@ public class BotAgent
 
             if (!HasEmptySlot()) break;
 
-            BuyAndPlace(bestCard);
-            bought = true;
+            if (BuyAndPlace(bestCard))
+            {
+                if (bestIndex >= 0 && bestIndex < unitShop.Count)
+                    unitShop.RemoveAt(bestIndex);
+                bought = true;
+            }
         }
     }
 
@@ -909,7 +918,7 @@ public class BotAgent
     // ──────────────────────────────────────────────────────────────────────────
     // PLACEMENT HELPERS
     // ──────────────────────────────────────────────────────────────────────────
-    private void BuyAndPlace(CardDefinition c)
+    private bool BuyAndPlace(CardDefinition c)
     {
         int idx;
         if (c.hasTaunt)
@@ -925,12 +934,15 @@ public class BotAgent
 
         if (idx >= 0)
         {
+            if (!economy.TryBuy(c.cost)) return false;
             var newUnit = new CardInstance(c, idx);
             board[idx] = newUnit;
-            economy.TryBuy(c.cost);
             FireTrigger(TriggerType.OnDeploy, newUnit);
             BroadcastAllyTrigger(TriggerType.OnAllyDeploy, newUnit);
+            return true;
         }
+
+        return false;
     }
 
     // Mô phỏng hiệu ứng "Tinh Hoa Hợp Nhất": đặt 1 unit ngẫu nhiên Tier+1 lên board

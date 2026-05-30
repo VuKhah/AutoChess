@@ -65,6 +65,107 @@ $LogDir  = Join-Path $ProjectPath "TrainingLogs"
 $null    = New-Item -ItemType Directory -Force -Path $LogDir
 $Stamp   = Get-Date -Format "yyyyMMdd_HHmmss"
 $LogFile = Join-Path $LogDir "error_$Stamp.log"
+$CsvDir  = Join-Path $ProjectPath "Assets\Document\02_Data\Train"
+
+function Read-NewLines {
+    param(
+        [string]$Path,
+        [ref]$Position
+    )
+
+    if (-not (Test-Path $Path)) { return @() }
+
+    $stream = [System.IO.File]::Open($Path, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite)
+    try {
+        if ($Position.Value -gt $stream.Length) { $Position.Value = 0 }
+        $stream.Seek($Position.Value, [System.IO.SeekOrigin]::Begin) | Out-Null
+
+        $reader = New-Object System.IO.StreamReader($stream, [System.Text.Encoding]::UTF8, $true, 4096, $true)
+        try {
+            $text = $reader.ReadToEnd()
+            $Position.Value = $stream.Position
+        }
+        finally {
+            $reader.Dispose()
+        }
+    }
+    finally {
+        $stream.Dispose()
+    }
+
+    if ([string]::IsNullOrWhiteSpace($text)) { return @() }
+    return $text -split "`r?`n" | Where-Object { $_ -ne "" }
+}
+
+function Show-LiveTrainingOutput {
+    param(
+        [System.Diagnostics.Process]$Process,
+        [string]$LogPath,
+        [string]$CsvDirectory,
+        [datetime]$StartedAt
+    )
+
+    $logPos = [long]0
+    $csvPos = [long]0
+    $csvPath = $null
+    $lastHeartbeat = Get-Date
+
+    Write-Host "Live log: $LogPath"
+    Write-Host "Dang theo doi training live... nhan Ctrl+C neu muon dung."
+    Write-Host ""
+
+    while (-not $Process.HasExited) {
+        foreach ($line in (Read-NewLines -Path $LogPath -Position ([ref]$logPos))) {
+            if ($line -match "\[AITraining\]|Gen \d+|Exception|Aborting|fatal" -or
+                ($line -match "Error" -and $line -notmatch "Licensing|AI\.Tracing|Curl|entitlement|com\.unity\.ai")) {
+                Write-Host $line
+            }
+        }
+
+        if (-not $csvPath -and (Test-Path $CsvDirectory)) {
+            $latestCsv = Get-ChildItem $CsvDirectory -Filter "training_*.csv" -ErrorAction SilentlyContinue |
+                         Where-Object { $_.LastWriteTime -gt $StartedAt } |
+                         Sort-Object LastWriteTime -Descending |
+                         Select-Object -First 1
+            if ($latestCsv) {
+                $csvPath = $latestCsv.FullName
+                $csvPos = 0
+                Write-Host "Live CSV: $csvPath"
+            }
+        }
+
+        if ($csvPath) {
+            foreach ($line in (Read-NewLines -Path $csvPath -Position ([ref]$csvPos))) {
+                if ($line -match "^\d+,") {
+                    Write-Host "[CSV] $line"
+                }
+            }
+        }
+
+        if (((Get-Date) - $lastHeartbeat).TotalSeconds -ge 30) {
+            Write-Host "[live] Unity van dang chay... PID=$($Process.Id) CPU=$([math]::Round($Process.CPU, 1))s"
+            $lastHeartbeat = Get-Date
+        }
+
+        Start-Sleep -Milliseconds 500
+        $Process.Refresh()
+    }
+
+    foreach ($line in (Read-NewLines -Path $LogPath -Position ([ref]$logPos))) {
+        if ($line -match "\[AITraining\]|Gen \d+|Exception|Aborting|fatal" -or
+            ($line -match "Error" -and $line -notmatch "Licensing|AI\.Tracing|Curl|entitlement|com\.unity\.ai")) {
+            Write-Host $line
+        }
+    }
+
+    if ($csvPath) {
+        foreach ($line in (Read-NewLines -Path $csvPath -Position ([ref]$csvPos))) {
+            if ($line -match "^\d+,") {
+                Write-Host "[CSV] $line"
+            }
+        }
+    }
+}
 
 Write-Host "Unity  : $UnityExe"
 Write-Host "Project: $ProjectPath"
@@ -78,8 +179,10 @@ $StartTime = Get-Date
 $proc = Start-Process `
     -FilePath    $UnityExe `
     -ArgumentList "-batchmode", "-quit", "-projectPath", "`"$ProjectPath`"", "-executeMethod", $Method, "-logFile", "`"$LogFile`"" `
-    -PassThru `
-    -Wait
+    -PassThru
+
+Show-LiveTrainingOutput -Process $proc -LogPath $LogFile -CsvDirectory $CsvDir -StartedAt $StartTime
+$proc.WaitForExit()
 
 $ExitCode = if ($proc -and $null -ne $proc.ExitCode) { $proc.ExitCode } else { -1 }
 $Duration = (Get-Date) - $StartTime

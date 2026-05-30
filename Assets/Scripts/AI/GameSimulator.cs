@@ -1,16 +1,33 @@
 using UnityEngine;
 
+public struct MatchResult
+{
+    public int result;
+    public int hpA;
+    public int hpB;
+    public int turns;
+    public float scoreA;
+}
+
 public class GameSimulator
 {
     private CombatResolver resolver = new CombatResolver();
+    private const int StartingHP = 7;
+    private const int MaxTurns = 20;
 
     public int SimulateMatch(BotAgent botA, BotAgent botB)
     {
-        int hpA = 7, hpB = 7;
-        int maxTurns = 20;
+        return EvaluateMatch(botA, botB).result;
+    }
 
-        for (int i = 0; i < maxTurns; i++)
+    public MatchResult EvaluateMatch(BotAgent botA, BotAgent botB)
+    {
+        int hpA = StartingHP, hpB = StartingHP;
+        int turnsPlayed = 0;
+
+        for (int i = 0; i < MaxTurns; i++)
         {
+            turnsPlayed = i + 1;
             int currentTurn = i + 1;
             int shopTier = Mathf.Clamp((currentTurn + 1) / 2, 1, 6);
 
@@ -43,8 +60,28 @@ public class GameSimulator
             botB.TriggerEndTurnShop();
         }
 
-        if (hpA > hpB) return 1;
-        if (hpB > hpA) return -1;
-        return 0;
+        int result = 0;
+        if (hpA > hpB) result = 1;
+        else if (hpB > hpA) result = -1;
+
+        return new MatchResult
+        {
+            result = result,
+            hpA = hpA,
+            hpB = hpB,
+            turns = turnsPlayed,
+            scoreA = ScoreFromA(result, hpA, hpB, turnsPlayed)
+        };
+    }
+
+    private static float ScoreFromA(int result, int hpA, int hpB, int turns)
+    {
+        float score = result > 0 ? 100f : result == 0 ? 25f : 0f;
+        score += (hpA - hpB) * 4f;
+
+        if (result > 0)
+            score += (MaxTurns - turns) * 2f;
+
+        return Mathf.Max(0f, score);
     }
 }
