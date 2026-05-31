@@ -130,7 +130,7 @@ public class BattlePhaseLayout : MonoBehaviour
             rect.anchorMin = anchors[i];
             rect.anchorMax = anchors[i];
             rect.anchoredPosition = Vector2.zero;
-            rect.sizeDelta = new Vector2(145f, 110f);
+            rect.sizeDelta = new Vector2(164f, 112f);
             rect.localScale = Vector3.one;
         }
     }

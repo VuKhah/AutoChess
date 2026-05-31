@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ee5229f1451f649469d2bc414651a039
+guid: 308a3f326608e334492b165bda3a68e5
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7135897253722541336
-    second: "s\xE0n \u0111\u1EA5u_0"
+      213: 8805073744275072655
+    second: Battle Phase_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "s\xE0n \u0111\u1EA5u_0"
+      name: Battle Phase_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1264
-        height: 842
+        width: 1536
+        height: 1024
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 81d41d1aebcc70360800000000000000
-      internalID: 7135897253722541336
+      spriteID: f8662ac4be7e13a70800000000000000
+      internalID: 8805073744275072655
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "s\xE0n \u0111\u1EA5u_0": 7135897253722541336
+      Battle Phase_0: 8805073744275072655
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
