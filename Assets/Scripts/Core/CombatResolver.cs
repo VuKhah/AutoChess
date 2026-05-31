@@ -20,16 +20,11 @@ public class CombatResolver
         { victim = v; killer = k; victimBoard = vb; killerBoard = kb; }
     }
 
-    private struct AttackIntent
+    private struct AttackEntry
     {
-        public CardInstance attacker, defender;
-        public int atkIdx, defIdx;
-        public bool isPlayerAttacking;
+        public CardInstance attacker;
+        public int atkSlot;
         public List<CardInstance> atkBoard, defBoard;
-
-        public AttackIntent(CardInstance a, CardInstance d, int ai, int di, bool ip,
-                            List<CardInstance> ab, List<CardInstance> db)
-        { attacker = a; defender = d; atkIdx = ai; defIdx = di; isPlayerAttacking = ip; atkBoard = ab; defBoard = db; }
     }
 
     private readonly Stack<DeathEvent> deathStack = new Stack<DeathEvent>();
@@ -37,7 +32,8 @@ public class CombatResolver
     // Dùng trong ResolveTurn để CleanupBoard có thể log Death action khi cần
     private TurnRecord              _currentLog;
     private List<CardInstance>      _pBoard;
-    private readonly HashSet<CardInstance> _clashDeaths = new HashSet<CardInstance>();
+    private readonly HashSet<CardInstance> _clashDeaths    = new HashSet<CardInstance>();
+    private readonly HashSet<CardInstance> _revivedThisFlush = new HashSet<CardInstance>();
 
     // ==========================================
     // PUBLIC API — gọi từ CardSlot / GameManager
@@ -119,45 +115,47 @@ public class CombatResolver
         // --- Phase 2: Battle Loop (tối đa 50 round) ---
         for (int round = 0; round < 50; round++)
         {
-            // Bước A: Build Stack tấn công xen kẽ P[0], E[0], P[1], E[1], ...
-            Stack<AttackIntent> attackStack = BuildAttackStack(pBoard, eBoard);
-
-            if (attackStack.Count == 0)
+            // Bước A: Build queue tấn công theo slot tăng dần (slot 0 → 6).
+            // Mỗi slot: enemy trước, player sau — giữ đúng thứ tự hiện tại.
+            List<AttackEntry> attackQueue = BuildInitialAttackQueue(pBoard, eBoard);
+            if (attackQueue.Count == 0)
             {
                 if (!Application.isBatchMode) Debug.Log("<color=gray>[COMBAT]</color> Trận đấu hòa: Không còn đòn tấn công hợp lệ!");
                 break;
             }
 
-            // Bước B: Pop từng intent ra khỏi Stack và thực thi
-            //         Nếu attacker đã chết → skip
-            //         Nếu defender chết trước → tìm mục tiêu thay thế
-            //         Flush Death Stack ngay sau mỗi đòn → deathrattle/reborn xử lý tức thì
-            while (attackStack.Count > 0)
+            // queued: ngăn unit đánh 2 lần trong cùng round
+            var queued = new HashSet<CardInstance>();
+            foreach (var e in attackQueue) queued.Add(e.attacker);
+
+            // Bước B: Lần lượt từng entry trong queue.
+            //   - FindTarget gọi động → phản ánh board hiện tại (Taunt/Frontline đúng lúc).
+            //   - Sau FlushDeathStack: unit mới summon/reborn được insert đúng vị trí slot.
+            int qi = 0;
+            while (qi < attackQueue.Count)
             {
-                AttackIntent intent = attackStack.Pop();
-                if (intent.attacker.IsDead) continue;
+                AttackEntry entry = attackQueue[qi++];
+                if (entry.attacker.IsDead) continue;
 
-                CardInstance defender = intent.defender;
-                int defIdx = intent.defIdx;
-                if (defender.IsDead)
-                {
-                    defender = FindTarget(intent.defBoard, intent.atkIdx);
-                    if (defender == null) continue;
-                    defIdx = intent.defBoard.IndexOf(defender);
-                }
+                CardInstance defender = FindTarget(entry.defBoard, entry.atkSlot);
+                if (defender == null) continue;
 
-                ExecuteClash(intent.attacker, defender,
-                             intent.atkIdx, defIdx,
-                             log, intent.isPlayerAttacking,
-                             intent.atkBoard, intent.defBoard);
+                bool isPlayerAttacking = ReferenceEquals(entry.atkBoard, pBoard);
+                ExecuteClash(entry.attacker, defender,
+                             entry.atkSlot, entry.defBoard.IndexOf(defender),
+                             log, isPlayerAttacking,
+                             entry.atkBoard, entry.defBoard);
 
                 ScanAllBoardsForNewDeaths(pBoard, eBoard);
-                // Flush ngay sau mỗi đòn: deathrattle / reborn / OnAllyDeath chain xử lý tức thì,
-                // không chờ đến cuối round — tránh unit đã chết vẫn "block slot" cho round sau
+                _revivedThisFlush.Clear();
                 FlushDeathStack(pBoard, eBoard);
 
-                // BUG FIX: Early-exit ngay khi một bên bị xóa sổ giữa round,
-                // tránh pop thêm AttackIntent thừa rồi skip từng cái.
+                // Reborn unit đã "chết rồi sống lại" → cho phép vào queue lại
+                foreach (var u in _revivedThisFlush) queued.Remove(u);
+
+                // Insert unit mới (summon / reborn) vào đúng vị trí slot trong phần chưa xử lý
+                InsertNewUnits(attackQueue, queued, pBoard, eBoard, qi);
+
                 if (IsSideEliminated(pBoard) || IsSideEliminated(eBoard)) break;
             }
 
@@ -173,34 +171,65 @@ public class CombatResolver
     }
 
     // ==========================================
-    // ATTACK STACK BUILDER
-    // Layout: Frontline = index 0-3 (slot 1-4), Backline = index 4-6 (slot 5-7).
-    // Thứ tự tấn công: Frontline (0→3) trước, Backline (4→6) sau.
-    // Stack LIFO → push ngược để pop ra đúng thứ tự.
+    // ATTACK QUEUE BUILDER
+    // Thứ tự: slot tăng dần (0→6). Cùng slot: enemy trước, player sau.
+    // Target KHÔNG được fix sẵn — FindTarget gọi động lúc execute để luôn
+    // phản ánh board hiện tại (Taunt / Frontline mới summon che đúng lúc).
     // ==========================================
 
-    private Stack<AttackIntent> BuildAttackStack(List<CardInstance> pBoard, List<CardInstance> eBoard)
+    private List<AttackEntry> BuildInitialAttackQueue(List<CardInstance> pBoard, List<CardInstance> eBoard)
     {
-        var stack = new Stack<AttackIntent>();
+        var queue = new List<AttackEntry>();
         int slotCount = Mathf.Min(pBoard.Count, eBoard.Count);
-
-        // Push ngược (slot cuối → 0) để pop ra 0,1,2,...,6
-        for (int slot = slotCount - 1; slot >= 0; slot--)
+        for (int slot = 0; slot < slotCount; slot++)
         {
             if (eBoard[slot] != null && !eBoard[slot].IsDead && eBoard[slot].currentATK > 0)
-            {
-                CardInstance target = FindTarget(pBoard, slot);
-                if (target != null)
-                    stack.Push(new AttackIntent(eBoard[slot], target, slot, pBoard.IndexOf(target), false, eBoard, pBoard));
-            }
+                queue.Add(new AttackEntry { attacker = eBoard[slot], atkSlot = slot, atkBoard = eBoard, defBoard = pBoard });
             if (pBoard[slot] != null && !pBoard[slot].IsDead && pBoard[slot].currentATK > 0)
+                queue.Add(new AttackEntry { attacker = pBoard[slot], atkSlot = slot, atkBoard = pBoard, defBoard = eBoard });
+        }
+        return queue;
+    }
+
+    // Unit mới xuất hiện trên board (summon / reborn) được insert vào đúng vị trí slot
+    // trong phần chưa xử lý của queue (index >= nextIndex), không đánh 2 lần/round.
+    private void InsertNewUnits(List<AttackEntry> queue, HashSet<CardInstance> queued,
+        List<CardInstance> pBoard, List<CardInstance> eBoard, int nextIndex)
+    {
+        // Thu thập trước rồi insert — tránh modify queue trong lúc scan
+        var toInsert = new List<AttackEntry>();
+        int slotCount = Mathf.Min(pBoard.Count, eBoard.Count);
+        for (int slot = 0; slot < slotCount; slot++)
+        {
+            var eu = eBoard[slot];
+            if (eu != null && !eu.IsDead && eu.currentATK > 0 && !queued.Contains(eu))
             {
-                CardInstance target = FindTarget(eBoard, slot);
-                if (target != null)
-                    stack.Push(new AttackIntent(pBoard[slot], target, slot, eBoard.IndexOf(target), true, pBoard, eBoard));
+                toInsert.Add(new AttackEntry { attacker = eu, atkSlot = slot, atkBoard = eBoard, defBoard = pBoard });
+                queued.Add(eu);
+            }
+            var pu = pBoard[slot];
+            if (pu != null && !pu.IsDead && pu.currentATK > 0 && !queued.Contains(pu))
+            {
+                toInsert.Add(new AttackEntry { attacker = pu, atkSlot = slot, atkBoard = pBoard, defBoard = eBoard });
+                queued.Add(pu);
             }
         }
-        return stack;
+
+        // toInsert đã sắp xếp theo slot tăng dần (vì loop slot 0→N).
+        // Mỗi entry được insert vào vị trí đúng trong phần chưa xử lý.
+        foreach (var entry in toInsert)
+        {
+            int insertAt = queue.Count;
+            for (int i = nextIndex; i < queue.Count; i++)
+            {
+                if (entry.atkSlot < queue[i].atkSlot)
+                {
+                    insertAt = i;
+                    break;
+                }
+            }
+            queue.Insert(insertAt, entry);
+        }
     }
 
     // ==========================================
@@ -375,9 +404,8 @@ public class CombatResolver
             if (unit.isReborn && !unit.hasRebornUsed)
             {
                 unit.ReviveDefault();
-                // Xóa khỏi _clashDeaths: unit đã hồi sinh nên không còn là "clash death" nữa.
-                // Nếu bị giết lại sau Reborn (ví dụ Sekhmet), CleanupBoard sẽ log Death action đúng.
                 _clashDeaths.Remove(unit);
+                _revivedThisFlush.Add(unit); // cho phép unit vào queue lại trong round hiện tại
                 if (!Application.isBatchMode) Debug.Log($"<color=magenta>[REBORN]</color> {unit.Data.cardName} hồi sinh với chỉ số mặc định (ATK {unit.currentATK} / HP {unit.currentHP})!");
                 engine.BroadcastAllyEvent(TriggerType.OnAllyReborn, unit, allyBoard, enemyBoard);
                 // Reborn = đơn vị "xuất hiện lại" → Sekhmet và các listener OnAllySummon cũng phản ứng
