@@ -17,7 +17,7 @@ public class AIManager : MonoBehaviour
         if (file != null)
         {
             loadedLibrary = JsonUtility.FromJson<AILibrary>(file.text);
-            Debug.Log("[AIManager] AI_Library nạp thành công: Hard / Babylon / Nile / Aggressor / Resilient");
+            Debug.Log("[AIManager] AI_Library nạp thành công: Hard / Babylon / Nile / Summoner / Resilient");
         }
     }
 
@@ -28,7 +28,7 @@ public class AIManager : MonoBehaviour
         {
             case "Babylon":   return loadedLibrary.babylonBot;
             case "Nile":      return loadedLibrary.nileBot;
-            case "Aggressor": return loadedLibrary.aggressorBot;
+            case "Summoner":  return loadedLibrary.summonerBot;
             case "Resilient": return loadedLibrary.resilientBot;
             default:          return loadedLibrary.hardBot;
         }

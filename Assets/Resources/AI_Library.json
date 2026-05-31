@@ -125,7 +125,7 @@
         ],
         "fitness": 2328.0
     },
-    "aggressorBot": {
+    "summonerBot": {
         "genes": [
             1.0,
             0.0,

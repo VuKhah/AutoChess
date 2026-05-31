@@ -84,12 +84,14 @@ public class GATrainer : MonoBehaviour
                     c.genes[18] = Random.Range(0.0f, 0.3f);
                     c.genes[19] = Random.Range(0.0f, 0.3f);
                     break;
-                case 2: // Aggressor seed — ATK rush, reroll hết tiền, bỏ growth
-                    c.genes[0]  = Random.Range(0.75f, 1.0f); // wATK
-                    c.genes[9]  = Random.Range(0.70f, 1.0f); // tOnAttack
-                    c.genes[24] = Random.Range(0.75f, 1.0f); // wRerollThresh
-                    c.genes[11] = Random.Range(0.00f, 0.2f); // tEndTurnShop (thấp)
-                    c.genes[26] = Random.Range(0.00f, 0.2f); // wRerollKeep (thấp — tiêu tiền nhanh)
+                case 2: // Summoner seed — summon/reborn/consume chain, giữ shells
+                    c.genes[14] = Random.Range(0.75f, 1.0f); // eSummon (covers SummonConsumed, isConsume)
+                    c.genes[5]  = Random.Range(0.70f, 1.0f); // wReborn — vòng lặp tái sinh
+                    c.genes[8]  = Random.Range(0.65f, 1.0f); // tOnDeath — kích khi unit chết
+                    c.genes[34] = Random.Range(0.65f, 1.0f); // tOnAllyGroup — OnAllyDeath/Summon/Reborn
+                    c.genes[35] = Random.Range(0.50f, 0.85f); // tOnAllyDeploy — khi shell triệu hồi
+                    c.genes[27] = Random.Range(0.00f, 0.15f); // wProactiveSell thấp — giữ shells
+                    c.genes[0]  = Random.Range(0.10f, 0.40f); // wATK thấp
                     break;
                 case 3: // Resilient seed — bền bỉ, phản đòn, không chết dễ
                     c.genes[1]  = Random.Range(0.75f, 1.0f); // wHP
@@ -162,11 +164,11 @@ public class GATrainer : MonoBehaviour
             float pctO = cntO * 100f / populationSize;
             float bestB = BestOrZero(population.Where(IsBabylon));
             float bestN = BestOrZero(population.Where(IsNile));
-            float bestA = population.Max(AggressorScore);
+            float bestS = population.Max(SummonerScore);
             float bestR = population.Max(ResilientScore);
 
             // ── Ghi CSV ──────────────────────────────────────────────────────
-            csv.WriteLine($"{g},{best:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{bestB:F0},{bestN:F0},{bestA:F2},{bestR:F2}");
+            csv.WriteLine($"{g},{best:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{bestB:F0},{bestN:F0},{bestS:F2},{bestR:F2}");
             Debug.Log($"Gen {g,3}/{generations}  Best={best,5:F0}  Avg={avg,5:F1}  Worst={worst,5:F0}  " +
                       $"Std={stdDev:F1}  B={pctB:F0}% N={pctN:F0}% O={pctO:F0}%  BestB={bestB:F0} BestN={bestN:F0}");
 
@@ -208,23 +210,23 @@ public class GATrainer : MonoBehaviour
         var nile = SelectDistinct(population.Where(IsNile), selected, c => c.fitness);
         if (nile != null) selected.Add(nile);
 
-        var aggressor = SelectDistinct(viable.Count > 0 ? viable : population, selected, AggressorScore);
-        if (aggressor != null) selected.Add(aggressor);
+        var summoner = SelectDistinct(viable.Count > 0 ? viable : population, selected, SummonerScore);
+        if (summoner != null) selected.Add(summoner);
 
         var resilient = SelectDistinct(viable.Count > 0 ? viable : population, selected, ResilientScore);
 
         library.hardBot = hard.Clone();
         library.babylonBot = babylon?.Clone();
         library.nileBot = nile?.Clone();
-        library.aggressorBot = aggressor?.Clone();
+        library.summonerBot = summoner?.Clone();
         library.resilientBot = resilient?.Clone();
 
         // ── Log kết quả ──────────────────────────────────────────────────────
-        LogBot("Hard",      library.hardBot,      "rank=1");
-        LogBot("Babylon",   library.babylonBot,   library.babylonBot   != null ? $"sBabylon={library.babylonBot.genes[18]:F3}"    : "");
-        LogBot("Nile",      library.nileBot,       library.nileBot      != null ? $"sNiles={library.nileBot.genes[20]:F3}"          : "");
-        LogBot("Aggressor", library.aggressorBot, library.aggressorBot != null ? $"score={AggressorScore(library.aggressorBot):F2}" : "");
-        LogBot("Resilient", library.resilientBot, library.resilientBot != null ? $"score={ResilientScore(library.resilientBot):F2}" : "");
+        LogBot("Hard",     library.hardBot,     "rank=1");
+        LogBot("Babylon",  library.babylonBot,  library.babylonBot  != null ? $"sBabylon={library.babylonBot.genes[18]:F3}"   : "");
+        LogBot("Nile",     library.nileBot,      library.nileBot     != null ? $"sNiles={library.nileBot.genes[20]:F3}"        : "");
+        LogBot("Summoner", library.summonerBot, library.summonerBot != null ? $"score={SummonerScore(library.summonerBot):F2}" : "");
+        LogBot("Resilient",library.resilientBot,library.resilientBot!= null ? $"score={ResilientScore(library.resilientBot):F2}" : "");
 
         csv.Close();
         SaveLibrary();
@@ -232,18 +234,18 @@ public class GATrainer : MonoBehaviour
     }
 
     // ── Scoring functions cho archetype selection ─────────────────────────────
-    private static float AggressorScore(Chromosome c)
+    private static float SummonerScore(Chromosome c)
     {
         if (c == null) return float.MinValue;
-        return c.genes[0] * 2.5f
-             + c.genes[9] * 1.5f
-             + c.genes[24]
-             + (1f - c.genes[11]) * 0.8f
-             + (1f - c.genes[26]) * 0.5f
-             - c.genes[1] * 0.6f
-             - c.genes[4] * 0.4f
-             - c.genes[5] * 0.6f
-             - c.genes[6] * 0.4f;
+        return c.genes[14] * 2.5f   // eSummon — SummonConsumed ×1.2 trong EffectWeight
+             + c.genes[5]  * 2.0f   // wReborn — vòng lặp tái sinh
+             + c.genes[8]  * 1.5f   // tOnDeath — deathrattle / summon khi chết
+             + c.genes[34] * 1.5f   // tOnAllyGroup — OnAllyDeath/Summon/Reborn chain
+             + c.genes[35] * 0.8f   // tOnAllyDeploy — khi shell được triệu hồi lên sân
+             + c.genes[12] * 0.6f   // tOnDeploy
+             - c.genes[9]  * 0.8f   // phạt OnAttack — không phải playstyle này
+             - c.genes[0]  * 0.5f   // phạt wATK raw
+             - c.genes[27] * 1.2f;  // phạt bán chủ động — phải giữ shells
     }
 
     private static float ResilientScore(Chromosome c)
@@ -312,7 +314,7 @@ public class GATrainer : MonoBehaviour
         AddTopClones(nextGen, population, c => true, eliteCount);
         AddTopClones(nextGen, population, IsBabylon, 2);
         AddTopClones(nextGen, population, IsNile, 2);
-        AddTopClones(nextGen, population.OrderByDescending(AggressorScore), c => true, 2);
+        AddTopClones(nextGen, population.OrderByDescending(SummonerScore), c => true, 2);
         AddTopClones(nextGen, population.OrderByDescending(ResilientScore), c => true, 2);
 
         int breedTarget = Mathf.Max(nextGen.Count, populationSize - immigrantCount);
@@ -386,11 +388,13 @@ public class GATrainer : MonoBehaviour
                 c.genes[19] = Random.Range(0.0f, 0.3f);
                 break;
             case 2:
-                c.genes[0]  = Random.Range(0.75f, 1.0f);
-                c.genes[9]  = Random.Range(0.70f, 1.0f);
-                c.genes[24] = Random.Range(0.75f, 1.0f);
-                c.genes[11] = Random.Range(0.00f, 0.20f);
-                c.genes[26] = Random.Range(0.00f, 0.20f);
+                c.genes[14] = Random.Range(0.75f, 1.0f);
+                c.genes[5]  = Random.Range(0.70f, 1.0f);
+                c.genes[8]  = Random.Range(0.65f, 1.0f);
+                c.genes[34] = Random.Range(0.65f, 1.0f);
+                c.genes[35] = Random.Range(0.50f, 0.85f);
+                c.genes[27] = Random.Range(0.00f, 0.15f);
+                c.genes[0]  = Random.Range(0.10f, 0.40f);
                 break;
             case 3:
                 c.genes[1]  = Random.Range(0.75f, 1.0f);

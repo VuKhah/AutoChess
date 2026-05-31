@@ -138,7 +138,7 @@ public partial class GameManager : MonoBehaviour
         AddBot(lib.hardBot,      10, "Hard");
         AddBot(lib.babylonBot,   10, "Babylon");
         AddBot(lib.nileBot,      10, "Nile");
-        AddBot(lib.aggressorBot, 10, "Aggressor");
+        AddBot(lib.summonerBot,  10, "Summoner");
         AddBot(lib.resilientBot, 10, "Resilient");
 
         Debug.Log($"<color=cyan>[AI]</color> {enemyBots.Count} đối thủ sẵn sàng (độ khó chọn: {difficulty})");

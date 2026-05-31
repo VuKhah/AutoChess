@@ -91,7 +91,7 @@ public static class AITrainingBatch
         string csvPath = Path.Combine(csvDir, $"training_{stamp}.csv");
 
         var csv = new StreamWriter(csvPath, false, System.Text.Encoding.UTF8) { AutoFlush = true };
-        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other,best_babylon,best_niles,best_aggressor,best_resilient");
+        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other,best_babylon,best_niles,best_summoner,best_resilient");
         Debug.Log($"[AITraining] CSV → {csvPath}");
 
         // ── 5 seeded sub-population (mỗi nhóm 20%) ───────────────────────────
@@ -115,12 +115,14 @@ public static class AITrainingBatch
                     c.genes[18] = Random.Range(0.0f, 0.3f);
                     c.genes[19] = Random.Range(0.0f, 0.3f);
                     break;
-                case 2: // Aggressor — ATK rush, reroll heavy
-                    c.genes[0]  = Random.Range(0.75f, 1.0f);
-                    c.genes[9]  = Random.Range(0.70f, 1.0f);
-                    c.genes[24] = Random.Range(0.75f, 1.0f);
-                    c.genes[11] = Random.Range(0.00f, 0.20f);
-                    c.genes[26] = Random.Range(0.00f, 0.20f);
+                case 2: // Summoner — summon/reborn/consume chain, giữ shells
+                    c.genes[14] = Random.Range(0.75f, 1.0f);
+                    c.genes[5]  = Random.Range(0.70f, 1.0f);
+                    c.genes[8]  = Random.Range(0.65f, 1.0f);
+                    c.genes[34] = Random.Range(0.65f, 1.0f);
+                    c.genes[35] = Random.Range(0.50f, 0.85f);
+                    c.genes[27] = Random.Range(0.00f, 0.15f);
+                    c.genes[0]  = Random.Range(0.10f, 0.40f);
                     break;
                 case 3: // Resilient — HP/Taunt/Reborn defensive
                     c.genes[1]  = Random.Range(0.75f, 1.0f);
@@ -175,10 +177,10 @@ public static class AITrainingBatch
             float pctO = (popSize - cntB - cntN) * 100f / popSize;
             float bestB = BestOrZero(population.Where(IsBabylon));
             float bestN = BestOrZero(population.Where(IsNile));
-            float bestA = population.Max(AggressorScore);
+            float bestS = population.Max(SummonerScore);
             float bestR = population.Max(ResilientScore);
 
-            csv.WriteLine($"{g},{best:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{bestB:F0},{bestN:F0},{bestA:F2},{bestR:F2}");
+            csv.WriteLine($"{g},{best:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{bestB:F0},{bestN:F0},{bestS:F2},{bestR:F2}");
             Debug.Log($"[AITraining] Gen {g}/{generations}  Best={best:F0}  Avg={avg:F1}  Worst={worst:F0}  Std={stdDev:F1}  B={pctB:F0}% N={pctN:F0}% O={pctO:F0}%  BestB={bestB:F0} BestN={bestN:F0}");
 
             if (pctB < 10f || pctN < 10f)
@@ -216,8 +218,8 @@ public static class AITrainingBatch
         var nile = SelectDistinct(population.Where(IsNile), selected, c => c.fitness);
         if (nile != null) selected.Add(nile);
 
-        var aggressor = SelectDistinct(viable.Count > 0 ? viable : population, selected, AggressorScore);
-        if (aggressor != null) selected.Add(aggressor);
+        var summoner = SelectDistinct(viable.Count > 0 ? viable : population, selected, SummonerScore);
+        if (summoner != null) selected.Add(summoner);
 
         var resilient = SelectDistinct(viable.Count > 0 ? viable : population, selected, ResilientScore);
 
@@ -226,32 +228,32 @@ public static class AITrainingBatch
             hardBot = hard.Clone(),
             babylonBot = babylon?.Clone(),
             nileBot = nile?.Clone(),
-            aggressorBot = aggressor?.Clone(),
+            summonerBot = summoner?.Clone(),
             resilientBot = resilient?.Clone(),
         };
 
         // Log kết quả cuối
         Debug.Log($"[AITraining] Hard      fitness={library.hardBot.fitness:F0}  rank=1");
-        LogResult("Babylon",   library.babylonBot,   library.babylonBot != null   ? $"sBabylon={library.babylonBot.genes[18]:F3}"    : "not found");
-        LogResult("Nile",      library.nileBot,       library.nileBot != null      ? $"sNiles={library.nileBot.genes[20]:F3}"          : "not found");
-        LogResult("Aggressor", library.aggressorBot, library.aggressorBot != null ? $"score={AggressorScore(library.aggressorBot):F2}" : "not found");
-        LogResult("Resilient", library.resilientBot, library.resilientBot != null ? $"score={ResilientScore(library.resilientBot):F2}" : "not found");
+        LogResult("Babylon",  library.babylonBot,  library.babylonBot  != null ? $"sBabylon={library.babylonBot.genes[18]:F3}"   : "not found");
+        LogResult("Nile",     library.nileBot,      library.nileBot     != null ? $"sNiles={library.nileBot.genes[20]:F3}"        : "not found");
+        LogResult("Summoner", library.summonerBot, library.summonerBot != null ? $"score={SummonerScore(library.summonerBot):F2}" : "not found");
+        LogResult("Resilient",library.resilientBot,library.resilientBot!= null ? $"score={ResilientScore(library.resilientBot):F2}" : "not found");
 
         csv.Close();
         return library;
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    private static float AggressorScore(Chromosome c) =>
-        c.genes[0] * 2.5f
-        + c.genes[9] * 1.5f
-        + c.genes[24]
-        + (1f - c.genes[11]) * 0.8f
-        + (1f - c.genes[26]) * 0.5f
-        - c.genes[1] * 0.6f
-        - c.genes[4] * 0.4f
-        - c.genes[5] * 0.6f
-        - c.genes[6] * 0.4f;
+    private static float SummonerScore(Chromosome c) =>
+        c.genes[14] * 2.5f
+        + c.genes[5]  * 2.0f
+        + c.genes[8]  * 1.5f
+        + c.genes[34] * 1.5f
+        + c.genes[35] * 0.8f
+        + c.genes[12] * 0.6f
+        - c.genes[9]  * 0.8f
+        - c.genes[0]  * 0.5f
+        - c.genes[27] * 1.2f;
 
     private static float ResilientScore(Chromosome c) =>
         c.genes[1] * 1.4f
@@ -313,7 +315,7 @@ public static class AITrainingBatch
         AddTopClones(nextGen, population, c => true, eliteCount);
         AddTopClones(nextGen, population, IsBabylon, 2);
         AddTopClones(nextGen, population, IsNile, 2);
-        AddTopClones(nextGen, population.OrderByDescending(AggressorScore), c => true, 2);
+        AddTopClones(nextGen, population.OrderByDescending(SummonerScore), c => true, 2);
         AddTopClones(nextGen, population.OrderByDescending(ResilientScore), c => true, 2);
 
         int breedTarget = Mathf.Max(nextGen.Count, popSize - immigrantCount);
@@ -384,11 +386,13 @@ public static class AITrainingBatch
                 c.genes[19] = Random.Range(0.0f, 0.3f);
                 break;
             case 2:
-                c.genes[0]  = Random.Range(0.75f, 1.0f);
-                c.genes[9]  = Random.Range(0.70f, 1.0f);
-                c.genes[24] = Random.Range(0.75f, 1.0f);
-                c.genes[11] = Random.Range(0.00f, 0.20f);
-                c.genes[26] = Random.Range(0.00f, 0.20f);
+                c.genes[14] = Random.Range(0.75f, 1.0f);
+                c.genes[5]  = Random.Range(0.70f, 1.0f);
+                c.genes[8]  = Random.Range(0.65f, 1.0f);
+                c.genes[34] = Random.Range(0.65f, 1.0f);
+                c.genes[35] = Random.Range(0.50f, 0.85f);
+                c.genes[27] = Random.Range(0.00f, 0.15f);
+                c.genes[0]  = Random.Range(0.10f, 0.40f);
                 break;
             case 3:
                 c.genes[1]  = Random.Range(0.75f, 1.0f);
