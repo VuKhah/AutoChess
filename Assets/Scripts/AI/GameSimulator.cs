@@ -76,12 +76,13 @@ public class GameSimulator
 
     private static float ScoreFromA(int result, int hpA, int hpB, int turns)
     {
-        float score = result > 0 ? 100f : result == 0 ? 25f : 0f;
-        score += (hpA - hpB) * 4f;
+        float score = result > 0 ? 120f : result == 0 ? 70f : 35f;
+        score += hpA * 6f;
+        score -= hpB * 3f;
 
         if (result > 0)
             score += (MaxTurns - turns) * 2f;
 
-        return Mathf.Max(0f, score);
+        return Mathf.Max(1f, score);
     }
 }

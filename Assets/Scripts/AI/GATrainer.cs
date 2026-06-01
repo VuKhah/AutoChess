@@ -8,10 +8,10 @@ public class GATrainer : MonoBehaviour
 {
     [Header("Cấu hình huấn luyện")]
     public int populationSize  = 30;   // test nhanh: 30 | production: 120
-    public int generations     = 40;   // test nhanh: 40 | production: 120
+    public int generations     = 40;   // test nhanh: 40 | production: 180
     public int matchesPerChrom = 5;    // test nhanh: 5  | production: 20
     [Range(0.05f, 0.25f)]
-    public float mutationRate  = 0.08f;
+    public float mutationRate  = 0.10f;
     [Range(0.05f, 0.2f)]
     public float mutationMag   = 0.12f;
     [Range(0.05f, 0.25f)]
@@ -119,7 +119,7 @@ public class GATrainer : MonoBehaviour
 
         _csv = new StreamWriter(csvPath, false, System.Text.Encoding.UTF8) { AutoFlush = true };
         var csv = _csv;
-        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other,best_babylon,best_niles,best_aggressor,best_resilient");
+        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other,best_babylon,best_niles,best_summoner,best_resilient,raw_best,avg_ema,best_gain");
 
         Debug.Log($"=== HUẤN LUYỆN AI === Genes:{Chromosome.GeneCount} | Pop:{populationSize} | Gen:{generations} ===");
         Debug.Log($"[GATrainer] CSV → {csvPath}");
@@ -128,9 +128,21 @@ public class GATrainer : MonoBehaviour
         const float PLATEAU_EPS      = 0.5f; // ngưỡng thay đổi std_dev tính là "không đổi"
         int   plateauCount = 0;
         float prevStdDev   = -1f;
+        Chromosome hallOfFame = null;
+        float bestEver = float.MinValue;
+        float bestBabylonEver = 0f;
+        float bestNileEver = 0f;
+        float bestSummonerEver = float.MinValue;
+        float bestResilientEver = float.MinValue;
+        float avgEma = 0f;
+        bool hasAvgEma = false;
+        var benchmarkOpponents = CreateBenchmarkOpponents();
 
         for (int g = 0; g < generations; g++)
         {
+            if (g > 0 && g % 30 == 0)
+                benchmarkOpponents = CreateBenchmarkOpponents();
+
             // ── Đánh giá Fitness ─────────────────────────────────────────────
             foreach (var chromo in population)
             {
@@ -145,6 +157,12 @@ public class GATrainer : MonoBehaviour
                     MatchResult result = sim.EvaluateMatch(me, opp);
                     chromo.fitness += result.scoreA;
                 }
+
+                foreach (var benchmark in benchmarkOpponents)
+                {
+                    MatchResult result = sim.EvaluateMatch(new BotAgent(chromo), new BotAgent(benchmark));
+                    chromo.fitness += result.scoreA * 0.5f;
+                }
             }
 
             // ── Sắp xếp ─────────────────────────────────────────────────────
@@ -154,6 +172,13 @@ public class GATrainer : MonoBehaviour
             float avg   = population.Average(c => c.fitness);
             float worst = population[population.Count - 1].fitness;
             float stdDev = Mathf.Sqrt(population.Average(c => (c.fitness - avg) * (c.fitness - avg)));
+            if (hallOfFame == null || best > bestEver)
+            {
+                hallOfFame = population[0].Clone();
+                bestEver = best;
+            }
+            avgEma = hasAvgEma ? Mathf.Lerp(avgEma, avg, 0.25f) : avg;
+            hasAvgEma = true;
 
             // ── Tribe distribution ───────────────────────────────────────────
             int cntB = population.Count(c => c.genes[18] > c.genes[19] && c.genes[18] > c.genes[20]);
@@ -166,10 +191,14 @@ public class GATrainer : MonoBehaviour
             float bestN = BestOrZero(population.Where(IsNile));
             float bestS = population.Max(SummonerScore);
             float bestR = population.Max(ResilientScore);
+            bestBabylonEver = Mathf.Max(bestBabylonEver, bestB);
+            bestNileEver = Mathf.Max(bestNileEver, bestN);
+            bestSummonerEver = Mathf.Max(bestSummonerEver, bestS);
+            bestResilientEver = Mathf.Max(bestResilientEver, bestR);
 
             // ── Ghi CSV ──────────────────────────────────────────────────────
-            csv.WriteLine($"{g},{best:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{bestB:F0},{bestN:F0},{bestS:F2},{bestR:F2}");
-            Debug.Log($"Gen {g,3}/{generations}  Best={best,5:F0}  Avg={avg,5:F1}  Worst={worst,5:F0}  " +
+            csv.WriteLine($"{g},{bestEver:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{bestBabylonEver:F0},{bestNileEver:F0},{bestSummonerEver:F2},{bestResilientEver:F2},{best:F0},{avgEma:F1},{bestEver - best:F0}");
+            Debug.Log($"Gen {g,3}/{generations}  Best={bestEver,5:F0}  Raw={best,5:F0}  Avg={avg,5:F1}  Worst={worst,5:F0}  " +
                       $"Std={stdDev:F1}  B={pctB:F0}% N={pctN:F0}% O={pctO:F0}%  BestB={bestB:F0} BestN={bestN:F0}");
 
             if (pctB < 10f || pctN < 10f)
@@ -189,7 +218,10 @@ public class GATrainer : MonoBehaviour
             }
 
             // ── Elitism + breed ───────────────────────────────────────────────
-            population = BreedNextGen(pctB, pctN);
+            if (g == generations - 1)
+                break;
+
+            population = BreedNextGen(g, pctB, pctN, pctO);
             yield return null;
         }
 
@@ -201,7 +233,7 @@ public class GATrainer : MonoBehaviour
 
         // ── Chọn 5 bot ───────────────────────────────────────────────────────
         var selected = new List<Chromosome>();
-        var hard = population[0];
+        var hard = hallOfFame ?? population[0];
         selected.Add(hard);
 
         var babylon = SelectDistinct(population.Where(IsBabylon), selected, c => c.fitness);
@@ -303,12 +335,18 @@ public class GATrainer : MonoBehaviour
         return Mathf.Sqrt(sum / Chromosome.GeneCount);
     }
 
-    private List<Chromosome> BreedNextGen(float pctB, float pctN)
+    private List<Chromosome> BreedNextGen(int generation, float pctB, float pctN, float pctO)
     {
-        int eliteCount = Mathf.Max(2, populationSize / 20);
-        int immigrantCount = Mathf.Max(2, Mathf.RoundToInt(populationSize * immigrantRate));
-        if (pctB < 10f) immigrantCount += 2;
-        if (pctN < 10f) immigrantCount += 2;
+        float progress = TrainingProgress(generation, generations);
+        float currentMutationRate = CurrentMutationRate(progress);
+        float currentMutationMag = CurrentMutationMag(progress);
+        int tournamentK = CurrentTournamentSize(progress);
+
+        int eliteCount = Mathf.Max(3, Mathf.RoundToInt(Mathf.Lerp(populationSize / 18f, populationSize / 8f, progress)));
+        int immigrantCount = Mathf.Max(2, Mathf.RoundToInt(populationSize * CurrentImmigrantRate(progress)));
+        if (pctB < 12f) immigrantCount += 2;
+        if (pctN < 12f) immigrantCount += 2;
+        if (pctO < 8f) immigrantCount += 3;
 
         var nextGen = new List<Chromosome>();
         AddTopClones(nextGen, population, c => true, eliteCount);
@@ -318,11 +356,20 @@ public class GATrainer : MonoBehaviour
         AddTopClones(nextGen, population.OrderByDescending(ResilientScore), c => true, 2);
 
         int breedTarget = Mathf.Max(nextGen.Count, populationSize - immigrantCount);
+        int refineTarget = progress < 0.35f ? 0 : Mathf.RoundToInt(populationSize * Mathf.Lerp(0.05f, 0.20f, progress));
+        foreach (var elite in population.Take(eliteCount))
+        {
+            if (refineTarget-- <= 0 || nextGen.Count >= breedTarget) break;
+            nextGen.Add(MutateClone(elite, currentMutationRate * 0.65f, currentMutationMag * 0.45f));
+        }
+
         while (nextGen.Count < breedTarget)
         {
             nextGen.Add(CrossoverAndMutate(
-                TournamentSelect(population, 3),
-                TournamentSelect(population, 3)));
+                TournamentSelect(population, tournamentK),
+                TournamentSelect(population, tournamentK),
+                currentMutationRate,
+                currentMutationMag));
         }
 
         while (nextGen.Count < populationSize)
@@ -348,7 +395,7 @@ public class GATrainer : MonoBehaviour
         return best;
     }
 
-    private Chromosome CrossoverAndMutate(Chromosome a, Chromosome b)
+    private Chromosome CrossoverAndMutate(Chromosome a, Chromosome b, float currentMutationRate, float currentMutationMag)
     {
         Chromosome child = new Chromosome();
 
@@ -361,15 +408,68 @@ public class GATrainer : MonoBehaviour
         for (int i = 0; i < Chromosome.GeneCount; i++)
         {
             child.genes[i] = (i >= pt1 && i < pt2) ? b.genes[i] : a.genes[i];
-            if (Random.value < mutationRate)
+            if (Random.value < currentMutationRate)
             {
                 float u1 = Mathf.Max(1e-6f, Random.value);
                 float z  = Mathf.Sqrt(-2f * Mathf.Log(u1)) * Mathf.Cos(2f * Mathf.PI * Random.value);
-                child.genes[i] += z * mutationMag;
+                child.genes[i] += z * currentMutationMag;
             }
             child.genes[i] = Mathf.Clamp01(child.genes[i]);
         }
         return child;
+    }
+
+    private static Chromosome MutateClone(Chromosome parent, float currentMutationRate, float currentMutationMag)
+    {
+        Chromosome child = parent.Clone();
+        for (int i = 0; i < Chromosome.GeneCount; i++)
+        {
+            if (Random.value < currentMutationRate)
+            {
+                float u1 = Mathf.Max(1e-6f, Random.value);
+                float z = Mathf.Sqrt(-2f * Mathf.Log(u1)) * Mathf.Cos(2f * Mathf.PI * Random.value);
+                child.genes[i] = Mathf.Clamp01(child.genes[i] + z * currentMutationMag);
+            }
+        }
+        return child;
+    }
+
+    private float TrainingProgress(int generation, int totalGenerations)
+    {
+        return totalGenerations <= 1 ? 1f : Mathf.Clamp01(generation / (float)(totalGenerations - 1));
+    }
+
+    private float CurrentMutationRate(float progress)
+    {
+        return Mathf.Lerp(mutationRate, 0.035f, Mathf.SmoothStep(0f, 1f, progress));
+    }
+
+    private float CurrentMutationMag(float progress)
+    {
+        return Mathf.Lerp(mutationMag, 0.035f, Mathf.SmoothStep(0f, 1f, progress));
+    }
+
+    private float CurrentImmigrantRate(float progress)
+    {
+        return Mathf.Lerp(immigrantRate, 0.04f, Mathf.SmoothStep(0f, 1f, progress));
+    }
+
+    private static int CurrentTournamentSize(float progress)
+    {
+        if (progress < 0.35f) return 3;
+        if (progress < 0.75f) return 4;
+        return 5;
+    }
+
+    private static List<Chromosome> CreateBenchmarkOpponents()
+    {
+        var benchmarks = new List<Chromosome>();
+        for (int group = 0; group < 5; group++)
+        {
+            benchmarks.Add(CreateSeededChromosome(group));
+            benchmarks.Add(CreateSeededChromosome(group));
+        }
+        return benchmarks;
     }
 
     private static Chromosome CreateSeededChromosome(int group)
