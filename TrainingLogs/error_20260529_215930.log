@@ -1,0 +1,3071 @@
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.4/staging' branch; Version is '6000.4.9f1 (f7258d6eebbe) revision 16197005'; Using compiler version '194234433'; Build Type 'Release'
+OS: 'Windows 11  (10.0.26200) ProfessionalWorkstation' Language: 'en' Physical Memory: 130429 MB
+[Licensing::IpcConnector] Channel LicenseClient-AZPC doesn't exist
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-05-29T14:59:30Z
+[Licensing::Module] Successfully launched the LicensingClient (PId: 68996)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-AZPC" at "2026-05-29T14:59:31.1933074Z"
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 68996, path: "C:/Program Files/Unity/Hub/Editor/6000.4.9f1/Editor/Data/Resources/Licensing/Client/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.1+9fbee8e
+  Session Id:              94a561e9e122432ca7e304744d47e77e
+  Correlation Id:          cdf64d7aca65183630fe70ac6f9388b0
+  External correlation Id: 6056390272548499890
+  Machine Id:              Kf4Kk3Jh8EBeJ+UefHSROfHMpTE=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-AZPC" (connect: 0.25s, validation: 0.13s, handshake: 0.02s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-AZPC-notifications" at "2026-05-29T14:59:31.3391426Z"
+[Licensing::Module] Connected to LicensingClient (PId: 68996, launch time: 0.00, total connection time: 0.39s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 18967989110189-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\6000.4.9f1\Editor\Unity.exe
+-batchmode
+-quit
+-projectPath
+C:\project\ngoc-test\AutoChess
+-executeMethod
+AITrainingBatch.RunProduction
+-logFile
+C:\project\ngoc-test\AutoChess\TrainingLogs\error_20260529_215930.log
+Successfully changed project path to: C:\project\ngoc-test\AutoChess
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.01
+C:/project/ngoc-test/AutoChess
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.42s
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Player connection [16264]  Target information:
+
+Player connection [16264]  * "[IP] 192.168.1.5 [Port] 55504 [Flags] 2 [Guid] 3570612161 [EditorId] 3570612161 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-640HVMQ) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [16264]  * "[IP] 172.30.224.1 [Port] 55504 [Flags] 2 [Guid] 3570612161 [EditorId] 3570612161 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-640HVMQ) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [16264]  * "[IP] 26.123.97.145 [Port] 55504 [Flags] 2 [Guid] 3570612161 [EditorId] 3570612161 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-640HVMQ) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [16264]  * "[IP] 192.168.80.1 [Port] 55504 [Flags] 2 [Guid] 3570612161 [EditorId] 3570612161 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-640HVMQ) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [16264]  * "[IP] 192.168.184.1 [Port] 55504 [Flags] 2 [Guid] 3570612161 [EditorId] 3570612161 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-640HVMQ) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [16264]  * "[IP] 100.111.82.51 [Port] 55504 [Flags] 2 [Guid] 3570612161 [EditorId] 3570612161 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-640HVMQ) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [16264] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [16264] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-53940" after 0.2 seconds.
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Initialize engine version: 6000.4.9f1 (f7258d6eebbe)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.4.9f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/project/ngoc-test/AutoChess/Assets
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 5090 (ID=0x2b85)
+    Vendor:          NVIDIA
+    VRAM:            32187 MB
+    App VRAM Budget: 31419 MB
+    Driver:          32.0.15.9186
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.4.9f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.4.9f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.4.9f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56940
+CodeReloadManager initialized
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.4.9f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.4.9f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.001549 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.255 seconds
+Domain Reload Profiling: 541ms
+	BeginReloadAssembly (88ms)
+		CreateAndSetChildDomain (14ms)
+	RebuildCommonClasses (25ms)
+	RebuildNativeTypeToScriptingClass (8ms)
+	initialDomainReloadingComplete (39ms)
+	LoadAllAssembliesAndSetupDomain (125ms)
+		LoadAssemblies (72ms)
+		AnalyzeDomain (118ms)
+			TypeCache.Refresh (117ms)
+				TypeCache.ScanAssembly (108ms)
+	FinalizeReload (256ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (29ms)
+			BeforeProcessingInitializeOnLoad (54ms)
+			ProcessInitializeOnLoadAttributes (65ms)
+			ProcessInitializeOnLoadMethodAttributes (58ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 74 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.2d.animation@14.0.4 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.2d.animation@011d329ac58b)
+    com.unity.2d.aseprite@4.0.2 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.2d.aseprite@ccedfadacc51)
+    com.unity.2d.psdimporter@13.0.3 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.2d.psdimporter@e58d0a2c1d48)
+    com.unity.2d.spriteshape@14.0.1 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.2d.spriteshape@da3647ffbbd7)
+    com.unity.2d.tilemap.extras@7.0.1 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.2d.tilemap.extras@66df903b3633)
+    com.unity.2d.tooling@2.0.2 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.2d.tooling@9d6aff712598)
+    com.unity.ai.assistant@2.9.0-pre.1 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.ai.assistant@66208e716584)
+    com.unity.cinemachine@3.1.6 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.cinemachine@285f38545487)
+    com.unity.collab-proxy@2.12.4 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.collab-proxy@0b1559bcd34e)
+    com.unity.ide.rider@3.0.40 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.ide.rider@e4950c6d131b)
+    com.unity.ide.visualstudio@2.0.27 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.ide.visualstudio@dc1ddd4f09b6)
+    com.unity.inputsystem@1.19.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.inputsystem@21a28c3a6c83)
+    com.unity.probuilder@6.0.9 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.probuilder@1f279ab829b7)
+    com.unity.timeline@1.8.12 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.timeline@8cd8509afae5)
+    com.unity.visualscripting@1.9.11 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.visualscripting@8bed5ad90189)
+    com.unity.settings-manager@2.1.1 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.settings-manager@0b8638c5ce86)
+    com.unity.splines@2.8.4 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.splines@9b00833aca09)
+    com.unity.mathematics@1.3.3 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.mathematics@19a9377c4ffa)
+    com.unity.cloud.gltfast@6.14.1 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.cloud.gltfast@0847aee0f6da)
+    com.unity.nuget.newtonsoft-json@3.2.2 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.nuget.newtonsoft-json@4dfd81071c64)
+    com.unity.2d.common@13.0.2 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.2d.common@edfe77495b67)
+    com.unity.burst@1.8.29 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.burst@6bb9aca3ef38)
+    com.unity.searcher@4.9.4 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.searcher@d45a78918735)
+    com.unity.nuget.mono-cecil@1.11.6 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff)
+    com.unity.test-framework.performance@3.4.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.test-framework.performance@aa81a99c4a75)
+  Built-in packages:
+    com.unity.2d.sprite@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.2d.sprite@b95cc7beb645)
+    com.unity.2d.tilemap@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.2d.tilemap@771fb19abead)
+    com.unity.multiplayer.center@1.0.1 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.multiplayer.center@f01f4ba8d00a)
+    com.unity.render-pipelines.universal@17.4.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.render-pipelines.universal@5e27d3932650)
+    com.unity.test-framework@1.6.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.test-framework@76560ee600cb)
+    com.unity.ugui@2.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.ugui@1f2d1ab0d950)
+    com.unity.visualeffectgraph@17.4.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.visualeffectgraph@1d000c792c1e)
+    com.unity.modules.accessibility@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.accessibility)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.screencapture@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.terrainphysics)
+    com.unity.modules.tilemap@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.ui@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.video)
+    com.unity.modules.vr@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.vr)
+    com.unity.modules.wind@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.xr)
+    com.unity.modules.subsystems@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.shadergraph@17.4.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.shadergraph@06b482f4a9ba)
+    com.unity.render-pipelines.core@17.4.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.render-pipelines.core@d0f56ad6832a)
+    com.unity.ext.nunit@2.0.5 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.ext.nunit@d8c07649098d)
+    com.unity.render-pipelines.universal-config@17.4.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.render-pipelines.universal-config@0db4263b9e6b)
+    com.unity.collections@6.4.0 (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.unity.collections@5b6ebd78ccc0)
+  Git packages:
+    com.coplaydev.unity-mcp@https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main (location: C:\project\ngoc-test\AutoChess\Library\PackageCache\com.coplaydev.unity-mcp@13fb3ee12774)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.01 seconds
+Assembly reference Packages/com.unity.cinemachine/Editor/Samples/ExposeHDRPInternals/HDRP-Editor-ref.asmref has no target assembly definition
+Assembly reference Packages/com.unity.cinemachine/Editor/Samples/ExposeHDRPInternals/HDRP-Editor-ref.asmref has no target assembly definition
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Duplicate assembly 'System.Runtime.CompilerServices.Unsafe.dll' with different versions detected, using 'Packages/com.unity.ai.assistant/Plugins/Shared/System.Runtime.CompilerServices.Unsafe.dll, AssemblyName=System.Runtime.CompilerServices.Unsafe, Version=6.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' and ignoring 'Packages/com.unity.collections/Unity.Collections.Tests/System.Runtime.CompilerServices.Unsafe/System.Runtime.CompilerServices.Unsafe.dll, AssemblyName=System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.Starting: C:\Program Files\Unity\Hub\Editor\6000.4.9f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: C:/project/ngoc-test/AutoChess
+Duplicate assembly 'System.Runtime.CompilerServices.Unsafe.dll' with different versions detected, using 'Packages/com.unity.ai.assistant/Plugins/Shared/System.Runtime.CompilerServices.Unsafe.dll, AssemblyName=System.Runtime.CompilerServices.Unsafe, Version=6.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' and ignoring 'Packages/com.unity.collections/Unity.Collections.Tests/System.Runtime.CompilerServices.Unsafe/System.Runtime.CompilerServices.Unsafe.dll, AssemblyName=System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.DisplayProgressbar: Compiling Scripts
+ExitCode: 0 Duration: 1s512ms
+[1340/1775  0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[1767/1775  0s] Csc Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp.dll (+2 others)
+Assets\Scripts\UI\SellZone.cs(29,25): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindAnyObjectByType instead.'
+[1768/1775  0s] Csc Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+[1769/1775  0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll, with 137 defines and 387 references
+
+processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+
+running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+[1770/1775  0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Assembly-CSharp.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp.dll, with 139 defines and 363 references
+
+processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+
+running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+[1771/1775  0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+[1772/1775  0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+[1773/1775  0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp.pdb
+[1774/1775  0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp.dll
+*** Tundra build success (1.49 seconds), 9 items updated, 1775 evaluated
+Assets\Scripts\UI\SellZone.cs(29,25): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindAnyObjectByType instead.'
+AssetDatabase: script compilation time: 1.837316s
+Begin MonoManager ReloadAssembly
+Total cache size 125781432
+Total cache size after purge 125781432, took 00:00:00.0640402
+Duplicate assembly 'System.Runtime.CompilerServices.Unsafe.dll' with different versions detected, using 'Packages/com.unity.ai.assistant/Plugins/Shared/System.Runtime.CompilerServices.Unsafe.dll, AssemblyName=System.Runtime.CompilerServices.Unsafe, Version=6.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' and ignoring 'Packages/com.unity.collections/Unity.Collections.Tests/System.Runtime.CompilerServices.Unsafe/System.Runtime.CompilerServices.Unsafe.dll, AssemblyName=System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.Assembly Assembly-CSharp-Editor-firstpass.dll at Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll not valid. Loading of assembly skipped.
+Assembly Assembly-CSharp-firstpass.dll at Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll not valid. Loading of assembly skipped.
+Assembly DocCodeExamples.dll at Library/ScriptAssemblies/DocCodeExamples.dll not valid. Loading of assembly skipped.
+Assembly TestNewCustomAssembly.dll at Library/ScriptAssemblies/TestNewCustomAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Animation.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Animation.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Aseprite.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Aseprite.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Common.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Common.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Psdimporter.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Psdimporter.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Sprite.Package.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Sprite.Package.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.SpriteShape.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.SpriteShape.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Tilemap.Package.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Tilemap.Package.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.AI.Assistant.Integrations.Sample.Editor.dll at Library/ScriptAssemblies/Unity.AI.Assistant.Integrations.Sample.Editor.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.BurstCompatibilityGen.dll at Library/ScriptAssemblies/Unity.Collections.BurstCompatibilityGen.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.DocCodeSamples.dll at Library/ScriptAssemblies/Unity.Collections.DocCodeSamples.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Collections.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.Tests.dll at Library/ScriptAssemblies/Unity.Collections.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.Tests.Playmode.dll at Library/ScriptAssemblies/Unity.Collections.Tests.Playmode.dll not valid. Loading of assembly skipped.
+Assembly Unity.InputSystem.IntegrationTests.dll at Library/ScriptAssemblies/Unity.InputSystem.IntegrationTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Mathematics.Tests.dll at Library/ScriptAssemblies/Unity.Mathematics.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Multiplayer.Center.Editor.Tests.dll at Library/ScriptAssemblies/Unity.Multiplayer.Center.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Multiplayer.Center.Tests.dll at Library/ScriptAssemblies/Unity.Multiplayer.Center.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Nuget.Mono-Cecil.dll at Library/ScriptAssemblies/Unity.Nuget.Mono-Cecil.dll not valid. Loading of assembly skipped.
+Assembly Unity.PathTracing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.PathTracing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.PathTracing.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.PathTracing.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Core.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Core.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Config.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Config.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Searcher.EditorTests.dll at Library/ScriptAssemblies/Unity.Searcher.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Settings.Tests.dll at Library/ScriptAssemblies/Unity.Settings.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ShaderGraph.Editor.Tests.dll at Library/ScriptAssemblies/Unity.ShaderGraph.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.TextMeshPro.Editor.Tests.dll at Library/ScriptAssemblies/Unity.TextMeshPro.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.TextMeshPro.Tests.dll at Library/ScriptAssemblies/Unity.TextMeshPro.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.UnifiedRayTracing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.UnifiedRayTracing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.VisualEffectGraph.Editor.Tests.dll at Library/ScriptAssemblies/Unity.VisualEffectGraph.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.VisualEffectGraph.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.VisualEffectGraph.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.UI.Common.Tests.dll at Library/ScriptAssemblies/UnityEditor.UI.Common.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.UI.EditorTests.dll at Library/ScriptAssemblies/UnityEditor.UI.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly UnityEngine.UI.Tests.dll at Library/ScriptAssemblies/UnityEngine.UI.Tests.dll not valid. Loading of assembly skipped.
+'Packages/com.unity.cinemachine/Editor/Editors/CinemachineVirtualCameraBaseEditor.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.unity.cinemachine/Editor/Obsolete/CinemachineVirtualCameraBaseEditor.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Assembly reference Packages/com.unity.cinemachine/Editor/Samples/ExposeHDRPInternals/HDRP-Editor-ref.asmref has no target assembly definition
+Duplicate assembly 'System.Runtime.CompilerServices.Unsafe.dll' with different versions detected, using 'Packages/com.unity.ai.assistant/Plugins/Shared/System.Runtime.CompilerServices.Unsafe.dll, AssemblyName=System.Runtime.CompilerServices.Unsafe, Version=6.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' and ignoring 'Packages/com.unity.collections/Unity.Collections.Tests/System.Runtime.CompilerServices.Unsafe/System.Runtime.CompilerServices.Unsafe.dll, AssemblyName=System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-AutoChess
+[Licensing::Client] Error: Code 404 while processing request (status: Found 0 entitlement groups and 0 free entitlements matching requested entitlement ids)
+[Licensing::Client] Error: Code 404 while processing request (status: Found 0 entitlement groups and 0 free entitlements matching requested entitlement ids)
+[Licensing::Client] Error: Code 404 while processing request (status: Found 0 entitlement groups and 0 free entitlements matching requested entitlement ids)
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  5.753 seconds
+Domain Reload Profiling: 6579ms
+	BeginReloadAssembly (158ms)
+		DisableScriptedObjects (24ms)
+		CreateAndSetChildDomain (47ms)
+	RebuildCommonClasses (24ms)
+	RebuildNativeTypeToScriptingClass (8ms)
+	initialDomainReloadingComplete (59ms)
+	LoadAllAssembliesAndSetupDomain (577ms)
+		LoadAssemblies (289ms)
+		AnalyzeDomain (335ms)
+			TypeCache.Refresh (249ms)
+				TypeCache.ScanAssembly (235ms)
+			BuildScriptInfoCaches (75ms)
+			ResolveRequiredComponents (8ms)
+	FinalizeReload (5753ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (16ms)
+			BeforeProcessingInitializeOnLoad (143ms)
+			ProcessInitializeOnLoadAttributes (4544ms)
+			ProcessInitializeOnLoadMethodAttributes (854ms)
+			AfterProcessingInitializeOnLoad (4ms)
+		AwakeInstancesAfterBackupRestoration (18ms)
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=8eb9ad9b16a7432429d1a40a6757e6be): Total: 9.946 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=6346 ms
+		Asset DB Callback time: managed=844 ms, native=26 ms
+		Scripting: domain reloads=1, domain reload time=830 ms, compile time=1838 ms, other=59 ms
+		Project Asset Count: scripts=2427, non-scripts=4948
+		Asset File Changes: new=0, changed=2, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 17.574ms
+	ApplyChangesToAssetFolders: 0.669ms
+	Scan: 189.222ms
+	OnSourceAssetsModified: 0.940ms
+	CategorizeScriptCompilationAssets: 56.309ms
+	ProcessAssetsWithTransientArtifactChanges: 103.555ms
+	CategorizeAssets: 79.593ms
+	CompileScripts: 1838.476ms
+	ImportOutOfDateAssets: 5765.846ms (5763.029ms without children)
+		UnloadImportedAssets: 0.881ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 1.089ms
+		OnDemandSchedulerStart: 0.804ms
+	PostProcessAllAssets: 845.335ms
+		VCAutoAddAssetPostprocess 1.024ms
+		XRBuildSystem.XRAssetImported 0.550ms
+		MonoPostProcessAllAssets: 843.350ms
+			AssetPostprocessor.OnPostprocessAllAssets 109.868ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 98.679ms
+			AssetReferenceReimportMonitor.OnPostprocessAllAssets 94.885ms
+			UniversalRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 48.454ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 26.854ms
+			SyncVS.PostprocessSyncProject 26.227ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 6.910ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 4.993ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 3.951ms
+			AssetChangedListener.OnPostprocessAllAssets 3.756ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 2.769ms
+			VFXGraphPreprocessor.OnPostprocessAllAssets 2.727ms
+			MaterialPostprocessor.OnPostprocessAllAssets 2.309ms
+			GraphRefreshPostprocessor.OnPostprocessAllAssets 2.252ms
+			InputActionAssetPostprocessor.OnPostprocessAllAssets 1.497ms
+			UVCSAssetPostprocessor.OnPostprocessAllAssets 1.293ms
+			SpriteEditorTexturePostprocessor.OnPostprocessAllAssets 1.200ms
+			AssetProcessor.OnPostprocessAllAssets 1.111ms
+			DomainReloadProcessor.OnPostprocessAllAssets 1.088ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.993ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.908ms
+			AssetChangeDetector.OnPostprocessAllAssets 0.888ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.871ms
+			AssetEvents.OnPostprocessAllAssets 0.735ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.713ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.696ms
+			ProjectSettingsPostprocessor.OnPostprocessAllAssets 0.676ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.616ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.611ms
+			SpriteShapeAssetPostProcessor.OnPostprocessAllAssets 0.578ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.512ms
+			CinemachineSettings.OnPostprocessAllAssets 0.508ms
+			SkillsProjectAssetPostprocessor.OnPostprocessAllAssets 0.433ms
+			InputActionJsonNameModifierAssetProcessor.OnPostprocessAllAssets 0.340ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.330ms
+			SpriteLibraryAssetPostprocessor.OnPostprocessAllAssets 0.312ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.252ms
+			PostProcessor.OnPostprocessAllAssets 0.244ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.162ms
+			PSDImporterAssetPostProcessor.OnPostprocessAllAssets 0.142ms
+			SamplePostprocessor.OnPostprocessAllAssets 0.139ms
+			PSDImportPostProcessor.OnPostprocessAllAssets 0.112ms
+			TrackSelectedAssetsProcessor.OnPostprocessAllAssets 0.101ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.084ms
+	PostAssetChangesProfiler: 7.957ms
+	UnloadStreamsBegin: 3.556ms
+	PersistCurrentRevisions: 0.148ms
+	GenerateScriptTypeHashes: 3.354ms
+	GenerateScriptTypeSerializationHashes: 6.624ms
+	Untracked: 1031.009ms
+
+Application.AssetDatabase Initial Refresh End
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.01 seconds
+Scanning for USB devices : 0.572ms
+Initializing Unity extensions:
+Unloading 36 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 11177 unused Assets / (10.0 MB). Loaded Objects now: 12105.
+Memory consumption went from 288.8 MB to 278.8 MB.
+Total: 25.100300 ms (FindLiveObjects: 1.206800 ms CreateObjectMapping: 0.347400 ms MarkObjects: 16.622700 ms  DeleteObjects: 6.920200 ms)
+
+<color=green>[DATABASE]</color> Đã nạp thành công 68 lá bài.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CardDatabase:LoadDatabase () (at Assets/Scripts/Managers/CardDatabase.cs:54)
+AITrainingBatch:InitCardDatabase () (at Assets/Editor/AITrainingBatch.cs:68)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:46)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Scripts/Managers/CardDatabase.cs Line: 54)
+
+[AITraining] CardDatabase: 43 units, 21 spells
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:InitCardDatabase () (at Assets/Editor/AITrainingBatch.cs:78)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:46)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 78)
+
+[AITraining] Bắt đầu — pop=120 gen=120 matches=20 genes=37
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:48)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 48)
+
+[AITraining] CSV → C:/project/ngoc-test/AutoChess/Assets\Document\02_Data\Train\training_20260529_215943.csv
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:95)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 95)
+
+[AITraining] >> Gen 0/120 bắt đầu đánh giá fitness...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:145)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 145)
+
+[AITraining] Gen 0/120 fitness 10/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 0/120 fitness 20/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 0/120 fitness 30/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 0/120 fitness 40/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 0/120 fitness 50/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 0/120 fitness 60/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 0/120 fitness 70/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 0/120 fitness 80/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 0/120 fitness 90/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 0/120 fitness 100/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 0/120 fitness 110/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 0/120 fitness 120/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 0/120  Best=2572  Avg=1527.8  Worst=148  Std=561.1  B=38% N=42% O=21%  BestB=2554 BestN=2572
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:182)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 182)
+
+[AITraining] >> Gen 1/120 bắt đầu đánh giá fitness...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:145)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 145)
+
+[AITraining] Gen 1/120 fitness 10/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 1/120 fitness 20/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 1/120 fitness 30/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 1/120 fitness 40/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 1/120 fitness 50/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 1/120 fitness 60/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 1/120 fitness 70/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 1/120 fitness 80/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 1/120 fitness 90/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 1/120 fitness 100/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 1/120 fitness 110/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 1/120 fitness 120/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 1/120  Best=2694  Avg=1563.8  Worst=0  Std=539.5  B=31% N=52% O=18%  BestB=2540 BestN=2694
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:182)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 182)
+
+[AITraining] >> Gen 2/120 bắt đầu đánh giá fitness...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:145)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 145)
+
+[AITraining] Gen 2/120 fitness 10/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 2/120 fitness 20/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 2/120 fitness 30/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 2/120 fitness 40/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 2/120 fitness 50/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 2/120 fitness 60/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 2/120 fitness 70/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 2/120 fitness 80/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 2/120 fitness 90/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 2/120 fitness 100/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 2/120 fitness 110/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 2/120 fitness 120/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 2/120  Best=2852  Avg=1610.9  Worst=154  Std=512.3  B=27% N=58% O=16%  BestB=2526 BestN=2852
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:182)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 182)
+
+[AITraining] >> Gen 3/120 bắt đầu đánh giá fitness...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:145)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 145)
+
+[AITraining] Gen 3/120 fitness 10/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 3/120 fitness 20/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 3/120 fitness 30/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 3/120 fitness 40/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 3/120 fitness 50/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 3/120 fitness 60/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 3/120 fitness 70/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 3/120 fitness 80/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 3/120 fitness 90/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 3/120 fitness 100/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 3/120 fitness 110/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 3/120 fitness 120/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 3/120  Best=2688  Avg=1532.7  Worst=154  Std=491.3  B=26% N=63% O=12%  BestB=2426 BestN=2688
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:182)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 182)
+
+[AITraining] >> Gen 4/120 bắt đầu đánh giá fitness...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:145)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 145)
+
+[AITraining] Gen 4/120 fitness 10/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 4/120 fitness 20/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 4/120 fitness 30/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 4/120 fitness 40/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 4/120 fitness 50/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 4/120 fitness 60/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 4/120 fitness 70/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 4/120 fitness 80/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 4/120 fitness 90/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 4/120 fitness 100/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 4/120 fitness 110/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 4/120 fitness 120/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 4/120  Best=2572  Avg=1498.7  Worst=154  Std=435.0  B=21% N=61% O=18%  BestB=2326 BestN=2572
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:182)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 182)
+
+[AITraining] >> Gen 5/120 bắt đầu đánh giá fitness...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:145)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 145)
+
+[AITraining] Gen 5/120 fitness 10/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 5/120 fitness 20/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 5/120 fitness 30/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 5/120 fitness 40/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 5/120 fitness 50/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 5/120 fitness 60/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 5/120 fitness 70/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 5/120 fitness 80/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 5/120 fitness 90/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 5/120 fitness 100/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 5/120 fitness 110/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 5/120 fitness 120/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 5/120  Best=2518  Avg=1564.9  Worst=154  Std=447.3  B=18% N=68% O=15%  BestB=2204 BestN=2518
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:182)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 182)
+
+[AITraining] >> Gen 6/120 bắt đầu đánh giá fitness...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:145)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 145)
+
+[AITraining] Gen 6/120 fitness 10/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 6/120 fitness 20/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 6/120 fitness 30/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 6/120 fitness 40/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 6/120 fitness 50/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 6/120 fitness 60/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 6/120 fitness 70/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 6/120 fitness 80/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 6/120 fitness 90/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 6/120 fitness 100/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 6/120 fitness 110/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 6/120 fitness 120/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 6/120  Best=2402  Avg=1520.1  Worst=308  Std=447.1  B=18% N=73% O=8%  BestB=2214 BestN=2402
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:182)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 182)
+
+[AITraining] >> Gen 7/120 bắt đầu đánh giá fitness...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:145)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 145)
+
+[AITraining] Gen 7/120 fitness 10/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 7/120 fitness 20/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 7/120 fitness 30/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 7/120 fitness 40/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 7/120 fitness 50/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+Curl error 35: Cert verify failed. Certificate could not be verified (either omitted or unsupported). UnityTls error code: 7
+[AITraining] Gen 7/120 fitness 60/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 7/120 fitness 70/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 7/120 fitness 80/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 7/120 fitness 90/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 7/120 fitness 100/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 7/120 fitness 110/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 7/120 fitness 120/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 7/120  Best=2378  Avg=1555.8  Worst=128  Std=483.2  B=22% N=73% O=5%  BestB=2114 BestN=2378
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:182)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 182)
+
+[AITraining] >> Gen 8/120 bắt đầu đánh giá fitness...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:145)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 145)
+
+[AITraining] Gen 8/120 fitness 10/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 8/120 fitness 20/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 8/120 fitness 30/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 8/120 fitness 40/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 8/120 fitness 50/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 8/120 fitness 60/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 8/120 fitness 70/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 8/120 fitness 80/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 8/120 fitness 90/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 8/120 fitness 100/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 8/120 fitness 110/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 8/120 fitness 120/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 8/120  Best=2354  Avg=1499.5  Worst=0  Std=497.1  B=17% N=77% O=7%  BestB=1920 BestN=2354
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:182)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 182)
+
+[AITraining] >> Gen 9/120 bắt đầu đánh giá fitness...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:145)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 145)
+
+[AITraining] Gen 9/120 fitness 10/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 9/120 fitness 20/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 9/120 fitness 30/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 9/120 fitness 40/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 9/120 fitness 50/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 9/120 fitness 60/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 9/120 fitness 70/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 9/120 fitness 80/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 9/120 fitness 90/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 9/120 fitness 100/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 9/120 fitness 110/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 9/120 fitness 120/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 9/120  Best=2678  Avg=1531.8  Worst=462  Std=467.5  B=14% N=78% O=8%  BestB=2256 BestN=2678
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:182)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 182)
+
+[AITraining] >> Gen 10/120 bắt đầu đánh giá fitness...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:145)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 145)
+
+[AITraining] Gen 10/120 fitness 10/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 10/120 fitness 20/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 10/120 fitness 30/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 10/120 fitness 40/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 10/120 fitness 50/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 10/120 fitness 60/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 10/120 fitness 70/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 10/120 fitness 80/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 10/120 fitness 90/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 10/120 fitness 100/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 10/120 fitness 110/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 10/120 fitness 120/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 10/120  Best=2578  Avg=1491.8  Worst=0  Std=450.9  B=12% N=83% O=6%  BestB=2578 BestN=2386
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:182)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 182)
+
+[AITraining] >> Gen 11/120 bắt đầu đánh giá fitness...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:145)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 145)
+
+[AITraining] Gen 11/120 fitness 10/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 11/120 fitness 20/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 11/120 fitness 30/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 11/120 fitness 40/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 11/120 fitness 50/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 11/120 fitness 60/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 11/120 fitness 70/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 11/120 fitness 80/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 11/120 fitness 90/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 11/120 fitness 100/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 11/120 fitness 110/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 11/120 fitness 120/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 11/120  Best=2406  Avg=1527.4  Worst=154  Std=462.7  B=15% N=82% O=3%  BestB=2222 BestN=2406
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:182)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 182)
+
+[AITraining] >> Gen 12/120 bắt đầu đánh giá fitness...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:145)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 145)
+
+[AITraining] Gen 12/120 fitness 10/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 12/120 fitness 20/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 12/120 fitness 30/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 12/120 fitness 40/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 12/120 fitness 50/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 12/120 fitness 60/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 12/120 fitness 70/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 12/120 fitness 80/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 12/120 fitness 90/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 12/120 fitness 100/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 12/120 fitness 110/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 12/120 fitness 120/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 12/120  Best=2512  Avg=1512.3  Worst=154  Std=480.5  B=16% N=83% O=2%  BestB=2228 BestN=2512
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:182)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 182)
+
+[AITraining] >> Gen 13/120 bắt đầu đánh giá fitness...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:145)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 145)
+
+[AITraining] Gen 13/120 fitness 10/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 13/120 fitness 20/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 13/120 fitness 30/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 13/120 fitness 40/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 13/120 fitness 50/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 13/120 fitness 60/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 13/120 fitness 70/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 13/120 fitness 80/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 13/120 fitness 90/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 13/120 fitness 100/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 13/120 fitness 110/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 13/120 fitness 120/120
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:161)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 161)
+
+[AITraining] Gen 13/120  Best=2678  Avg=1531.2  Worst=154  Std=502.0  B=17% N=78% O=5%  BestB=2402 BestN=2678
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:182)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 182)
+
+[AITraining] >> Gen 14/120 bắt đầu đánh giá fitness...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+AITrainingBatch:RunGA (int,int,int) (at Assets/Editor/AITrainingBatch.cs:145)
+AITrainingBatch:Execute (int,int,int) (at Assets/Editor/AITrainingBatch.cs:50)
+AITrainingBatch:RunProduction () (at Assets/Editor/AITrainingBatch.cs:41)
+
+(Filename: Assets/Editor/AITrainingBatch.cs Line: 145)
+
+InvalidOperationException: Collection was modified; enumeration operation may not execute.
+  at System.Collections.Generic.List`1+Enumerator[T].MoveNextRare () [0x00013] in <f713e1c3c5f545ce9b1df47230f4f853>:0 
+  at System.Collections.Generic.List`1+Enumerator[T].MoveNext () [0x0004a] in <f713e1c3c5f545ce9b1df47230f4f853>:0 
+  at AbilityEngine.ExecuteEffect (AbilityData ability, CardInstance target, CardInstance source, System.Collections.Generic.List`1[T] allyBoard, System.Collections.Generic.List`1[T] enemyBoard, System.Int32 scaleFactor, CardInstance directEnemy, System.Int32 escalationBonus) [0x00c49] in C:\project\ngoc-test\AutoChess\Assets\Scripts\Core\AbilityEngine.cs:432 
+  at AbilityEngine.TriggerAbility (TriggerType triggerContext, CardInstance source, CardInstance directEnemy, System.Collections.Generic.List`1[T] allyBoard, System.Collections.Generic.List`1[T] enemyBoard) [0x00360] in C:\project\ngoc-test\AutoChess\Assets\Scripts\Core\AbilityEngine.cs:139 
+  at AbilityEngine.ExecuteEffect (AbilityData ability, CardInstance target, CardInstance source, System.Collections.Generic.List`1[T] allyBoard, System.Collections.Generic.List`1[T] enemyBoard, System.Int32 scaleFactor, CardInstance directEnemy, System.Int32 escalationBonus) [0x0081e] in C:\project\ngoc-test\AutoChess\Assets\Scripts\Core\AbilityEngine.cs:341 
+  at AbilityEngine.TriggerAbility (TriggerType triggerContext, CardInstance source, CardInstance directEnemy, System.Collections.Generic.List`1[T] allyBoard, System.Collections.Generic.List`1[T] enemyBoard) [0x00360] in C:\project\ngoc-test\AutoChess\Assets\Scripts\Core\AbilityEngine.cs:139 
+  at CombatResolver.ResolveTurn (System.Collections.Generic.List`1[T] pBoard, System.Collections.Generic.List`1[T] eBoard, TurnRecord log) [0x000c6] in C:\project\ngoc-test\AutoChess\Assets\Scripts\Core\CombatResolver.cs:105 
+  at GameSimulator.EvaluateMatch (BotAgent botA, BotAgent botB) [0x000d8] in C:\project\ngoc-test\AutoChess\Assets\Scripts\AI\GameSimulator.cs:47 
+  at AITrainingBatch.RunGA (System.Int32 popSize, System.Int32 generations, System.Int32 matchesPerChrom) [0x002f0] in C:\project\ngoc-test\AutoChess\Assets\Editor\AITrainingBatch.cs:156 
+  at AITrainingBatch.Execute (System.Int32 popSize, System.Int32 generations, System.Int32 matchesPerChrom) [0x00042] in C:\project\ngoc-test\AutoChess\Assets\Editor\AITrainingBatch.cs:50 
+  at AITrainingBatch.RunProduction () [0x00000] in C:\project\ngoc-test\AutoChess\Assets\Editor\AITrainingBatch.cs:41 
+
+(Filename: Assets/Scripts/Core/AbilityEngine.cs Line: 432)
+
+executeMethod method AITrainingBatch.RunProduction threw exception.
+Exiting without the bug reporter. Application will terminate with return code 1
