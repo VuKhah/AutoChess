@@ -7,6 +7,7 @@ public struct MatchResult
     public int hpB;
     public int turns;
     public float scoreA;
+    public float lateScoreA;
 }
 
 public class GameSimulator
@@ -24,6 +25,8 @@ public class GameSimulator
     {
         int hpA = StartingHP, hpB = StartingHP;
         int turnsPlayed = 0;
+        float lateScoreA = 0f;
+        float lateScoreB = 0f;
 
         for (int i = 0; i < MaxTurns; i++)
         {
@@ -44,6 +47,13 @@ public class GameSimulator
             botA.DecidePrepPhase(unitShopA, spellShopA, shopTier);
             botB.DecidePrepPhase(unitShopB, spellShopB, shopTier);
 
+            if (currentTurn >= 9)
+            {
+                float lateWeight = Mathf.InverseLerp(9f, MaxTurns, currentTurn);
+                lateScoreA += BoardPower(botA) * (1f + lateWeight);
+                lateScoreB += BoardPower(botB) * (1f + lateWeight);
+            }
+
             resolver.ResolveTurn(botA.board, botB.board, new TurnRecord());
 
             bool aAlive = botA.board.Exists(u => u != null && !u.IsDead);
@@ -58,6 +68,13 @@ public class GameSimulator
             botB.EndCombatPhase();
             botA.TriggerEndTurnShop();
             botB.TriggerEndTurnShop();
+
+            if (currentTurn >= 9)
+            {
+                float lateWeight = Mathf.InverseLerp(9f, MaxTurns, currentTurn);
+                lateScoreA += BoardPower(botA) * (1.2f + lateWeight);
+                lateScoreB += BoardPower(botB) * (1.2f + lateWeight);
+            }
         }
 
         int result = 0;
@@ -70,19 +87,41 @@ public class GameSimulator
             hpA = hpA,
             hpB = hpB,
             turns = turnsPlayed,
-            scoreA = ScoreFromA(result, hpA, hpB, turnsPlayed)
+            scoreA = ScoreFromA(result, hpA, hpB, turnsPlayed, lateScoreA, lateScoreB),
+            lateScoreA = lateScoreA
         };
     }
 
-    private static float ScoreFromA(int result, int hpA, int hpB, int turns)
+    private static float ScoreFromA(int result, int hpA, int hpB, int turns, float lateScoreA, float lateScoreB)
     {
         float score = result > 0 ? 120f : result == 0 ? 70f : 35f;
         score += hpA * 6f;
         score -= hpB * 3f;
+        score += Mathf.Max(0f, lateScoreA) * 0.18f;
+        score += Mathf.Clamp(lateScoreA - lateScoreB, -300f, 300f) * 0.12f;
 
-        if (result > 0)
-            score += (MaxTurns - turns) * 2f;
+        if (turns >= 12)
+            score += (turns - 11) * 3f;
 
         return Mathf.Max(1f, score);
+    }
+
+    private static float BoardPower(BotAgent bot)
+    {
+        float score = 0f;
+        foreach (var unit in bot.board)
+        {
+            if (unit == null || unit.IsDead) continue;
+
+            score += unit.currentATK * 3f;
+            score += unit.currentHP * 2f;
+            score += unit.Data.tier * 8f;
+            score += unit.mergeLevel * 24f;
+            if (unit.isTaunt) score += 8f;
+            if (unit.isReborn && !unit.hasRebornUsed) score += 18f;
+            if (unit.safeguardActive) score += 12f;
+            if (unit.Data.abilities != null) score += unit.Data.abilities.Count * 4f;
+        }
+        return score;
     }
 }

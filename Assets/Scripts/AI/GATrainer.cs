@@ -119,7 +119,7 @@ public class GATrainer : MonoBehaviour
 
         _csv = new StreamWriter(csvPath, false, System.Text.Encoding.UTF8) { AutoFlush = true };
         var csv = _csv;
-        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other,best_babylon,best_niles,best_summoner,best_resilient,raw_best,avg_ema,best_gain");
+        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other,best_babylon,best_niles,best_summoner,best_resilient,raw_best,avg_ema,best_gain,best_late,avg_late");
 
         Debug.Log($"=== HUẤN LUYỆN AI === Genes:{Chromosome.GeneCount} | Pop:{populationSize} | Gen:{generations} ===");
         Debug.Log($"[GATrainer] CSV → {csvPath}");
@@ -143,10 +143,13 @@ public class GATrainer : MonoBehaviour
             if (g > 0 && g % 30 == 0)
                 benchmarkOpponents = CreateBenchmarkOpponents();
 
+            var lateScores = new Dictionary<Chromosome, float>();
+
             // ── Đánh giá Fitness ─────────────────────────────────────────────
             foreach (var chromo in population)
             {
                 chromo.fitness = 0f;
+                lateScores[chromo] = 0f;
                 for (int m = 0; m < matchesPerChrom; m++)
                 {
                     BotAgent me      = new BotAgent(chromo);
@@ -156,12 +159,14 @@ public class GATrainer : MonoBehaviour
                     BotAgent opp     = new BotAgent(population[oppIdx]);
                     MatchResult result = sim.EvaluateMatch(me, opp);
                     chromo.fitness += result.scoreA;
+                    lateScores[chromo] += result.lateScoreA;
                 }
 
                 foreach (var benchmark in benchmarkOpponents)
                 {
                     MatchResult result = sim.EvaluateMatch(new BotAgent(chromo), new BotAgent(benchmark));
                     chromo.fitness += result.scoreA * 0.5f;
+                    lateScores[chromo] += result.lateScoreA * 0.5f;
                 }
             }
 
@@ -172,6 +177,8 @@ public class GATrainer : MonoBehaviour
             float avg   = population.Average(c => c.fitness);
             float worst = population[population.Count - 1].fitness;
             float stdDev = Mathf.Sqrt(population.Average(c => (c.fitness - avg) * (c.fitness - avg)));
+            float bestLate = lateScores.TryGetValue(population[0], out float late) ? late : 0f;
+            float avgLate = population.Average(c => lateScores.TryGetValue(c, out float v) ? v : 0f);
             if (hallOfFame == null || best > bestEver)
             {
                 hallOfFame = population[0].Clone();
@@ -197,8 +204,8 @@ public class GATrainer : MonoBehaviour
             bestResilientEver = Mathf.Max(bestResilientEver, bestR);
 
             // ── Ghi CSV ──────────────────────────────────────────────────────
-            csv.WriteLine($"{g},{bestEver:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{bestBabylonEver:F0},{bestNileEver:F0},{bestSummonerEver:F2},{bestResilientEver:F2},{best:F0},{avgEma:F1},{bestEver - best:F0}");
-            Debug.Log($"Gen {g,3}/{generations}  Best={bestEver,5:F0}  Raw={best,5:F0}  Avg={avg,5:F1}  Worst={worst,5:F0}  " +
+            csv.WriteLine($"{g},{bestEver:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{bestBabylonEver:F0},{bestNileEver:F0},{bestSummonerEver:F2},{bestResilientEver:F2},{best:F0},{avgEma:F1},{bestEver - best:F0},{bestLate:F0},{avgLate:F0}");
+            Debug.Log($"Gen {g,3}/{generations}  Best={bestEver,5:F0}  Raw={best,5:F0}  Avg={avg,5:F1}  Late={avgLate:F0}  Worst={worst,5:F0}  " +
                       $"Std={stdDev:F1}  B={pctB:F0}% N={pctN:F0}% O={pctO:F0}%  BestB={bestB:F0} BestN={bestN:F0}");
 
             if (pctB < 10f || pctN < 10f)

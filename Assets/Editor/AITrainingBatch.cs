@@ -93,7 +93,7 @@ public static class AITrainingBatch
         string csvPath = Path.Combine(csvDir, $"training_{stamp}.csv");
 
         var csv = new StreamWriter(csvPath, false, System.Text.Encoding.UTF8) { AutoFlush = true };
-        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other,best_babylon,best_niles,best_summoner,best_resilient,raw_best,avg_ema,best_gain");
+        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other,best_babylon,best_niles,best_summoner,best_resilient,raw_best,avg_ema,best_gain,best_late,avg_late");
         Debug.Log($"[AITraining] CSV → {csvPath}");
 
         // ── 5 seeded sub-population (mỗi nhóm 20%) ───────────────────────────
@@ -160,24 +160,28 @@ public static class AITrainingBatch
                 benchmarkOpponents = CreateBenchmarkOpponents();
 
             Debug.Log($"[AITraining] >> Gen {g}/{generations} bắt đầu đánh giá fitness...");
+            var lateScores = new Dictionary<Chromosome, float>();
 
             // Đánh giá fitness
             for (int ci = 0; ci < popSize; ci++)
             {
                 var chromo = population[ci];
                 chromo.fitness = 0f;
+                lateScores[chromo] = 0f;
                 for (int m = 0; m < matchesPerChrom; m++)
                 {
                     int oppIdx = Random.Range(0, popSize - 1);
                     if (oppIdx >= ci) oppIdx++;
                     MatchResult result = sim.EvaluateMatch(new BotAgent(chromo), new BotAgent(population[oppIdx]));
                     chromo.fitness += result.scoreA;
+                    lateScores[chromo] += result.lateScoreA;
                 }
 
                 foreach (var benchmark in benchmarkOpponents)
                 {
                     MatchResult result = sim.EvaluateMatch(new BotAgent(chromo), new BotAgent(benchmark));
                     chromo.fitness += result.scoreA * 0.5f;
+                    lateScores[chromo] += result.lateScoreA * 0.5f;
                 }
 
                 if ((ci + 1) % 10 == 0 || ci == popSize - 1)
@@ -190,6 +194,8 @@ public static class AITrainingBatch
             float avg    = population.Average(c => c.fitness);
             float worst  = population[population.Count - 1].fitness;
             float stdDev = Mathf.Sqrt(population.Average(c => (c.fitness - avg) * (c.fitness - avg)));
+            float bestLate = lateScores.TryGetValue(population[0], out float late) ? late : 0f;
+            float avgLate = population.Average(c => lateScores.TryGetValue(c, out float v) ? v : 0f);
             if (hallOfFame == null || best > bestEver)
             {
                 hallOfFame = population[0].Clone();
@@ -212,8 +218,8 @@ public static class AITrainingBatch
             bestSummonerEver = Mathf.Max(bestSummonerEver, bestS);
             bestResilientEver = Mathf.Max(bestResilientEver, bestR);
 
-            csv.WriteLine($"{g},{bestEver:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{bestBabylonEver:F0},{bestNileEver:F0},{bestSummonerEver:F2},{bestResilientEver:F2},{best:F0},{avgEma:F1},{bestEver - best:F0}");
-            Debug.Log($"[AITraining] Gen {g}/{generations}  Best={bestEver:F0}  Raw={best:F0}  Avg={avg:F1}  Worst={worst:F0}  Std={stdDev:F1}  B={pctB:F0}% N={pctN:F0}% O={pctO:F0}%  BestB={bestB:F0} BestN={bestN:F0}");
+            csv.WriteLine($"{g},{bestEver:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{bestBabylonEver:F0},{bestNileEver:F0},{bestSummonerEver:F2},{bestResilientEver:F2},{best:F0},{avgEma:F1},{bestEver - best:F0},{bestLate:F0},{avgLate:F0}");
+            Debug.Log($"[AITraining] Gen {g}/{generations}  Best={bestEver:F0}  Raw={best:F0}  Avg={avg:F1}  Late={avgLate:F0}  Worst={worst:F0}  Std={stdDev:F1}  B={pctB:F0}% N={pctN:F0}% O={pctO:F0}%  BestB={bestB:F0} BestN={bestN:F0}");
 
             if (pctB < 10f || pctN < 10f)
                 Debug.LogWarning($"[AITraining] Diversity low at gen {g}: B={pctB:F0}% N={pctN:F0}%. Injecting seeded immigrants next gen.");
