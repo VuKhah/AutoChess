@@ -3,7 +3,7 @@
 #
 # Cách dùng:
 #   .\train_ai.ps1              → Quick mode  (30 pop × 40 gen, ~2 phút)
-#   .\train_ai.ps1 -Production  → Production  (100 pop × 150 gen, ~20 phút)
+#   .\train_ai.ps1 -Production  → Production  (200 pop × 150 gen, early-stop ~60-70 gen, ~16-20 phút)
 #
 # Output chính : Assets/Resources/AI_Library.json
 # Output báo cáo: Assets/Document/02_Data/Train/training_TIMESTAMP.csv

@@ -124,10 +124,10 @@ public class GATrainer : MonoBehaviour
         Debug.Log($"=== HUẤN LUYỆN AI === Genes:{Chromosome.GeneCount} | Pop:{populationSize} | Gen:{generations} ===");
         Debug.Log($"[GATrainer] CSV → {csvPath}");
 
-        const int   PLATEAU_PATIENCE = 15;   // số gen liên tiếp không đổi → dừng
-        const float PLATEAU_EPS      = 0.5f; // ngưỡng thay đổi std_dev tính là "không đổi"
+        const int   PLATEAU_PATIENCE = 25;   // gen liên tiếp best không tăng ≥ EPS → dừng
+        const float PLATEAU_EPS      = 100f; // cải thiện < 100 điểm không tính là "đổi"
         int   plateauCount = 0;
-        float prevStdDev   = -1f;
+        float prevBestEver = float.MinValue;
         Chromosome hallOfFame = null;
         float bestEver = float.MinValue;
         float bestBabylonEver = 0f;
@@ -211,16 +211,16 @@ public class GATrainer : MonoBehaviour
             if (pctB < 10f || pctN < 10f)
                 Debug.LogWarning($"[GATrainer] Diversity low at gen {g}: B={pctB:F0}% N={pctN:F0}%. Injecting seeded immigrants next gen.");
 
-            // ── Early stopping — std_dev plateau ─────────────────────────────
-            if (prevStdDev >= 0f && Mathf.Abs(stdDev - prevStdDev) < PLATEAU_EPS)
+            // ── Early stopping — best fitness plateau ────────────────────────
+            if (bestEver - prevBestEver < PLATEAU_EPS)
                 plateauCount++;
             else
                 plateauCount = 0;
-            prevStdDev = stdDev;
+            prevBestEver = bestEver;
 
             if (plateauCount >= PLATEAU_PATIENCE)
             {
-                Debug.LogWarning($"[GATrainer] Early stop tại gen {g} — std_dev plateau {PLATEAU_PATIENCE} gen liên tiếp (Δ<{PLATEAU_EPS}).");
+                Debug.LogWarning($"[GATrainer] Early stop tại gen {g} — best fitness plateau {PLATEAU_PATIENCE} gen (Δ<{PLATEAU_EPS:F0}).");
                 break;
             }
 
@@ -276,15 +276,17 @@ public class GATrainer : MonoBehaviour
     private static float SummonerScore(Chromosome c)
     {
         if (c == null) return float.MinValue;
-        return c.genes[14] * 2.5f   // eSummon — SummonConsumed ×1.2 trong EffectWeight
-             + c.genes[5]  * 2.0f   // wReborn — vòng lặp tái sinh
-             + c.genes[8]  * 1.5f   // tOnDeath — deathrattle / summon khi chết
-             + c.genes[34] * 1.5f   // tOnAllyGroup — OnAllyDeath/Summon/Reborn chain
-             + c.genes[35] * 0.8f   // tOnAllyDeploy — khi shell được triệu hồi lên sân
-             + c.genes[12] * 0.6f   // tOnDeploy
-             - c.genes[9]  * 0.8f   // phạt OnAttack — không phải playstyle này
+        return c.genes[20] * 2.0f   // sNiles — Bastet/Sekhmet/Osiris đều là Niles
+             + c.genes[14] * 2.5f   // eSummon — summon units trong combat
+             + c.genes[34] * 2.0f   // tOnAllyGroup — OnAllySummon kích Bastet mỗi 2 lần
+             + c.genes[13] * 1.5f   // eAddStats — Bastet buff +ATK/+HP cho toàn bộ Niles
+             + c.genes[15] * 1.0f   // eDealDmg — damage effects trong chain
+             + c.genes[2]  * 0.8f   // wTierBonus — cần tier 5 Bastet, tier 6 Sekhmet/Osiris
+             + c.genes[8]  * 0.8f   // tOnDeath — death chain triggers
+             - c.genes[9]  * 0.8f   // phạt OnAttack — không phải combat bot
              - c.genes[0]  * 0.5f   // phạt wATK raw
-             - c.genes[27] * 1.2f;  // phạt bán chủ động — phải giữ shells
+             - c.genes[27] * 1.2f   // phạt bán chủ động — giữ số lượng unit
+             - c.genes[21] * 0.8f;  // phạt wMerge — số lượng > chất lượng
     }
 
     private static float ResilientScore(Chromosome c)
@@ -380,7 +382,12 @@ public class GATrainer : MonoBehaviour
         }
 
         while (nextGen.Count < populationSize)
-            nextGen.Add(CreateSeededChromosome(Random.Range(0, 5)));
+        {
+            // Nếu pct_other sụp xuống < 8%: ép immigration sang summoner/resilient
+            // thay vì random → ngăn Babylon colonize toàn bộ quần thể
+            int group = (pctO < 8f) ? (2 + (nextGen.Count % 2)) : Random.Range(0, 5);
+            nextGen.Add(CreateSeededChromosome(group));
+        }
 
         return nextGen;
     }
@@ -494,14 +501,18 @@ public class GATrainer : MonoBehaviour
                 c.genes[18] = Random.Range(0.0f, 0.3f);
                 c.genes[19] = Random.Range(0.0f, 0.3f);
                 break;
-            case 2:
-                c.genes[14] = Random.Range(0.75f, 1.0f);
-                c.genes[5]  = Random.Range(0.70f, 1.0f);
-                c.genes[8]  = Random.Range(0.65f, 1.0f);
-                c.genes[34] = Random.Range(0.65f, 1.0f);
-                c.genes[35] = Random.Range(0.50f, 0.85f);
-                c.genes[27] = Random.Range(0.00f, 0.15f);
-                c.genes[0]  = Random.Range(0.10f, 0.40f);
+            case 2: // summonerBot — Niles summon chain, kích Bastet escalating buff
+                c.genes[20] = Random.Range(0.75f, 1.0f);  // sNiles — tribe identity
+                c.genes[14] = Random.Range(0.75f, 1.0f);  // eSummon — value summon effects
+                c.genes[34] = Random.Range(0.75f, 1.0f);  // tOnAllyGroup — OnAllySummon kích Bastet
+                c.genes[13] = Random.Range(0.65f, 0.95f); // eAddStats — Bastet buff là AddStats
+                c.genes[15] = Random.Range(0.55f, 0.85f); // eDealDmg — damage trong chain
+                c.genes[2]  = Random.Range(0.60f, 0.90f); // wTierBonus — Bastet tier 5, Sekhmet tier 6
+                c.genes[8]  = Random.Range(0.45f, 0.75f); // tOnDeath — death chain (hỗ trợ)
+                c.genes[27] = Random.Range(0.00f, 0.15f); // wProactiveSell LOW — giữ số lượng unit
+                c.genes[21] = Random.Range(0.00f, 0.25f); // wMerge LOW — số lượng > 3-star
+                c.genes[9]  = Random.Range(0.00f, 0.20f); // tOnAttack LOW
+                c.genes[5]  = Random.Range(0.25f, 0.55f); // wReborn MEDIUM — không phải identity
                 break;
             case 3:
                 c.genes[1]  = Random.Range(0.75f, 1.0f);

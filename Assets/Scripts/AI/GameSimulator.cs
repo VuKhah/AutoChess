@@ -116,7 +116,7 @@ public class GameSimulator
             score += unit.currentATK * 3f;
             score += unit.currentHP * 2f;
             score += unit.Data.tier * 8f;
-            score += unit.mergeLevel * 24f;
+            score += unit.mergeLevel * 12f;
             if (unit.isTaunt) score += 8f;
             if (unit.isReborn && !unit.hasRebornUsed) score += 18f;
             if (unit.safeguardActive) score += 12f;

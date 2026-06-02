@@ -21,9 +21,9 @@ public static class AITrainingBatch
     private const int   QUICK_GEN      = 40;
     private const int   QUICK_MATCHES  = 5;
 
-    private const int   PROD_POP       = 120;
-    private const int   PROD_GEN       = 180;
-    private const int   PROD_MATCHES   = 24;
+    private const int   PROD_POP       = 200;
+    private const int   PROD_GEN       = 150;
+    private const int   PROD_MATCHES   = 25;
 
     private const float MUTATION_RATE_EARLY = 0.10f;
     private const float MUTATION_RATE_LATE  = 0.035f;
@@ -36,7 +36,7 @@ public static class AITrainingBatch
     [MenuItem("Tools/AI/Train AI — Quick (30 pop × 40 gen)")]
     public static void RunQuickFromMenu() => RunQuick();
 
-    [MenuItem("Tools/AI/Train AI — Production (120 pop × 120 gen)")]
+    [MenuItem("Tools/AI/Train AI — Production (200 pop × 150 gen)")]
     public static void RunProductionFromMenu() => RunProduction();
 
     public static void RunQuick()      => Execute(QUICK_POP, QUICK_GEN, QUICK_MATCHES);
@@ -141,10 +141,10 @@ public static class AITrainingBatch
         var benchmarkOpponents = CreateBenchmarkOpponents();
 
         // ── GA loop ───────────────────────────────────────────────────────────
-        const int   PLATEAU_PATIENCE = 15;
-        const float PLATEAU_EPS      = 0.5f;
+        const int   PLATEAU_PATIENCE = 25;   // gen liên tiếp best không tăng ≥ EPS → dừng
+        const float PLATEAU_EPS      = 100f; // cải thiện < 100 điểm không tính là "đổi"
         int   plateauCount = 0;
-        float prevStdDev   = -1f;
+        float prevBestEver = float.MinValue;
         Chromosome hallOfFame = null;
         float bestEver = float.MinValue;
         float bestBabylonEver = 0f;
@@ -224,16 +224,16 @@ public static class AITrainingBatch
             if (pctB < 10f || pctN < 10f)
                 Debug.LogWarning($"[AITraining] Diversity low at gen {g}: B={pctB:F0}% N={pctN:F0}%. Injecting seeded immigrants next gen.");
 
-            // ── Early stopping — std_dev plateau ─────────────────────────────
-            if (prevStdDev >= 0f && Mathf.Abs(stdDev - prevStdDev) < PLATEAU_EPS)
+            // ── Early stopping — best fitness plateau ────────────────────────
+            if (bestEver - prevBestEver < PLATEAU_EPS)
                 plateauCount++;
             else
                 plateauCount = 0;
-            prevStdDev = stdDev;
+            prevBestEver = bestEver;
 
             if (plateauCount >= PLATEAU_PATIENCE)
             {
-                Debug.LogWarning($"[AITraining] Early stop tại gen {g} — std_dev plateau {PLATEAU_PATIENCE} gen liên tiếp (Δ<{PLATEAU_EPS}).");
+                Debug.LogWarning($"[AITraining] Early stop tại gen {g} — best fitness plateau {PLATEAU_PATIENCE} gen (Δ<{PLATEAU_EPS:F0}).");
                 break;
             }
 
@@ -377,7 +377,12 @@ public static class AITrainingBatch
             nextGen.Add(CrossoverAndMutate(population, tournamentK, mutationRate, mutationMag));
 
         while (nextGen.Count < popSize)
-            nextGen.Add(CreateSeededChromosome(Random.Range(0, 5)));
+        {
+            // Nếu pct_other sụp < 8%: ép immigration sang summoner/resilient
+            // thay vì random → ngăn Babylon colonize toàn bộ quần thể
+            int group = (pctO < 8f) ? (2 + (nextGen.Count % 2)) : Random.Range(0, 5);
+            nextGen.Add(CreateSeededChromosome(group));
+        }
 
         return nextGen;
     }
