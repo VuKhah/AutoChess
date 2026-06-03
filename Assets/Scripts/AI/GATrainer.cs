@@ -14,7 +14,7 @@ public class GATrainer : MonoBehaviour
     public float mutationRate  = 0.10f;
     [Range(0.05f, 0.2f)]
     public float mutationMag   = 0.12f;
-    [Range(0.05f, 0.25f)]
+    [Range(0.04f, 0.30f)]
     public float immigrantRate = 0.12f;
     public float minLibraryDistance = 0.18f;
 
@@ -85,20 +85,23 @@ public class GATrainer : MonoBehaviour
                     c.genes[19] = Random.Range(0.0f, 0.3f);
                     break;
                 case 2: // Summoner seed — summon/reborn/consume chain, giữ shells
-                    c.genes[14] = Random.Range(0.75f, 1.0f); // eSummon (covers SummonConsumed, isConsume)
-                    c.genes[5]  = Random.Range(0.70f, 1.0f); // wReborn — vòng lặp tái sinh
-                    c.genes[8]  = Random.Range(0.65f, 1.0f); // tOnDeath — kích khi unit chết
-                    c.genes[34] = Random.Range(0.65f, 1.0f); // tOnAllyGroup — OnAllyDeath/Summon/Reborn
+                    c.genes[14] = Random.Range(0.75f, 1.0f);  // eSummon (covers SummonConsumed, isConsume)
+                    c.genes[5]  = Random.Range(0.70f, 1.0f);  // wReborn — vòng lặp tái sinh
+                    c.genes[8]  = Random.Range(0.65f, 1.0f);  // tOnDeath — kích khi unit chết
+                    c.genes[34] = Random.Range(0.65f, 1.0f);  // tOnAllyGroup — OnAllyDeath/Summon/Reborn
                     c.genes[35] = Random.Range(0.50f, 0.85f); // tOnAllyDeploy — khi shell triệu hồi
                     c.genes[27] = Random.Range(0.00f, 0.15f); // wProactiveSell thấp — giữ shells
                     c.genes[0]  = Random.Range(0.10f, 0.40f); // wATK thấp
+                    c.genes[23] = Random.Range(0.10f, 0.40f); // wSaveThreshold thấp — cần thực sự mua unit
                     break;
                 case 3: // Resilient seed — bền bỉ, phản đòn, không chết dễ
-                    c.genes[1]  = Random.Range(0.75f, 1.0f); // wHP
-                    c.genes[4]  = Random.Range(0.70f, 1.0f); // wTaunt
-                    c.genes[5]  = Random.Range(0.70f, 1.0f); // wReborn
-                    c.genes[6]  = Random.Range(0.70f, 1.0f); // wSafeguard
-                    c.genes[10] = Random.Range(0.70f, 1.0f); // tOnTakeDmg
+                    c.genes[1]  = Random.Range(0.75f, 1.0f);  // wHP
+                    c.genes[4]  = Random.Range(0.70f, 1.0f);  // wTaunt
+                    c.genes[5]  = Random.Range(0.70f, 1.0f);  // wReborn
+                    c.genes[6]  = Random.Range(0.70f, 1.0f);  // wSafeguard
+                    c.genes[10] = Random.Range(0.70f, 1.0f);  // tOnTakeDmg
+                    c.genes[17] = Random.Range(0.50f, 0.90f); // eGiveBuff — ability Reborn/Safeguard là cốt lõi
+                    c.genes[0]  = Random.Range(0.25f, 0.55f); // wATK minimum — cần ATK để thắng combat
                     break;
                 // case 4: random hoàn toàn — đóng góp cho hardBot
             }
@@ -124,8 +127,8 @@ public class GATrainer : MonoBehaviour
         Debug.Log($"=== HUẤN LUYỆN AI === Genes:{Chromosome.GeneCount} | Pop:{populationSize} | Gen:{generations} ===");
         Debug.Log($"[GATrainer] CSV → {csvPath}");
 
-        const int   PLATEAU_PATIENCE = 25;   // gen liên tiếp best không tăng ≥ EPS → dừng
-        const float PLATEAU_EPS      = 100f; // cải thiện < 100 điểm không tính là "đổi"
+        const int   PLATEAU_PATIENCE = 30;   // gen liên tiếp best không tăng ≥ EPS → dừng
+        const float PLATEAU_EPS      = 30f;  // 100 → 30: ngay cả cải thiện nhỏ cũng reset counter
         int   plateauCount = 0;
         float prevBestEver = float.MinValue;
         Chromosome hallOfFame = null;
@@ -235,7 +238,9 @@ public class GATrainer : MonoBehaviour
         // ── Sort lần cuối ─────────────────────────────────────────────────────
         population = population.OrderByDescending(c => c.fitness).ToList();
         float avgFinal    = population.Average(c => c.fitness);
-        float threshold   = avgFinal * 0.8f; // ngưỡng "đủ tốt" để chọn specialist
+        float hardFitness = hallOfFame?.fitness ?? population[0].fitness;
+        // Sàn tối thiểu: 55% của hardBot, tránh chọn specialist fitness quá thấp
+        float threshold   = Mathf.Max(avgFinal * 0.8f, hardFitness * 0.55f);
         var   viable      = population.Where(c => c.fitness >= threshold).ToList();
 
         // ── Chọn 5 bot ───────────────────────────────────────────────────────
@@ -286,21 +291,23 @@ public class GATrainer : MonoBehaviour
              - c.genes[9]  * 0.8f   // phạt OnAttack — không phải combat bot
              - c.genes[0]  * 0.5f   // phạt wATK raw
              - c.genes[27] * 1.2f   // phạt bán chủ động — giữ số lượng unit
-             - c.genes[21] * 0.8f;  // phạt wMerge — số lượng > chất lượng
+             - c.genes[21] * 0.8f   // phạt wMerge — số lượng > chất lượng
+             - c.genes[23] * 1.5f;  // phạt buy threshold quá cao — bot cần thực sự mua unit
     }
 
     private static float ResilientScore(Chromosome c)
     {
         if (c == null) return float.MinValue;
-        return c.genes[1] * 1.4f
-             + c.genes[4]
-             + c.genes[5] * 1.5f
-             + c.genes[6]
-             + c.genes[10]
-             + c.genes[11] * 0.5f
-             - c.genes[0] * 0.4f
-             - c.genes[9] * 0.5f
-             - c.genes[24] * 0.3f;
+        return c.genes[1] * 1.4f    // wHP
+             + c.genes[4]           // wTaunt
+             + c.genes[5] * 1.5f    // wReborn
+             + c.genes[6]           // wSafeguard
+             + c.genes[10]          // tOnTakeDmg
+             + c.genes[11] * 0.5f   // tEndTurnShop
+             + c.genes[17] * 1.0f   // eGiveBuff — ability Reborn/Safeguard/Taunt là cốt lõi
+             + c.genes[0]  * 0.2f   // wATK — cần tối thiểu để thắng combat
+             - c.genes[9]  * 0.5f   // phạt OnAttack
+             - c.genes[24] * 0.3f;  // phạt reroll quá hung hăng
     }
 
     private void LogBot(string name, Chromosome bot, string extra)
@@ -513,13 +520,16 @@ public class GATrainer : MonoBehaviour
                 c.genes[21] = Random.Range(0.00f, 0.25f); // wMerge LOW — số lượng > 3-star
                 c.genes[9]  = Random.Range(0.00f, 0.20f); // tOnAttack LOW
                 c.genes[5]  = Random.Range(0.25f, 0.55f); // wReborn MEDIUM — không phải identity
+                c.genes[23] = Random.Range(0.10f, 0.40f); // wSaveThreshold LOW — cần thực sự mua unit
                 break;
-            case 3:
-                c.genes[1]  = Random.Range(0.75f, 1.0f);
-                c.genes[4]  = Random.Range(0.70f, 1.0f);
-                c.genes[5]  = Random.Range(0.70f, 1.0f);
-                c.genes[6]  = Random.Range(0.70f, 1.0f);
-                c.genes[10] = Random.Range(0.70f, 1.0f);
+            case 3: // resilientBot — bền bỉ, phản đòn, không chết dễ
+                c.genes[1]  = Random.Range(0.75f, 1.0f);  // wHP
+                c.genes[4]  = Random.Range(0.70f, 1.0f);  // wTaunt
+                c.genes[5]  = Random.Range(0.70f, 1.0f);  // wReborn
+                c.genes[6]  = Random.Range(0.70f, 1.0f);  // wSafeguard
+                c.genes[10] = Random.Range(0.70f, 1.0f);  // tOnTakeDmg
+                c.genes[17] = Random.Range(0.50f, 0.90f); // eGiveBuff — ability Reborn/Safeguard là cốt lõi
+                c.genes[0]  = Random.Range(0.25f, 0.55f); // wATK minimum — cần ATK để thắng combat
                 break;
         }
         return c;

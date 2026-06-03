@@ -94,14 +94,14 @@ public class GameSimulator
 
     private static float ScoreFromA(int result, int hpA, int hpB, int turns, float lateScoreA, float lateScoreB)
     {
-        float score = result > 0 ? 120f : result == 0 ? 70f : 35f;
-        score += hpA * 6f;
-        score -= hpB * 3f;
-        score += Mathf.Max(0f, lateScoreA) * 0.18f;
-        score += Mathf.Clamp(lateScoreA - lateScoreB, -300f, 300f) * 0.12f;
-
-        if (turns >= 12)
-            score += (turns - 11) * 3f;
+        // Win=300, Draw=100, Loss=10 — win premium = 290 (trước: 85)
+        // Số trận thắng quan trọng hơn board power
+        float score = result > 0 ? 300f : result == 0 ? 100f : 10f;
+        score += hpA * 8f;   // HP margin vẫn quan trọng — thắng rộng tốt hơn thắng sát
+        score -= hpB * 4f;   // phạt để đối thủ còn HP
+        // lateScore giảm xuống — board power là thứ yếu so với kết quả trận
+        score += Mathf.Max(0f, lateScoreA) * 0.06f;
+        score += Mathf.Clamp(lateScoreA - lateScoreB, -300f, 300f) * 0.04f;
 
         return Mathf.Max(1f, score);
     }

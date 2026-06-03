@@ -26,11 +26,11 @@ public static class AITrainingBatch
     private const int   PROD_MATCHES   = 25;
 
     private const float MUTATION_RATE_EARLY = 0.10f;
-    private const float MUTATION_RATE_LATE  = 0.035f;
+    private const float MUTATION_RATE_LATE  = 0.06f;  // 0.035 → 0.06: giữ khả năng explore ở gen cuối
     private const float MUTATION_MAG_EARLY  = 0.12f;
-    private const float MUTATION_MAG_LATE   = 0.035f;
+    private const float MUTATION_MAG_LATE   = 0.06f;  // 0.035 → 0.06: bước nhảy lớn hơn khi bị stuck
     private const float IMMIGRANT_RATE_EARLY = 0.12f;
-    private const float IMMIGRANT_RATE_LATE  = 0.04f;
+    private const float IMMIGRANT_RATE_LATE  = 0.08f; // 0.04 → 0.08: nhiều máu mới hơn ở giai đoạn cuối
     private const float MIN_LIBRARY_DISTANCE = 0.18f;
 
     [MenuItem("Tools/AI/Train AI — Quick (30 pop × 40 gen)")]
@@ -141,8 +141,8 @@ public static class AITrainingBatch
         var benchmarkOpponents = CreateBenchmarkOpponents();
 
         // ── GA loop ───────────────────────────────────────────────────────────
-        const int   PLATEAU_PATIENCE = 25;   // gen liên tiếp best không tăng ≥ EPS → dừng
-        const float PLATEAU_EPS      = 100f; // cải thiện < 100 điểm không tính là "đổi"
+        const int   PLATEAU_PATIENCE = 30;   // gen liên tiếp best không tăng ≥ EPS → dừng
+        const float PLATEAU_EPS      = 30f;  // 100 → 30: ngay cả cải thiện nhỏ cũng reset counter
         int   plateauCount = 0;
         float prevBestEver = float.MinValue;
         Chromosome hallOfFame = null;
