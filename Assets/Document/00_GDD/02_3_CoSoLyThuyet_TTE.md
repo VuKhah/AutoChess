@@ -174,7 +174,7 @@ if (!skipForPendingReborn)
 
 **`copiesAbilitiesOnConsume`:** Đây là flag mở rộng khả năng của `Destroy+isConsume` lên một bậc. Khi bật, source không chỉ "nuốt" unit mà còn **sao chép toàn bộ ability** của unit đó vào danh sách ability của mình. Đây là mechanic của Upamaki — con quái vật thần thoại Ai Cập nuốt chửng linh hồn và tiếp thu sức mạnh của chúng. Về mặt kỹ thuật, những ability được sao chép này là *runtime mutation* của `CardDefinition.abilities` — dữ liệu được thêm vào trong khi game đang chạy, nằm ngoài JSON tĩnh.
 
-**`ScaleTargetStats`:** Effect này nhân chỉ số hiện tại của target với một hệ số: `newATK = currentATK + currentATK × effectValue1 × scaleFactor`. Vì `scaleFactor = mergeLevel + 1`, một unit đã merge nhiều lần sẽ nhận được buff khổng lồ. Đây là cách Osiris được thiết kế — unit có ATK thấp nhưng ability nhân đôi chỉ số khi tấn công: merge Osiris lên đủ mức rồi trigger một lần là đủ để tạo ra con quái vật không thể ngăn chặn.
+**`ScaleTargetStats`:** Effect này nhân chỉ số hiện tại của target với một hệ số: `newATK = currentATK + currentATK × effectValue1 × scaleFactor`. Vì `scaleFactor = mergeLevel + 1`, một unit đã merge nhiều lần sẽ nhận được buff khổng lồ. Đây là cách Osiris được thiết kế — unit có ATK/HP thấp (3/3) nhưng khi một đồng minh hồi sinh (`OnAllyReborn`), Osiris nhân đôi/ba/bốn chỉ số của unit đó tùy mergeLevel. Kết hợp với Anubis grant Reborn, một unit trung bình có thể trở thành con quái vật trong một round mà không cần merge Osiris lên cao.
 
 ---
 

@@ -198,16 +198,17 @@ Crossover và mutation, dù cần thiết cho khám phá, đều có thể làm 
 
 **Elitism** giải quyết vấn đề này bằng cách đơn giản: sao chép nguyên vẹn một số cá thể tốt nhất từ thế hệ hiện tại vào thế hệ tiếp theo, không qua bất kỳ toán tử nào. Điều này đảm bảo tính chất toán học quan trọng: **fitness tốt nhất của quần thể không bao giờ giảm theo thế hệ** — GA với elitism là một thuật toán *monotonically improving* theo nghĩa đó.
 
-Đề tài cài đặt elitism theo hai cấp độ. Cấp độ đầu tiên là **elitism toàn cục**: clone top `max(2, populationSize/20)` chromosome có fitness cao nhất — ít nhất 2 cá thể và tối đa 5% quần thể. Cấp độ thứ hai là **elitism theo archetype**: mỗi thế hệ bổ sung thêm top 2 Babylon, top 2 Niles, top 2 Summoner score, top 2 Resilient score vào thế hệ sau — đảm bảo từng dòng phong cách chơi luôn có đại diện tốt nhất của mình được bảo toàn, dù fitness tổng của nó thấp hơn nhóm khác ở thời điểm hiện tại:
+Đề tài cài đặt elitism theo hai cấp độ. Cấp độ đầu tiên là **elitism toàn cục**: clone top `max(3, round(Lerp(populationSize/18, populationSize/8, progress)))` chromosome có fitness cao nhất — khoảng 7 cá thể ở đầu training và ~15 ở cuối (tăng dần để bảo toàn nhiều nghiệm tốt hơn khi quần thể đã trưởng thành). Cấp độ thứ hai là **elitism theo archetype**: mỗi thế hệ bổ sung thêm top 2 Babylon, top 2 Niles, top 2 Summoner score, top 2 Resilient score vào thế hệ sau — đảm bảo từng dòng phong cách chơi luôn có đại diện tốt nhất của mình được bảo toàn, dù fitness tổng của nó thấp hơn nhóm khác ở thời điểm hiện tại:
 
 ```csharp
 // GATrainer.cs — BreedNextGen()
-int eliteCount = Mathf.Max(2, populationSize / 20);
-AddTopClones(nextGen, population, c => true, eliteCount);   // global elite
-AddTopClones(nextGen, population, IsBabylon, 2);            // Babylon elite
-AddTopClones(nextGen, population, IsNile, 2);               // Niles elite
-AddTopClones(nextGen, population.OrderByDescending(SummonerScore), c => true, 2);   // Summoner
-AddTopClones(nextGen, population.OrderByDescending(ResilientScore), c => true, 2);  // Resilient
+int eliteCount = Mathf.Max(3, Mathf.RoundToInt(
+    Mathf.Lerp(populationSize / 18f, populationSize / 8f, progress)));
+AddTopClones(nextGen, population, c => true, eliteCount);              // global elite
+AddTopClones(nextGen, population, IsBabylon, 2);                       // Babylon elite
+AddTopClones(nextGen, population, IsNile, 2);                          // Niles elite
+AddTopClones(nextGen, population.OrderByDescending(SummonerScore), 2); // Summoner
+AddTopClones(nextGen, population.OrderByDescending(ResilientScore), 2);// Resilient
 ```
 
 Thiết kế elitism theo archetype này phản ánh một mục tiêu thiết kế quan trọng của dự án: không chỉ tìm một bot "tốt nhất", mà tìm ra **nhiều phong cách chơi tốt nhất**. Một bot Babylon giỏi nhất có thể không có fitness tổng cao bằng một generalist, nhưng nó có giá trị riêng khi cần đa dạng hóa độ khó game.

@@ -557,8 +557,8 @@ int eliteCount = Mathf.Max(3, Mathf.RoundToInt(
 AddTopClones(nextGen, population, c => true, eliteCount);       // global elite
 AddTopClones(nextGen, population, IsBabylon, 2);                // Babylon elite
 AddTopClones(nextGen, population, IsNile, 2);                   // Niles elite
-AddTopClones(nextGen, population.OrderBy(SummonerScore), 2);   // Summoner elite
-AddTopClones(nextGen, population.OrderBy(ResilientScore), 2);  // Resilient elite
+AddTopClones(nextGen, population.OrderByDescending(SummonerScore), 2);   // Summoner elite
+AddTopClones(nextGen, population.OrderByDescending(ResilientScore), 2);  // Resilient elite
 ```
 
 Tổng cộng tối thiểu `eliteCount + 8` cá thể được bảo toàn mỗi thế hệ. Bốn tầng cuối đảm bảo mỗi archetype luôn có đại diện tốt nhất được giữ lại — dù fitness tổng của babylonBot có thể không vào top global elite, top-2 Babylon chắc chắn được bảo toàn.

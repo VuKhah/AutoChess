@@ -164,15 +164,17 @@ Một điểm thú vị ít được chú ý là **hàm fitness trong GameSimula
 
 ```csharp
 // GameSimulator.ScoreFromA()
-float score = result > 0 ? 100f : result == 0 ? 25f : 0f;
-score += (hpA - hpB) * 4f;
+float score = result > 0 ? 120f : result == 0 ? 70f : 35f;
+score += hpA * 6f;
+score -= hpB * 3f;
 if (result > 0)
     score += (MaxTurns - turns) * 2f;   // thắng nhanh hơn → điểm cao hơn
+return Mathf.Max(1f, score);
 ```
 
-Ba thành phần của công thức này thực chất encode ba mục tiêu kinh tế khác nhau. Thành phần đầu (`100f` khi thắng) là reward tuyệt đối cho chiến thắng. Thành phần `(hpA - hpB) × 4` là reward tương đối cho **biên chiến thắng** — thắng với HP còn nhiều hơn đối thủ nghĩa là chiến lược đang hoạt động hiệu quả, không chỉ may mắn. Thành phần `(MaxTurns - turns) × 2` là reward cho **tốc độ** — thắng ở lượt 8 được nhiều điểm hơn thắng ở lượt 18.
+Ba thành phần của công thức này thực chất encode ba mục tiêu kinh tế khác nhau. Thành phần đầu (`120f / 70f / 35f`) là reward tuyệt đối phân biệt kết quả — hòa (70) vẫn được thưởng đáng kể để không loại bỏ chiến lược phòng thủ bền bỉ. Thành phần `hpA×6 − hpB×3` là reward tương đối cho **biên chiến thắng**: thắng với HP còn nhiều được thưởng thêm, thua nhưng đã hạ HP đối thủ được bù một phần. Hệ số không đối xứng (6 vs. 3) khuyến khích bot giữ mình sống hơn là chỉ tấn công. Thành phần `(MaxTurns - turns) × 2` là reward cho **tốc độ** — thắng ở lượt 8 được nhiều điểm hơn thắng ở lượt 18.
 
-Thành phần thứ ba ngầm khuyến khích chiến lược **tempo**: chi tiêu coin sớm để xây dựng đội hình mạnh từ đầu, từ đó áp đảo đối thủ và kết thúc ván đấu nhanh. Một bot tiết kiệm quá mức (economy-heavy) có thể thắng nhưng thắng muộn, nhận điểm thấp hơn một bot balanced. Qua nhiều thế hệ evolution, áp lực fitness này "dạy" chromosome học được điểm cân bằng tempo-economy mà không cần người thiết kế chỉ định cụ thể — đây là một ví dụ điển hình về **reward shaping**: thiết kế hàm fitness cẩn thận để behavior mong muốn nổi lên tự nhiên từ quá trình tối ưu hóa.
+Thành phần tốc độ ngầm khuyến khích chiến lược **tempo**: chi tiêu coin sớm để xây dựng đội hình mạnh từ đầu, áp đảo đối thủ và kết thúc ván nhanh. Một bot tiết kiệm quá mức (economy-heavy) có thể thắng nhưng thắng muộn, nhận điểm thấp hơn bot balanced. Phạm vi điểm thực tế: thắng sớm HP cao ≈ 120 + 7×6 + 19×2 = 200; thua nhanh HP cạn ≈ 35 − 7×3 = 14 — đủ rộng để phân biệt rõ chiến lược. Qua nhiều thế hệ evolution, áp lực fitness này "dạy" chromosome tìm điểm cân bằng tempo-economy mà không cần người thiết kế chỉ định — đây là **reward shaping**: thiết kế hàm fitness để behavior mong muốn nổi lên tự nhiên.
 
 > **[HÌNH 2.16 — Cấu Trúc Hàm Fitness]** *Biểu đồ tròn hoặc thanh dọc chia nhỏ điểm fitness: phần thắng/thua (100/0/25 điểm), phần biên thắng (hpA−hpB × 4), phần tốc độ (MaxTurns−turns × 2). Kèm ví dụ số cụ thể cho hai kịch bản: thắng nhanh vs. thắng muộn.*
 
