@@ -557,8 +557,8 @@ int eliteCount = Mathf.Max(3, Mathf.RoundToInt(
 AddTopClones(nextGen, population, c => true, eliteCount);       // global elite
 AddTopClones(nextGen, population, IsBabylon, 2);                // Babylon elite
 AddTopClones(nextGen, population, IsNile, 2);                   // Niles elite
-AddTopClones(nextGen, population.OrderBy(SummonerScore), 2);   // Summoner elite
-AddTopClones(nextGen, population.OrderBy(ResilientScore), 2);  // Resilient elite
+AddTopClones(nextGen, population.OrderByDescending(SummonerScore), 2);   // Summoner elite
+AddTopClones(nextGen, population.OrderByDescending(ResilientScore), 2);  // Resilient elite
 ```
 
 Tổng cộng tối thiểu `eliteCount + 8` cá thể được bảo toàn mỗi thế hệ. Bốn tầng cuối đảm bảo mỗi archetype luôn có đại diện tốt nhất được giữ lại — dù fitness tổng của babylonBot có thể không vào top global elite, top-2 Babylon chắc chắn được bảo toàn.
@@ -650,7 +650,7 @@ Kết quả training được lưu vào `Assets/Resources/AI_Library.json`:
 ```json
 {
   "hardBot":     { "genes": [0.71, 0.68, ...], "fitness": 4764.0 },
-  "babylonBot":  { "genes": [0.12, 0.45, ..., 0.91, 0.04, 0.08, ...], "fitness": 4154.0 },
+  "babylonBot":  { "genes": [0.12, 0.45, ..., 0.91, 0.04, 0.08, ...], "fitness": 4764.0 },
   "nileBot":     { "genes": [0.38, 0.72, ..., 0.07, 0.03, 0.88, ...], "fitness": 4727.0 },
   "summonerBot": { "genes": [0.20, 0.35, ..., 0.94, 0.85, ...], "fitness": 3892.0 },
   "resilientBot":{ "genes": [0.14, 0.89, 0.31, ...], "fitness": 3645.0 }
@@ -743,13 +743,13 @@ Từ dữ liệu training và theo dõi `best_summoner`, `best_resilient` scores
 
 | Chỉ số | hardBot | babylonBot | nileBot | summonerBot | resilientBot |
 |--------|:-------:|:----------:|:-------:|:-----------:|:------------:|
-| Fitness cuối | **4764** | 4154 | 4727 | — | — |
+| Fitness cuối | **4764** | **4764** | 4727 | — | — |
 | Best score (cumulative) | 4764 | 4764 | 4764 | **8.56** | **6.13** |
-| Cải thiện so với gen 0 | +37 | +0 | +0 | +0.79 (10.2%) | +0.54 (9.7%) |
+| Cải thiện so với gen 0 | +37 | +37 | +0 | +0.79 (10.2%) | +0.54 (9.7%) |
 
 *Lưu ý: SummonerScore và ResilientScore là composite metrics khác với fitness thô, không so sánh trực tiếp.*
 
-Cả babylonBot và nileBot đạt best fitness 4764 — bằng hardBot về điểm tuyệt đối! Điều này có nghĩa là **cả ba specialist đều là chromosome xuất sắc**, được phân biệt không phải bởi chất lượng tổng thể mà bởi profile gene khác nhau (GeneDistance ≥ 0.18 giữa các bot). Đây chính là mục tiêu thiết kế: không phải tìm bot tốt nhất duy nhất, mà tìm nhiều bot giỏi theo cách khác nhau.
+hardBot và babylonBot đều đạt fitness 4764 — bằng nhau về điểm tuyệt đối. nileBot đạt 4727, tương đương fitness tốt nhất của quần thể ở thế hệ 0 (không cải thiện thêm về điểm số, nhưng gene profile ngày càng đặc trưng hơn cho archetype Niles). Điều này có nghĩa là **cả ba specialist đều là chromosome xuất sắc**, được phân biệt không phải bởi chất lượng tổng thể mà bởi profile gene khác nhau (GeneDistance ≥ 0.18 giữa các bot). Đây chính là mục tiêu thiết kế: không phải tìm bot tốt nhất duy nhất, mà tìm nhiều bot giỏi theo cách khác nhau.
 
 summonerBot và resilientBot có fitness thô thấp hơn nhưng được chọn qua composite score, phản ánh triết lý: bot specialise vào summon chain hay phòng thủ không nhất thiết thắng nhiều nhất, nhưng chúng có *phong cách chơi riêng biệt* đủ để tạo ra sự đa dạng trải nghiệm cho người chơi.
 

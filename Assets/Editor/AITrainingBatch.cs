@@ -26,11 +26,15 @@ public static class AITrainingBatch
     private const int   PROD_MATCHES   = 36;
 
     private const float MUTATION_RATE_EARLY = 0.10f;
-    private const float MUTATION_RATE_LATE  = 0.035f;
+    private const float MUTATION_RATE_LATE  = 0.06f;  // 0.035 → 0.06: giữ khả năng explore ở gen cuối
     private const float MUTATION_MAG_EARLY  = 0.12f;
-    private const float MUTATION_MAG_LATE   = 0.035f;
+    private const float MUTATION_MAG_LATE   = 0.06f;  // 0.035 → 0.06: bước nhảy lớn hơn khi bị stuck
     private const float IMMIGRANT_RATE_EARLY = 0.12f;
+<<<<<<< HEAD
     private const float IMMIGRANT_RATE_LATE  = 0.07f;
+=======
+    private const float IMMIGRANT_RATE_LATE  = 0.08f; // 0.04 → 0.08: nhiều máu mới hơn ở giai đoạn cuối
+>>>>>>> fe8dc8718f501ce5200bedd8c768b0ae1769ed05
     private const float MIN_LIBRARY_DISTANCE = 0.18f;
 
     [MenuItem("Tools/AI/Train AI — Quick (30 pop × 40 gen)")]
@@ -145,9 +149,14 @@ public static class AITrainingBatch
         var benchmarkOpponents = CreateBenchmarkOpponents();
 
         // ── GA loop ───────────────────────────────────────────────────────────
+<<<<<<< HEAD
         const int   PLATEAU_PATIENCE = 40;   // hardcore: only stop when best/avg/late/card all stall for a long tail
         const float PLATEAU_EPS      = 120f;
         int minStopGen = Mathf.RoundToInt(generations * 0.90f);
+=======
+        const int   PLATEAU_PATIENCE = 30;   // gen liên tiếp best không tăng ≥ EPS → dừng
+        const float PLATEAU_EPS      = 30f;  // 100 → 30: ngay cả cải thiện nhỏ cũng reset counter
+>>>>>>> fe8dc8718f501ce5200bedd8c768b0ae1769ed05
         int   plateauCount = 0;
         float prevProgressScore = float.MinValue;
         Chromosome hallOfFame = null;

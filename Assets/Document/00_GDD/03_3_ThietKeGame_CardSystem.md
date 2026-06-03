@@ -61,8 +61,10 @@ Niles unit buff lẫn nhau qua các sự kiện chiến đấu — summon, rebor
 
 Chiến lược Niles điển hình là *chaos resilience* — nhìn bề ngoài đội hình dễ chết, nhưng thực ra mỗi cái chết kích hoạt một chuỗi buff và hồi sinh khiến đội hình mạnh dần theo từng lượt chiến đấu.
 
-**Bộ tộc Olympus — Cộng sinh qua sức mạnh thuần túy:**
-Olympus là bộ tộc tập trung vào ATK buff và áp lực tấn công. Trong khi Babylon và Niles có những chuỗi trigger phức tạp, Olympus hướng đến sức mạnh trực tiếp hơn — unit Olympus buffs nhau qua combat events (tấn công, gây sát thương, chiến thắng trận đấu). Đây là bộ tộc cho người chơi ưa chiến lược aggro: xây dựng đội hình tấn công cao và áp đảo đối thủ trước khi các combo phức tạp của Babylon hay Niles có thể triển khai đầy đủ.
+**Bộ tộc Olympus — Cộng sinh qua sức mạnh thuần túy *(thiết kế dự kiến)*:**
+Olympus được thiết kế là bộ tộc tập trung vào ATK buff và áp lực tấn công. Trong khi Babylon và Niles có những chuỗi trigger phức tạp, Olympus hướng đến sức mạnh trực tiếp hơn — unit Olympus buffs nhau qua combat events (tấn công, gây sát thương, chiến thắng trận đấu). Đây là bộ tộc cho người chơi ưa chiến lược aggro: xây dựng đội hình tấn công cao và áp đảo đối thủ trước khi các combo phức tạp của Babylon hay Niles có thể triển khai đầy đủ.
+
+> *Lưu ý về phạm vi triển khai: Trong phiên bản hiện tại (68 card), không có unit nào có `tribe = Olympus`. Gene `genes[19]` (sOlympus) trong chromosome bot được giữ lại trong kiến trúc để đơn giản hóa mở rộng về sau, nhưng không có tác dụng thực tế trong training. Thảo luận thêm ở Mục 6.5.*
 
 **Tại sao không dùng threshold cứng?**
 Quyết định không hardcode "3 unit = synergy kích hoạt" là có chủ ý. Threshold cứng tạo ra các "điểm gãy" rõ ràng trong giá trị của từng unit — đơn vị thứ 3 đột nhiên mạnh hơn hẳn đơn vị thứ 2. Mô hình emergent tránh hiện tượng này: thêm unit thứ 4, thứ 5 vẫn có giá trị (thêm trigger), và việc "mất một unit" không làm mất đột ngột toàn bộ synergy. Điều này tạo ra quyết định trade-off linh hoạt hơn thay vì binary "đủ/chưa đủ ngưỡng".
