@@ -91,7 +91,7 @@ public class CardDefinition
     public int      baseATK;
     public int      baseHP;
     public int      cost;         // 1–3 coin
-    public int      tier;         // 1–3, xác định khi nào xuất hiện trong shop
+    public int      tier;         // 1–6, xác định khi nào xuất hiện trong shop
 
     public List<AbilityData> abilities;   // danh sách kỹ năng theo mô hình TTE
 
@@ -139,7 +139,7 @@ Ngoài chỉ số, `CardInstance` theo dõi nhiều trạng thái runtime phục
 
 Ngoài ba trường cốt lõi (`trigger`, `target`, `effect`), `AbilityData` chứa một tập các modifier định hình cách kỹ năng hoạt động: `isPermanent` quyết định buff có tồn tại qua combat hay không; `triggerLimit` giới hạn số lần kích hoạt tối đa (ví dụ: "chỉ trigger 2 lần mỗi trận"); `conditionCount` cho phép kỹ năng "skip" — chỉ kích hoạt mỗi N lần trigger (ví dụ: "mỗi lần thứ 3 bị đánh"); `isEscalating` làm cho giá trị tăng dần mỗi lần kích hoạt; `subjectTribe` lọc trigger `OnAllySell`/`OnAllyDeploy` để chỉ phản ứng với unit thuộc bộ tộc cụ thể.
 
-Sức mạnh của thiết kế này hiện rõ khi đọc JSON của một lá bài phức tạp. Anubis, lá bài Niles có kỹ năng "mỗi khi tấn công, triệu hồi một Mummy ngẫu nhiên; chỉ làm vậy tối đa 3 lần mỗi trận, và sau lần thứ nhất, buff combat của mỗi Mummy tăng thêm", được biểu diễn đầy đủ bởi một `AbilityData` với `trigger=OnAttack`, `target=Self`, `effect=Summon`, `summonCardID="niles_mummy"`, `triggerLimit=3`, `isEscalating=true`. Không cần một dòng C# riêng cho Anubis.
+Sức mạnh của thiết kế này hiện rõ khi đọc JSON của một lá bài phức tạp. Anubis, lá bài Niles có kỹ năng "khi một đồng minh chết, ban Reborn cho đồng minh có HP thấp nhất; tối đa 2 lần ở merge level 0, tăng lên 4 rồi 6 lần ở merge level cao hơn", được biểu diễn đầy đủ bởi một `AbilityData` với `trigger=OnAllyDeath`, `target=LowestHealthAlly`, `effect=GiveBuff(Reborn)`, `triggerLimit=2`, `isScaledTriggerLimit=true`. Không cần một dòng C# riêng cho Anubis.
 
 ---
 
@@ -293,8 +293,10 @@ Khi cần sửa logic combat, chỉ một file cần mở. Khi cần thêm mecha
 
 Cơ chế drop rate theo shop tier quyết định "chất lượng" của shop theo từng thời điểm trong game. Ở lượt đầu (shop tier 1), chỉ unit tier 1 xuất hiện. Từ lượt 3 (shop tier 2), unit tier 2 bắt đầu xuất hiện với xác suất nhỏ. Đến cuối game (shop tier 6), unit tier 3 chiếm đa số. Phân phối này tạo ra cảm giác progression tự nhiên: người chơi xây nền tảng bằng unit rẻ sớm game, rồi dần nâng cấp khi có nhiều tiền hơn và shop chất lượng hơn.
 
-| Shop Tier | Tier 1 | Tier 2 | Tier 3 |
-|:---------:|:------:|:------:|:------:|
+*(Ghi chú: "Tier 1/2/3" trong bảng là ba nhóm chất lượng để tính drop rate, tương ứng card pool tier 1–2 / 3–4 / 5–6. Card thực tế có pool tier từ 1–6 như trình bày trong Mục 3.3.)*
+
+| Shop Tier | Tier 1 (pool 1–2) | Tier 2 (pool 3–4) | Tier 3 (pool 5–6) |
+|:---------:|:-----------------:|:-----------------:|:-----------------:|
 | 1 | 100% | — | — |
 | 2 | 70% | 30% | — |
 | 3 | 40% | 45% | 15% |
@@ -474,4 +476,4 @@ Kết quả không phải một kiến trúc "đẹp trên lý thuyết" — mà
 
 ---
 
-*[Kết thúc Chương 4 — Tiếp theo: Chương 6 — Kết Quả Và Đánh Giá]*
+*[Kết thúc Chương 4 — Tiếp theo: Chương 5 — Thuật Toán Di Truyền Và Hệ Thống AI]*
