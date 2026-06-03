@@ -8,6 +8,7 @@ public struct MatchResult
     public int turns;
     public float scoreA;
     public float lateScoreA;
+    public float cardScoreA;
 }
 
 public class GameSimulator
@@ -27,6 +28,8 @@ public class GameSimulator
         int turnsPlayed = 0;
         float lateScoreA = 0f;
         float lateScoreB = 0f;
+        float cardScoreA = 0f;
+        float cardScoreB = 0f;
 
         for (int i = 0; i < MaxTurns; i++)
         {
@@ -52,6 +55,8 @@ public class GameSimulator
                 float lateWeight = Mathf.InverseLerp(9f, MaxTurns, currentTurn);
                 lateScoreA += BoardPower(botA) * (1f + lateWeight);
                 lateScoreB += BoardPower(botB) * (1f + lateWeight);
+                cardScoreA += CardQuality(botA) * (1f + lateWeight);
+                cardScoreB += CardQuality(botB) * (1f + lateWeight);
             }
 
             resolver.ResolveTurn(botA.board, botB.board, new TurnRecord());
@@ -74,6 +79,8 @@ public class GameSimulator
                 float lateWeight = Mathf.InverseLerp(9f, MaxTurns, currentTurn);
                 lateScoreA += BoardPower(botA) * (1.2f + lateWeight);
                 lateScoreB += BoardPower(botB) * (1.2f + lateWeight);
+                cardScoreA += CardQuality(botA) * (1.2f + lateWeight);
+                cardScoreB += CardQuality(botB) * (1.2f + lateWeight);
             }
         }
 
@@ -87,21 +94,24 @@ public class GameSimulator
             hpA = hpA,
             hpB = hpB,
             turns = turnsPlayed,
-            scoreA = ScoreFromA(result, hpA, hpB, turnsPlayed, lateScoreA, lateScoreB),
-            lateScoreA = lateScoreA
+            scoreA = ScoreFromA(result, hpA, hpB, turnsPlayed, lateScoreA, lateScoreB, cardScoreA, cardScoreB),
+            lateScoreA = lateScoreA,
+            cardScoreA = cardScoreA
         };
     }
 
-    private static float ScoreFromA(int result, int hpA, int hpB, int turns, float lateScoreA, float lateScoreB)
+    private static float ScoreFromA(int result, int hpA, int hpB, int turns, float lateScoreA, float lateScoreB, float cardScoreA, float cardScoreB)
     {
         float score = result > 0 ? 120f : result == 0 ? 70f : 35f;
         score += hpA * 6f;
         score -= hpB * 3f;
-        score += Mathf.Max(0f, lateScoreA) * 0.18f;
-        score += Mathf.Clamp(lateScoreA - lateScoreB, -300f, 300f) * 0.12f;
+        score += Mathf.Max(0f, lateScoreA) * 0.22f;
+        score += Mathf.Clamp(lateScoreA - lateScoreB, -400f, 400f) * 0.15f;
+        score += Mathf.Max(0f, cardScoreA) * 0.10f;
+        score += Mathf.Clamp(cardScoreA - cardScoreB, -350f, 350f) * 0.10f;
 
         if (turns >= 12)
-            score += (turns - 11) * 3f;
+            score += (turns - 11) * 4f;
 
         return Mathf.Max(1f, score);
     }
@@ -122,6 +132,73 @@ public class GameSimulator
             if (unit.safeguardActive) score += 12f;
             if (unit.Data.abilities != null) score += unit.Data.abilities.Count * 4f;
         }
+        return score;
+    }
+
+    private static float CardQuality(BotAgent bot)
+    {
+        float score = 0f;
+        foreach (var unit in bot.board)
+        {
+            if (unit == null || unit.IsDead) continue;
+
+            score += unit.Data.tier * 16f;
+            score += unit.Data.cost * 10f;
+            score += unit.mergeLevel * 35f;
+            score += unit.currentATK * 1.8f;
+            score += unit.currentHP * 1.4f;
+            if (unit.Data.hasTaunt || unit.isTaunt) score += 8f;
+            if (unit.Data.hasReborn || unit.isReborn) score += 14f;
+            if (unit.Data.hasSafeguard || unit.safeguardActive) score += 10f;
+            if (unit.Data.abilities != null)
+            {
+                foreach (var ability in unit.Data.abilities)
+                    if (ability != null) score += AbilityQuality(ability);
+            }
+        }
+        return score;
+    }
+
+    private static float AbilityQuality(AbilityData ability)
+    {
+        float score = 4f;
+        switch (ability.trigger)
+        {
+            case TriggerType.EndTurnShop:
+            case TriggerType.Aura:
+            case TriggerType.OnAllyDeath:
+            case TriggerType.OnAllySummon:
+            case TriggerType.OnAllyReborn:
+                score += 8f;
+                break;
+            case TriggerType.StartOfBattle:
+            case TriggerType.OnDeploy:
+                score += 5f;
+                break;
+        }
+
+        switch (ability.effect)
+        {
+            case EffectType.AddStats:
+            case EffectType.GiveStats:
+            case EffectType.ScaleTargetStats:
+            case EffectType.AbsorbStats:
+                score += 10f;
+                break;
+            case EffectType.Summon:
+            case EffectType.SummonConsumed:
+            case EffectType.Reborn:
+            case EffectType.GiveBuff:
+                score += 8f;
+                break;
+            case EffectType.GainCoin:
+                score += 6f;
+                break;
+        }
+
+        if (ability.isPermanent) score += 5f;
+        if (ability.isEscalating) score += 6f;
+        if (ability.isReborn) score += 6f;
         return score;
     }
 }

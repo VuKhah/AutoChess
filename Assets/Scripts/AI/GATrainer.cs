@@ -7,9 +7,9 @@ using UnityEngine;
 public class GATrainer : MonoBehaviour
 {
     [Header("Cấu hình huấn luyện")]
-    public int populationSize  = 30;   // test nhanh: 30 | production: 120
-    public int generations     = 40;   // test nhanh: 40 | production: 180
-    public int matchesPerChrom = 5;    // test nhanh: 5  | production: 20
+    public int populationSize  = 30;   // test nhanh: 30 | production: 360
+    public int generations     = 40;   // test nhanh: 40 | production: 280
+    public int matchesPerChrom = 5;    // test nhanh: 5  | production: 36
     [Range(0.05f, 0.25f)]
     public float mutationRate  = 0.10f;
     [Range(0.05f, 0.2f)]
@@ -84,14 +84,18 @@ public class GATrainer : MonoBehaviour
                     c.genes[18] = Random.Range(0.0f, 0.3f);
                     c.genes[19] = Random.Range(0.0f, 0.3f);
                     break;
-                case 2: // Summoner seed — summon/reborn/consume chain, giữ shells
-                    c.genes[14] = Random.Range(0.75f, 1.0f); // eSummon (covers SummonConsumed, isConsume)
-                    c.genes[5]  = Random.Range(0.70f, 1.0f); // wReborn — vòng lặp tái sinh
-                    c.genes[8]  = Random.Range(0.65f, 1.0f); // tOnDeath — kích khi unit chết
-                    c.genes[34] = Random.Range(0.65f, 1.0f); // tOnAllyGroup — OnAllyDeath/Summon/Reborn
-                    c.genes[35] = Random.Range(0.50f, 0.85f); // tOnAllyDeploy — khi shell triệu hồi
-                    c.genes[27] = Random.Range(0.00f, 0.15f); // wProactiveSell thấp — giữ shells
-                    c.genes[0]  = Random.Range(0.10f, 0.40f); // wATK thấp
+                case 2: // Summoner/Niles chain
+                    c.genes[20] = Random.Range(0.75f, 1.0f);
+                    c.genes[14] = Random.Range(0.75f, 1.0f);
+                    c.genes[34] = Random.Range(0.75f, 1.0f);
+                    c.genes[13] = Random.Range(0.65f, 0.95f);
+                    c.genes[15] = Random.Range(0.55f, 0.85f);
+                    c.genes[2]  = Random.Range(0.60f, 0.90f);
+                    c.genes[8]  = Random.Range(0.45f, 0.75f);
+                    c.genes[27] = Random.Range(0.00f, 0.15f);
+                    c.genes[21] = Random.Range(0.00f, 0.25f);
+                    c.genes[9]  = Random.Range(0.00f, 0.20f);
+                    c.genes[5]  = Random.Range(0.25f, 0.55f);
                     break;
                 case 3: // Resilient seed — bền bỉ, phản đòn, không chết dễ
                     c.genes[1]  = Random.Range(0.75f, 1.0f); // wHP
@@ -119,16 +123,18 @@ public class GATrainer : MonoBehaviour
 
         _csv = new StreamWriter(csvPath, false, System.Text.Encoding.UTF8) { AutoFlush = true };
         var csv = _csv;
-        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other,best_babylon,best_niles,best_summoner,best_resilient,raw_best,avg_ema,best_gain,best_late,avg_late");
+        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other,best_babylon,best_niles,best_summoner,best_resilient,raw_best,avg_ema,best_gain,best_late,avg_late,best_card,avg_card");
 
         Debug.Log($"=== HUẤN LUYỆN AI === Genes:{Chromosome.GeneCount} | Pop:{populationSize} | Gen:{generations} ===");
         Debug.Log($"[GATrainer] CSV → {csvPath}");
 
-        const int   PLATEAU_PATIENCE = 25;   // gen liên tiếp best không tăng ≥ EPS → dừng
-        const float PLATEAU_EPS      = 100f; // cải thiện < 100 điểm không tính là "đổi"
+        const int   PLATEAU_PATIENCE = 40;
+        const float PLATEAU_EPS      = 120f;
+        int minStopGen = Mathf.RoundToInt(generations * 0.90f);
         int   plateauCount = 0;
-        float prevBestEver = float.MinValue;
+        float prevProgressScore = float.MinValue;
         Chromosome hallOfFame = null;
+        var hardCandidates = new List<Chromosome>();
         float bestEver = float.MinValue;
         float bestBabylonEver = 0f;
         float bestNileEver = 0f;
@@ -144,12 +150,14 @@ public class GATrainer : MonoBehaviour
                 benchmarkOpponents = CreateBenchmarkOpponents();
 
             var lateScores = new Dictionary<Chromosome, float>();
+            var cardScores = new Dictionary<Chromosome, float>();
 
             // ── Đánh giá Fitness ─────────────────────────────────────────────
             foreach (var chromo in population)
             {
                 chromo.fitness = 0f;
                 lateScores[chromo] = 0f;
+                cardScores[chromo] = 0f;
                 for (int m = 0; m < matchesPerChrom; m++)
                 {
                     BotAgent me      = new BotAgent(chromo);
@@ -160,6 +168,7 @@ public class GATrainer : MonoBehaviour
                     MatchResult result = sim.EvaluateMatch(me, opp);
                     chromo.fitness += result.scoreA;
                     lateScores[chromo] += result.lateScoreA;
+                    cardScores[chromo] += result.cardScoreA;
                 }
 
                 foreach (var benchmark in benchmarkOpponents)
@@ -167,6 +176,7 @@ public class GATrainer : MonoBehaviour
                     MatchResult result = sim.EvaluateMatch(new BotAgent(chromo), new BotAgent(benchmark));
                     chromo.fitness += result.scoreA * 0.5f;
                     lateScores[chromo] += result.lateScoreA * 0.5f;
+                    cardScores[chromo] += result.cardScoreA * 0.5f;
                 }
             }
 
@@ -179,11 +189,15 @@ public class GATrainer : MonoBehaviour
             float stdDev = Mathf.Sqrt(population.Average(c => (c.fitness - avg) * (c.fitness - avg)));
             float bestLate = lateScores.TryGetValue(population[0], out float late) ? late : 0f;
             float avgLate = population.Average(c => lateScores.TryGetValue(c, out float v) ? v : 0f);
+            float bestCard = cardScores.TryGetValue(population[0], out float card) ? card : 0f;
+            float avgCard = population.Average(c => cardScores.TryGetValue(c, out float v) ? v : 0f);
             if (hallOfFame == null || best > bestEver)
             {
                 hallOfFame = population[0].Clone();
                 bestEver = best;
+                AddHardCandidate(hardCandidates, hallOfFame, 24);
             }
+            AddHardCandidates(hardCandidates, population.Take(4), 24);
             avgEma = hasAvgEma ? Mathf.Lerp(avgEma, avg, 0.25f) : avg;
             hasAvgEma = true;
 
@@ -204,23 +218,24 @@ public class GATrainer : MonoBehaviour
             bestResilientEver = Mathf.Max(bestResilientEver, bestR);
 
             // ── Ghi CSV ──────────────────────────────────────────────────────
-            csv.WriteLine($"{g},{bestEver:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{bestBabylonEver:F0},{bestNileEver:F0},{bestSummonerEver:F2},{bestResilientEver:F2},{best:F0},{avgEma:F1},{bestEver - best:F0},{bestLate:F0},{avgLate:F0}");
-            Debug.Log($"Gen {g,3}/{generations}  Best={bestEver,5:F0}  Raw={best,5:F0}  Avg={avg,5:F1}  Late={avgLate:F0}  Worst={worst,5:F0}  " +
+            csv.WriteLine($"{g},{bestEver:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{bestBabylonEver:F0},{bestNileEver:F0},{bestSummonerEver:F2},{bestResilientEver:F2},{best:F0},{avgEma:F1},{bestEver - best:F0},{bestLate:F0},{avgLate:F0},{bestCard:F0},{avgCard:F0}");
+            Debug.Log($"Gen {g,3}/{generations}  Best={bestEver,5:F0}  Raw={best,5:F0}  Avg={avg,5:F1}  Late={avgLate:F0}  Card={avgCard:F0}  Worst={worst,5:F0}  " +
                       $"Std={stdDev:F1}  B={pctB:F0}% N={pctN:F0}% O={pctO:F0}%  BestB={bestB:F0} BestN={bestN:F0}");
 
             if (pctB < 10f || pctN < 10f)
                 Debug.LogWarning($"[GATrainer] Diversity low at gen {g}: B={pctB:F0}% N={pctN:F0}%. Injecting seeded immigrants next gen.");
 
-            // ── Early stopping — best fitness plateau ────────────────────────
-            if (bestEver - prevBestEver < PLATEAU_EPS)
+            // ── Early stopping — composite progress plateau ─────────────────
+            float progressScore = bestEver + avgEma * 0.45f + avgLate * 0.08f + avgCard * 0.035f;
+            if (progressScore - prevProgressScore < PLATEAU_EPS)
                 plateauCount++;
             else
                 plateauCount = 0;
-            prevBestEver = bestEver;
+            prevProgressScore = progressScore;
 
-            if (plateauCount >= PLATEAU_PATIENCE)
+            if (g >= minStopGen && plateauCount >= PLATEAU_PATIENCE)
             {
-                Debug.LogWarning($"[GATrainer] Early stop tại gen {g} — best fitness plateau {PLATEAU_PATIENCE} gen (Δ<{PLATEAU_EPS:F0}).");
+                Debug.LogWarning($"[GATrainer] Early stop tại gen {g} — composite progress plateau {PLATEAU_PATIENCE} gen (Δ<{PLATEAU_EPS:F0}).");
                 break;
             }
 
@@ -240,7 +255,8 @@ public class GATrainer : MonoBehaviour
 
         // ── Chọn 5 bot ───────────────────────────────────────────────────────
         var selected = new List<Chromosome>();
-        var hard = hallOfFame ?? population[0];
+        AddHardCandidates(hardCandidates, population.Take(Mathf.Min(20, population.Count)), 32);
+        var hard = SelectHardByGauntlet(hardCandidates.Count > 0 ? hardCandidates : population.Take(12)) ?? hallOfFame ?? population[0];
         selected.Add(hard);
 
         var babylon = SelectDistinct(population.Where(IsBabylon), selected, c => c.fitness);
@@ -309,6 +325,61 @@ public class GATrainer : MonoBehaviour
             Debug.Log($"► <b>{name} Bot</b>  fitness={bot.fitness:F0}  {extra}");
         else
             Debug.LogWarning($"[GATrainer] {name} specialist không tìm thấy trong population cuối.");
+    }
+
+    private void AddHardCandidates(List<Chromosome> target, IEnumerable<Chromosome> candidates, int maxCount)
+    {
+        foreach (var candidate in candidates)
+            AddHardCandidate(target, candidate, maxCount);
+    }
+
+    private void AddHardCandidate(List<Chromosome> target, Chromosome candidate, int maxCount)
+    {
+        if (candidate == null) return;
+        if (target.Any(c => GeneDistance(c, candidate) < 0.025f)) return;
+
+        target.Add(candidate.Clone());
+        target.Sort((a, b) => b.fitness.CompareTo(a.fitness));
+        while (target.Count > maxCount)
+            target.RemoveAt(target.Count - 1);
+    }
+
+    private Chromosome SelectHardByGauntlet(IEnumerable<Chromosome> candidates)
+    {
+        var pool = candidates
+            .Where(c => c != null)
+            .OrderByDescending(c => c.fitness)
+            .Take(16)
+            .Select(c => c.Clone())
+            .ToList();
+
+        if (pool.Count == 0) return null;
+
+        var benchmarks = CreateBenchmarkOpponents();
+        for (int i = 0; i < 3; i++)
+            benchmarks.AddRange(CreateBenchmarkOpponents());
+
+        Chromosome best = null;
+        float bestScore = float.MinValue;
+        foreach (var candidate in pool)
+        {
+            float score = 0f;
+            foreach (var benchmark in benchmarks)
+            {
+                MatchResult result = sim.EvaluateMatch(new BotAgent(candidate), new BotAgent(benchmark));
+                score += result.scoreA + result.lateScoreA * 0.08f + result.cardScoreA * 0.035f;
+            }
+
+            candidate.fitness = score;
+            if (best == null || score > bestScore)
+            {
+                best = candidate;
+                bestScore = score;
+            }
+        }
+
+        Debug.Log($"[GATrainer] Final hard gauntlet candidates={pool.Count} benchmarks={benchmarks.Count} winner={bestScore:F0}");
+        return best;
     }
 
     // ── GA helpers ────────────────────────────────────────────────────────────
@@ -465,7 +536,7 @@ public class GATrainer : MonoBehaviour
 
     private float CurrentImmigrantRate(float progress)
     {
-        return Mathf.Lerp(immigrantRate, 0.04f, Mathf.SmoothStep(0f, 1f, progress));
+        return Mathf.Lerp(immigrantRate, 0.07f, Mathf.SmoothStep(0f, 1f, progress));
     }
 
     private static int CurrentTournamentSize(float progress)
