@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -21,26 +21,22 @@ public static class AITrainingBatch
     private const int   QUICK_GEN      = 40;
     private const int   QUICK_MATCHES  = 5;
 
-    private const int   PROD_POP       = 360;
-    private const int   PROD_GEN       = 280;
-    private const int   PROD_MATCHES   = 36;
+    private const int   PROD_POP       = 320;
+    private const int   PROD_GEN       = 200;
+    private const int   PROD_MATCHES   = 32;
 
     private const float MUTATION_RATE_EARLY = 0.10f;
     private const float MUTATION_RATE_LATE  = 0.06f;  // 0.035 → 0.06: giữ khả năng explore ở gen cuối
     private const float MUTATION_MAG_EARLY  = 0.12f;
     private const float MUTATION_MAG_LATE   = 0.06f;  // 0.035 → 0.06: bước nhảy lớn hơn khi bị stuck
     private const float IMMIGRANT_RATE_EARLY = 0.12f;
-<<<<<<< HEAD
-    private const float IMMIGRANT_RATE_LATE  = 0.07f;
-=======
     private const float IMMIGRANT_RATE_LATE  = 0.08f; // 0.04 → 0.08: nhiều máu mới hơn ở giai đoạn cuối
->>>>>>> fe8dc8718f501ce5200bedd8c768b0ae1769ed05
     private const float MIN_LIBRARY_DISTANCE = 0.18f;
 
     [MenuItem("Tools/AI/Train AI — Quick (30 pop × 40 gen)")]
     public static void RunQuickFromMenu() => RunQuick();
 
-    [MenuItem("Tools/AI/Train AI - Production (360 pop x 280 gen)")]
+    [MenuItem("Tools/AI/Train AI - Production (320 pop x 200 gen)")]
     public static void RunProductionFromMenu() => RunProduction();
 
     public static void RunQuick()      => Execute(QUICK_POP, QUICK_GEN, QUICK_MATCHES);
@@ -53,7 +49,20 @@ public static class AITrainingBatch
 
         Debug.Log($"[AITraining] Bắt đầu — pop={popSize} gen={generations} matches={matchesPerChrom} genes={Chromosome.GeneCount}");
 
-        var library = RunGA(popSize, generations, matchesPerChrom);
+        var previousLibrary = LoadExistingLibrary();
+        var library = RunGA(popSize, generations, matchesPerChrom, previousLibrary);
+        var candidateReport = EvaluateLibrary("candidate", library);
+
+        if (previousLibrary != null)
+        {
+            var previousReport = EvaluateLibrary("previous", previousLibrary);
+            if (previousReport.overallScore > candidateReport.overallScore * 1.03f)
+            {
+                Debug.LogWarning($"[AITraining] Previous library wins validation ({previousReport.overallScore:F1} > {candidateReport.overallScore:F1}). Keeping previous AI_Library.json.");
+                library = previousLibrary;
+            }
+        }
+
         SaveLibrary(library);
 
         Debug.Log("[AITraining] Hoàn tất → Assets/Resources/AI_Library.json");
@@ -86,7 +95,7 @@ public static class AITrainingBatch
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    private static AILibrary RunGA(int popSize, int generations, int matchesPerChrom)
+    private static AILibrary RunGA(int popSize, int generations, int matchesPerChrom, AILibrary previousLibrary)
     {
         var sim = new GameSimulator();
 
@@ -97,7 +106,7 @@ public static class AITrainingBatch
         string csvPath = Path.Combine(csvDir, $"training_{stamp}.csv");
 
         var csv = new StreamWriter(csvPath, false, System.Text.Encoding.UTF8) { AutoFlush = true };
-        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other,best_babylon,best_niles,best_summoner,best_resilient,raw_best,avg_ema,best_gain,best_late,avg_late,best_card,avg_card");
+        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other,diversity_index,dominant_pct,best_babylon,best_niles,best_summoner,best_resilient,raw_best,avg_ema,best_gain,best_improvement_pct,avg_improvement_pct,progress_score,plateau_count,mutation_rate,mutation_mag,immigrant_rate,best_late,avg_late,best_card,avg_card");
         Debug.Log($"[AITraining] CSV → {csvPath}");
 
         // ── 5 seeded sub-population (mỗi nhóm 20%) ───────────────────────────
@@ -128,11 +137,13 @@ public static class AITrainingBatch
                     c.genes[13] = Random.Range(0.65f, 0.95f);
                     c.genes[15] = Random.Range(0.55f, 0.85f);
                     c.genes[2]  = Random.Range(0.60f, 0.90f);
-                    c.genes[8]  = Random.Range(0.45f, 0.75f);
+                    c.genes[8]  = Random.Range(0.55f, 0.85f);
+                    c.genes[35] = Random.Range(0.50f, 0.85f);
                     c.genes[27] = Random.Range(0.00f, 0.15f);
                     c.genes[21] = Random.Range(0.00f, 0.25f);
                     c.genes[9]  = Random.Range(0.00f, 0.20f);
-                    c.genes[5]  = Random.Range(0.25f, 0.55f);
+                    c.genes[5]  = Random.Range(0.45f, 0.75f);
+                    c.genes[23] = Random.Range(0.10f, 0.40f);
                     break;
                 case 3: // Resilient — HP/Taunt/Reborn defensive
                     c.genes[1]  = Random.Range(0.75f, 1.0f);
@@ -140,23 +151,23 @@ public static class AITrainingBatch
                     c.genes[5]  = Random.Range(0.70f, 1.0f);
                     c.genes[6]  = Random.Range(0.70f, 1.0f);
                     c.genes[10] = Random.Range(0.70f, 1.0f);
+                    c.genes[17] = Random.Range(0.50f, 0.90f);
+                    c.genes[0]  = Random.Range(0.25f, 0.55f);
                     break;
                 // case 4: random — contributes to hardBot
             }
             population.Add(c);
         }
 
+        if (previousLibrary != null)
+            InjectLibrarySeeds(population, previousLibrary, popSize);
+
         var benchmarkOpponents = CreateBenchmarkOpponents();
 
         // ── GA loop ───────────────────────────────────────────────────────────
-<<<<<<< HEAD
-        const int   PLATEAU_PATIENCE = 40;   // hardcore: only stop when best/avg/late/card all stall for a long tail
-        const float PLATEAU_EPS      = 120f;
-        int minStopGen = Mathf.RoundToInt(generations * 0.90f);
-=======
-        const int   PLATEAU_PATIENCE = 30;   // gen liên tiếp best không tăng ≥ EPS → dừng
-        const float PLATEAU_EPS      = 30f;  // 100 → 30: ngay cả cải thiện nhỏ cũng reset counter
->>>>>>> fe8dc8718f501ce5200bedd8c768b0ae1769ed05
+        const int   PLATEAU_PATIENCE = 28;
+        const float PLATEAU_EPS      = 150f;
+        int minStopGen = Mathf.RoundToInt(generations * 0.75f);
         int   plateauCount = 0;
         float prevProgressScore = float.MinValue;
         Chromosome hallOfFame = null;
@@ -167,6 +178,8 @@ public static class AITrainingBatch
         float bestSummonerEver = float.MinValue;
         float bestResilientEver = float.MinValue;
         float avgEma = 0f;
+        float initialBest = 0f;
+        float initialAvg = 0f;
         bool hasAvgEma = false;
 
         for (int g = 0; g < generations; g++)
@@ -203,7 +216,8 @@ public static class AITrainingBatch
                     cardScores[chromo] += result.cardScoreA * 0.5f;
                 }
 
-                if ((ci + 1) % 10 == 0 || ci == popSize - 1)
+                int progressLogStep = Mathf.Max(10, popSize / 6);
+                if ((ci + 1) % progressLogStep == 0 || ci == popSize - 1)
                     Debug.Log($"[AITraining] Gen {g}/{generations} fitness {ci + 1}/{popSize}");
             }
 
@@ -217,6 +231,12 @@ public static class AITrainingBatch
             float avgLate = population.Average(c => lateScores.TryGetValue(c, out float v) ? v : 0f);
             float bestCard = cardScores.TryGetValue(population[0], out float card) ? card : 0f;
             float avgCard = population.Average(c => cardScores.TryGetValue(c, out float v) ? v : 0f);
+            if (g == 0)
+            {
+                initialBest = Mathf.Max(1f, best);
+                initialAvg = Mathf.Max(1f, avg);
+            }
+
             if (hallOfFame == null || best > bestEver)
             {
                 hallOfFame = population[0].Clone();
@@ -232,6 +252,8 @@ public static class AITrainingBatch
             float pctB = cntB * 100f / popSize;
             float pctN = cntN * 100f / popSize;
             float pctO = (popSize - cntB - cntN) * 100f / popSize;
+            float diversityIndex = DiversityIndex(pctB, pctN, pctO);
+            float dominantPct = Mathf.Max(pctB, Mathf.Max(pctN, pctO));
             float bestB = BestOrZero(population.Where(IsBabylon));
             float bestN = BestOrZero(population.Where(IsNile));
             float bestS = population.Max(SummonerScore);
@@ -241,14 +263,21 @@ public static class AITrainingBatch
             bestSummonerEver = Mathf.Max(bestSummonerEver, bestS);
             bestResilientEver = Mathf.Max(bestResilientEver, bestR);
 
-            csv.WriteLine($"{g},{bestEver:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{bestBabylonEver:F0},{bestNileEver:F0},{bestSummonerEver:F2},{bestResilientEver:F2},{best:F0},{avgEma:F1},{bestEver - best:F0},{bestLate:F0},{avgLate:F0},{bestCard:F0},{avgCard:F0}");
+            float progressScore = bestEver + avgEma * 0.45f + avgLate * 0.08f + avgCard * 0.035f;
+            float bestImprovementPct = (bestEver / initialBest - 1f) * 100f;
+            float avgImprovementPct = (avgEma / initialAvg - 1f) * 100f;
+            float progress = TrainingProgress(g, generations);
+            float currentMutationRate = CurrentMutationRate(progress);
+            float currentMutationMag = CurrentMutationMag(progress);
+            float currentImmigrantRate = CurrentImmigrantRate(progress);
+
+            csv.WriteLine($"{g},{bestEver:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{diversityIndex:F1},{dominantPct:F1},{bestBabylonEver:F0},{bestNileEver:F0},{bestSummonerEver:F2},{bestResilientEver:F2},{best:F0},{avgEma:F1},{bestEver - best:F0},{bestImprovementPct:F2},{avgImprovementPct:F2},{progressScore:F1},{plateauCount},{currentMutationRate:F4},{currentMutationMag:F4},{currentImmigrantRate:F4},{bestLate:F0},{avgLate:F0},{bestCard:F0},{avgCard:F0}");
             Debug.Log($"[AITraining] Gen {g}/{generations}  Best={bestEver:F0}  Raw={best:F0}  Avg={avg:F1}  Late={avgLate:F0}  Card={avgCard:F0}  Worst={worst:F0}  Std={stdDev:F1}  B={pctB:F0}% N={pctN:F0}% O={pctO:F0}%  BestB={bestB:F0} BestN={bestN:F0}");
 
             if (pctB < 10f || pctN < 10f)
                 Debug.LogWarning($"[AITraining] Diversity low at gen {g}: B={pctB:F0}% N={pctN:F0}%. Injecting seeded immigrants next gen.");
 
             // ── Early stopping — composite progress plateau ─────────────────
-            float progressScore = bestEver + avgEma * 0.45f + avgLate * 0.08f + avgCard * 0.035f;
             if (progressScore - prevProgressScore < PLATEAU_EPS)
                 plateauCount++;
             else
@@ -270,7 +299,8 @@ public static class AITrainingBatch
         // ── Selection cuối ────────────────────────────────────────────────────
         population = population.OrderByDescending(c => c.fitness).ToList();
         float avgFinal  = population.Average(c => c.fitness);
-        float threshold = avgFinal * 0.8f;
+        float hardFitness = hallOfFame?.fitness ?? population[0].fitness;
+        float threshold = Mathf.Max(avgFinal * 0.8f, hardFitness * 0.55f);
         var   viable    = population.Where(c => c.fitness >= threshold).ToList();
 
         var selected = new List<Chromosome>();
@@ -321,7 +351,8 @@ public static class AITrainingBatch
         - c.genes[9]  * 0.8f
         - c.genes[0]  * 0.5f
         - c.genes[27] * 1.2f
-        - c.genes[21] * 0.8f;
+        - c.genes[21] * 0.8f
+        - c.genes[23] * 1.5f;
 
     private static float ResilientScore(Chromosome c) =>
         c.genes[1] * 1.4f
@@ -330,7 +361,8 @@ public static class AITrainingBatch
         + c.genes[6]
         + c.genes[10]
         + c.genes[11] * 0.5f
-        - c.genes[0] * 0.4f
+        + c.genes[17]
+        + c.genes[0] * 0.2f
         - c.genes[9] * 0.5f
         - c.genes[24] * 0.3f;
 
@@ -338,6 +370,39 @@ public static class AITrainingBatch
         Debug.Log(bot != null
             ? $"[AITraining] {name,-10} fitness={bot.fitness:F0}  {extra}"
             : $"[AITraining] {name,-10} NOT FOUND in population");
+
+    private static void InjectLibrarySeeds(List<Chromosome> population, AILibrary library, int popSize)
+    {
+        var seeds = GetLibraryBots(library);
+        if (seeds.Count == 0) return;
+
+        int cursor = 0;
+        foreach (var seed in seeds)
+        {
+            population[cursor++ % popSize] = seed.Clone();
+            for (int i = 0; i < 5 && cursor < Mathf.Min(popSize, seeds.Count * 6); i++)
+                population[cursor++ % popSize] = MutateClone(seed, 0.18f, 0.045f);
+        }
+
+        Debug.Log($"[AITraining] Injected {cursor} previous-library seeds into initial population.");
+    }
+
+    private static List<Chromosome> GetLibraryBots(AILibrary library)
+    {
+        var result = new List<Chromosome>();
+        AddValidBot(result, library?.hardBot);
+        AddValidBot(result, library?.babylonBot);
+        AddValidBot(result, library?.nileBot);
+        AddValidBot(result, library?.summonerBot);
+        AddValidBot(result, library?.resilientBot);
+        return result;
+    }
+
+    private static void AddValidBot(List<Chromosome> result, Chromosome bot)
+    {
+        if (IsValidBot(bot))
+            result.Add(bot);
+    }
 
     private static void AddHardCandidates(List<Chromosome> target, IEnumerable<Chromosome> candidates, int maxCount)
     {
@@ -436,9 +501,9 @@ public static class AITrainingBatch
 
         int eliteCount = Mathf.Max(3, Mathf.RoundToInt(Mathf.Lerp(popSize / 18f, popSize / 8f, progress)));
         int immigrantCount = Mathf.Max(2, Mathf.RoundToInt(popSize * CurrentImmigrantRate(progress)));
-        if (pctB < 12f) immigrantCount += 2;
-        if (pctN < 12f) immigrantCount += 2;
-        if (pctO < 8f) immigrantCount += 3;
+        if (pctB < 12f) immigrantCount += Mathf.RoundToInt(popSize * 0.06f);
+        if (pctN < 12f) immigrantCount += Mathf.RoundToInt(popSize * 0.08f);
+        if (pctO < 10f) immigrantCount += Mathf.RoundToInt(popSize * 0.07f);
 
         var nextGen = new List<Chromosome>();
         AddTopClones(nextGen, population, c => true, eliteCount);
@@ -460,13 +525,25 @@ public static class AITrainingBatch
 
         while (nextGen.Count < popSize)
         {
-            // Nếu pct_other sụp < 8%: ép immigration sang summoner/resilient
-            // thay vì random → ngăn Babylon colonize toàn bộ quần thể
-            int group = (pctO < 8f) ? (2 + (nextGen.Count % 2)) : Random.Range(0, 5);
+            int group = SelectImmigrantGroup(nextGen.Count, pctB, pctN, pctO);
             nextGen.Add(CreateSeededChromosome(group));
         }
 
         return nextGen;
+    }
+
+    private static int SelectImmigrantGroup(int index, float pctB, float pctN, float pctO)
+    {
+        var groups = new List<int>();
+        if (pctB < 15f) groups.Add(0);
+        if (pctN < 15f) groups.Add(1);
+        if (pctO < 12f)
+        {
+            groups.Add(2);
+            groups.Add(3);
+        }
+
+        return groups.Count > 0 ? groups[index % groups.Count] : Random.Range(0, 5);
     }
 
     private static void AddTopClones(List<Chromosome> target, IEnumerable<Chromosome> source, System.Func<Chromosome, bool> predicate, int count)
@@ -586,11 +663,13 @@ public static class AITrainingBatch
                 c.genes[13] = Random.Range(0.65f, 0.95f);
                 c.genes[15] = Random.Range(0.55f, 0.85f);
                 c.genes[2]  = Random.Range(0.60f, 0.90f);
-                c.genes[8]  = Random.Range(0.45f, 0.75f);
+                c.genes[8]  = Random.Range(0.55f, 0.85f);
+                c.genes[35] = Random.Range(0.50f, 0.85f);
                 c.genes[27] = Random.Range(0.00f, 0.15f);
                 c.genes[21] = Random.Range(0.00f, 0.25f);
                 c.genes[9]  = Random.Range(0.00f, 0.20f);
-                c.genes[5]  = Random.Range(0.25f, 0.55f);
+                c.genes[5]  = Random.Range(0.45f, 0.75f);
+                c.genes[23] = Random.Range(0.10f, 0.40f);
                 break;
             case 3:
                 c.genes[1]  = Random.Range(0.75f, 1.0f);
@@ -598,6 +677,8 @@ public static class AITrainingBatch
                 c.genes[5]  = Random.Range(0.70f, 1.0f);
                 c.genes[6]  = Random.Range(0.70f, 1.0f);
                 c.genes[10] = Random.Range(0.70f, 1.0f);
+                c.genes[17] = Random.Range(0.50f, 0.90f);
+                c.genes[0]  = Random.Range(0.25f, 0.55f);
                 break;
         }
         return c;
@@ -606,6 +687,91 @@ public static class AITrainingBatch
     private static bool IsBabylon(Chromosome c) => c.genes[18] > c.genes[19] && c.genes[18] > c.genes[20];
     private static bool IsNile(Chromosome c) => c.genes[20] > c.genes[19] && c.genes[20] > c.genes[18];
     private static float BestOrZero(IEnumerable<Chromosome> pool) => pool.Any() ? pool.Max(c => c.fitness) : 0f;
+    private static float DiversityIndex(float pctB, float pctN, float pctO)
+    {
+        float b = pctB / 100f;
+        float n = pctN / 100f;
+        float o = pctO / 100f;
+        return Mathf.Clamp01((1f - (b * b + n * n + o * o)) / (2f / 3f)) * 100f;
+    }
+
+    private struct ValidationReport
+    {
+        public float overallScore;
+        public float hardWinRate;
+    }
+
+    private static AILibrary LoadExistingLibrary()
+    {
+        string path = Path.Combine(Application.dataPath, "Resources", "AI_Library.json");
+        if (!File.Exists(path)) return null;
+
+        var library = JsonUtility.FromJson<AILibrary>(File.ReadAllText(path));
+        return IsValidBot(library?.hardBot) ? library : null;
+    }
+
+    private static bool IsValidBot(Chromosome bot)
+    {
+        return bot?.genes != null && bot.genes.Length >= Chromosome.GeneCount;
+    }
+
+    private static ValidationReport EvaluateLibrary(string label, AILibrary library)
+    {
+        Random.InitState(260604);
+        var sim = new GameSimulator();
+        var benchmarks = CreateBenchmarkOpponents();
+        for (int i = 0; i < 3; i++)
+            benchmarks.AddRange(CreateBenchmarkOpponents());
+
+        float total = 0f;
+        int botCount = 0;
+        float hardWinRate = 0f;
+
+        var bots = new List<KeyValuePair<string, Chromosome>>
+        {
+            new KeyValuePair<string, Chromosome>("hard", library.hardBot),
+            new KeyValuePair<string, Chromosome>("babylon", library.babylonBot),
+            new KeyValuePair<string, Chromosome>("nile", library.nileBot),
+            new KeyValuePair<string, Chromosome>("summoner", library.summonerBot),
+            new KeyValuePair<string, Chromosome>("resilient", library.resilientBot),
+        };
+
+        foreach (var entry in bots)
+        {
+            if (!IsValidBot(entry.Value)) continue;
+
+            float wins = 0f;
+            float score = 0f;
+            int games = 0;
+
+            foreach (var benchmark in benchmarks)
+            {
+                MatchResult forward = sim.EvaluateMatch(new BotAgent(entry.Value), new BotAgent(benchmark));
+                if (forward.result > 0) wins += 1f;
+                else if (forward.result == 0) wins += 0.5f;
+                score += forward.scoreA;
+                games++;
+
+                MatchResult reverse = sim.EvaluateMatch(new BotAgent(benchmark), new BotAgent(entry.Value));
+                if (reverse.result < 0) wins += 1f;
+                else if (reverse.result == 0) wins += 0.5f;
+                score += Mathf.Max(1f, 400f - reverse.scoreA);
+                games++;
+            }
+
+            float winRate = games > 0 ? wins / games : 0f;
+            float botScore = score / Mathf.Max(1, games) + winRate * 500f;
+            total += botScore;
+            botCount++;
+            if (entry.Key == "hard") hardWinRate = winRate;
+
+            Debug.Log($"[AITraining] Validation {label}/{entry.Key}: winRate={winRate:P1} score={botScore:F1} games={games}");
+        }
+
+        float overall = botCount > 0 ? total / botCount : 0f;
+        Debug.Log($"[AITraining] Validation {label}: overall={overall:F1} hardWinRate={hardWinRate:P1}");
+        return new ValidationReport { overallScore = overall, hardWinRate = hardWinRate };
+    }
 
     private static void SaveLibrary(AILibrary library)
     {

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public struct MatchResult
 {
@@ -102,27 +102,15 @@ public class GameSimulator
 
     private static float ScoreFromA(int result, int hpA, int hpB, int turns, float lateScoreA, float lateScoreB, float cardScoreA, float cardScoreB)
     {
-<<<<<<< HEAD
-        float score = result > 0 ? 120f : result == 0 ? 70f : 35f;
-        score += hpA * 6f;
-        score -= hpB * 3f;
-        score += Mathf.Max(0f, lateScoreA) * 0.22f;
-        score += Mathf.Clamp(lateScoreA - lateScoreB, -400f, 400f) * 0.15f;
-        score += Mathf.Max(0f, cardScoreA) * 0.10f;
-        score += Mathf.Clamp(cardScoreA - cardScoreB, -350f, 350f) * 0.10f;
-
-        if (turns >= 12)
-            score += (turns - 11) * 4f;
-=======
-        // Win=300, Draw=100, Loss=10 — win premium = 290 (trước: 85)
-        // Số trận thắng quan trọng hơn board power
         float score = result > 0 ? 300f : result == 0 ? 100f : 10f;
-        score += hpA * 8f;   // HP margin vẫn quan trọng — thắng rộng tốt hơn thắng sát
-        score -= hpB * 4f;   // phạt để đối thủ còn HP
-        // lateScore giảm xuống — board power là thứ yếu so với kết quả trận
+        score += hpA * 8f;
+        score -= hpB * 4f;
         score += Mathf.Max(0f, lateScoreA) * 0.06f;
         score += Mathf.Clamp(lateScoreA - lateScoreB, -300f, 300f) * 0.04f;
->>>>>>> fe8dc8718f501ce5200bedd8c768b0ae1769ed05
+        score += Mathf.Max(0f, cardScoreA) * 0.035f;
+        score += Mathf.Clamp(cardScoreA - cardScoreB, -250f, 250f) * 0.025f;
+        if (turns >= 12)
+            score += (turns - 11) * 2f;
 
         return Mathf.Max(1f, score);
     }
@@ -213,3 +201,4 @@ public class GameSimulator
         return score;
     }
 }
+

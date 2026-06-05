@@ -15,7 +15,7 @@
 ```
 # Chạy headless:
 .\train_ai.ps1              # Quick  — 30 pop × 40 gen  (~2 phút)
-.\train_ai.ps1 -Production  # Prod   — 200 pop × 150 gen (~20-30 phút)
+.\train_ai.ps1 -Production  # Prod   — 320 pop × 200 gen (~20-30 phút, có early stop khi plateau)
 ```
 
 Output luôn ghi vào:
@@ -34,18 +34,18 @@ private const int   QUICK_POP      = 30;    // pop cho quick mode
 private const int   QUICK_GEN      = 40;    // gen cho quick mode
 private const int   QUICK_MATCHES  = 5;     // trận/chromosome/gen (quick)
 
-private const int   PROD_POP       = 200;   // ← đây là production pop
-private const int   PROD_GEN       = 150;   // ← đây là production gen
-private const int   PROD_MATCHES   = 25;    // ← trận/chromosome/gen (prod)
+private const int   PROD_POP       = 320;   // ← đây là production pop
+private const int   PROD_GEN       = 200;   // ← đây là production gen
+private const int   PROD_MATCHES   = 32;    // ← trận/chromosome/gen (prod)
 // ──────────────────────────────────────────────────────────────────────
 ```
 
 ### Trong Editor → `Assets/Scripts/AI/GATrainer.cs`, Inspector:
 
 Chỉnh trực tiếp trên Inspector của GameObject có component GATrainer:
-- `Population Size` — mặc định 30 (test) / production nên đặt 120–200
-- `Generations` — mặc định 40 (test) / production nên đặt 150–180
-- `Matches Per Chrom` — mặc định 5 / production nên đặt 20–25
+- `Population Size` — mặc định 30 (test) / production nên đặt 320
+- `Generations` — mặc định 40 (test) / production nên đặt 180–200
+- `Matches Per Chrom` — mặc định 5 / production nên đặt 32
 
 ---
 

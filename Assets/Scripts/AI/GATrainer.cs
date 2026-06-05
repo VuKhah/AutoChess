@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,9 +7,9 @@ using UnityEngine;
 public class GATrainer : MonoBehaviour
 {
     [Header("Cấu hình huấn luyện")]
-    public int populationSize  = 30;   // test nhanh: 30 | production: 360
-    public int generations     = 40;   // test nhanh: 40 | production: 280
-    public int matchesPerChrom = 5;    // test nhanh: 5  | production: 36
+    public int populationSize  = 30;   // test nhanh: 30 | production: 320
+    public int generations     = 40;   // test nhanh: 40 | production: 200
+    public int matchesPerChrom = 5;    // test nhanh: 5  | production: 32
     [Range(0.05f, 0.25f)]
     public float mutationRate  = 0.10f;
     [Range(0.05f, 0.2f)]
@@ -84,7 +84,6 @@ public class GATrainer : MonoBehaviour
                     c.genes[18] = Random.Range(0.0f, 0.3f);
                     c.genes[19] = Random.Range(0.0f, 0.3f);
                     break;
-<<<<<<< HEAD
                 case 2: // Summoner/Niles chain
                     c.genes[20] = Random.Range(0.75f, 1.0f);
                     c.genes[14] = Random.Range(0.75f, 1.0f);
@@ -92,22 +91,13 @@ public class GATrainer : MonoBehaviour
                     c.genes[13] = Random.Range(0.65f, 0.95f);
                     c.genes[15] = Random.Range(0.55f, 0.85f);
                     c.genes[2]  = Random.Range(0.60f, 0.90f);
-                    c.genes[8]  = Random.Range(0.45f, 0.75f);
+                    c.genes[8]  = Random.Range(0.55f, 0.85f);
+                    c.genes[35] = Random.Range(0.50f, 0.85f);
                     c.genes[27] = Random.Range(0.00f, 0.15f);
                     c.genes[21] = Random.Range(0.00f, 0.25f);
                     c.genes[9]  = Random.Range(0.00f, 0.20f);
-                    c.genes[5]  = Random.Range(0.25f, 0.55f);
-=======
-                case 2: // Summoner seed — summon/reborn/consume chain, giữ shells
-                    c.genes[14] = Random.Range(0.75f, 1.0f);  // eSummon (covers SummonConsumed, isConsume)
-                    c.genes[5]  = Random.Range(0.70f, 1.0f);  // wReborn — vòng lặp tái sinh
-                    c.genes[8]  = Random.Range(0.65f, 1.0f);  // tOnDeath — kích khi unit chết
-                    c.genes[34] = Random.Range(0.65f, 1.0f);  // tOnAllyGroup — OnAllyDeath/Summon/Reborn
-                    c.genes[35] = Random.Range(0.50f, 0.85f); // tOnAllyDeploy — khi shell triệu hồi
-                    c.genes[27] = Random.Range(0.00f, 0.15f); // wProactiveSell thấp — giữ shells
-                    c.genes[0]  = Random.Range(0.10f, 0.40f); // wATK thấp
-                    c.genes[23] = Random.Range(0.10f, 0.40f); // wSaveThreshold thấp — cần thực sự mua unit
->>>>>>> fe8dc8718f501ce5200bedd8c768b0ae1769ed05
+                    c.genes[5]  = Random.Range(0.45f, 0.75f);
+                    c.genes[23] = Random.Range(0.10f, 0.40f);
                     break;
                 case 3: // Resilient seed — bền bỉ, phản đòn, không chết dễ
                     c.genes[1]  = Random.Range(0.75f, 1.0f);  // wHP
@@ -137,19 +127,14 @@ public class GATrainer : MonoBehaviour
 
         _csv = new StreamWriter(csvPath, false, System.Text.Encoding.UTF8) { AutoFlush = true };
         var csv = _csv;
-        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other,best_babylon,best_niles,best_summoner,best_resilient,raw_best,avg_ema,best_gain,best_late,avg_late,best_card,avg_card");
+        csv.WriteLine("gen,best,avg,worst,std_dev,pct_babylon,pct_niles,pct_other,diversity_index,dominant_pct,best_babylon,best_niles,best_summoner,best_resilient,raw_best,avg_ema,best_gain,best_improvement_pct,avg_improvement_pct,progress_score,plateau_count,mutation_rate,mutation_mag,immigrant_rate,best_late,avg_late,best_card,avg_card");
 
         Debug.Log($"=== HUẤN LUYỆN AI === Genes:{Chromosome.GeneCount} | Pop:{populationSize} | Gen:{generations} ===");
         Debug.Log($"[GATrainer] CSV → {csvPath}");
 
-<<<<<<< HEAD
-        const int   PLATEAU_PATIENCE = 40;
-        const float PLATEAU_EPS      = 120f;
-        int minStopGen = Mathf.RoundToInt(generations * 0.90f);
-=======
-        const int   PLATEAU_PATIENCE = 30;   // gen liên tiếp best không tăng ≥ EPS → dừng
-        const float PLATEAU_EPS      = 30f;  // 100 → 30: ngay cả cải thiện nhỏ cũng reset counter
->>>>>>> fe8dc8718f501ce5200bedd8c768b0ae1769ed05
+        const int   PLATEAU_PATIENCE = 28;
+        const float PLATEAU_EPS      = 150f;
+        int minStopGen = Mathf.RoundToInt(generations * 0.75f);
         int   plateauCount = 0;
         float prevProgressScore = float.MinValue;
         Chromosome hallOfFame = null;
@@ -160,6 +145,8 @@ public class GATrainer : MonoBehaviour
         float bestSummonerEver = float.MinValue;
         float bestResilientEver = float.MinValue;
         float avgEma = 0f;
+        float initialBest = 0f;
+        float initialAvg = 0f;
         bool hasAvgEma = false;
         var benchmarkOpponents = CreateBenchmarkOpponents();
 
@@ -210,6 +197,12 @@ public class GATrainer : MonoBehaviour
             float avgLate = population.Average(c => lateScores.TryGetValue(c, out float v) ? v : 0f);
             float bestCard = cardScores.TryGetValue(population[0], out float card) ? card : 0f;
             float avgCard = population.Average(c => cardScores.TryGetValue(c, out float v) ? v : 0f);
+            if (g == 0)
+            {
+                initialBest = Mathf.Max(1f, best);
+                initialAvg = Mathf.Max(1f, avg);
+            }
+
             if (hallOfFame == null || best > bestEver)
             {
                 hallOfFame = population[0].Clone();
@@ -227,6 +220,8 @@ public class GATrainer : MonoBehaviour
             float pctB = cntB * 100f / populationSize;
             float pctN = cntN * 100f / populationSize;
             float pctO = cntO * 100f / populationSize;
+            float diversityIndex = DiversityIndex(pctB, pctN, pctO);
+            float dominantPct = Mathf.Max(pctB, Mathf.Max(pctN, pctO));
             float bestB = BestOrZero(population.Where(IsBabylon));
             float bestN = BestOrZero(population.Where(IsNile));
             float bestS = population.Max(SummonerScore);
@@ -237,7 +232,15 @@ public class GATrainer : MonoBehaviour
             bestResilientEver = Mathf.Max(bestResilientEver, bestR);
 
             // ── Ghi CSV ──────────────────────────────────────────────────────
-            csv.WriteLine($"{g},{bestEver:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{bestBabylonEver:F0},{bestNileEver:F0},{bestSummonerEver:F2},{bestResilientEver:F2},{best:F0},{avgEma:F1},{bestEver - best:F0},{bestLate:F0},{avgLate:F0},{bestCard:F0},{avgCard:F0}");
+            float progressScore = bestEver + avgEma * 0.45f + avgLate * 0.08f + avgCard * 0.035f;
+            float bestImprovementPct = (bestEver / initialBest - 1f) * 100f;
+            float avgImprovementPct = (avgEma / initialAvg - 1f) * 100f;
+            float progress = TrainingProgress(g, generations);
+            float currentMutationRate = CurrentMutationRate(progress);
+            float currentMutationMag = CurrentMutationMag(progress);
+            float currentImmigrantRate = CurrentImmigrantRate(progress);
+
+            csv.WriteLine($"{g},{bestEver:F0},{avg:F1},{worst:F0},{stdDev:F2},{pctB:F1},{pctN:F1},{pctO:F1},{diversityIndex:F1},{dominantPct:F1},{bestBabylonEver:F0},{bestNileEver:F0},{bestSummonerEver:F2},{bestResilientEver:F2},{best:F0},{avgEma:F1},{bestEver - best:F0},{bestImprovementPct:F2},{avgImprovementPct:F2},{progressScore:F1},{plateauCount},{currentMutationRate:F4},{currentMutationMag:F4},{currentImmigrantRate:F4},{bestLate:F0},{avgLate:F0},{bestCard:F0},{avgCard:F0}");
             Debug.Log($"Gen {g,3}/{generations}  Best={bestEver,5:F0}  Raw={best,5:F0}  Avg={avg,5:F1}  Late={avgLate:F0}  Card={avgCard:F0}  Worst={worst,5:F0}  " +
                       $"Std={stdDev:F1}  B={pctB:F0}% N={pctN:F0}% O={pctO:F0}%  BestB={bestB:F0} BestN={bestN:F0}");
 
@@ -245,7 +248,6 @@ public class GATrainer : MonoBehaviour
                 Debug.LogWarning($"[GATrainer] Diversity low at gen {g}: B={pctB:F0}% N={pctN:F0}%. Injecting seeded immigrants next gen.");
 
             // ── Early stopping — composite progress plateau ─────────────────
-            float progressScore = bestEver + avgEma * 0.45f + avgLate * 0.08f + avgCard * 0.035f;
             if (progressScore - prevProgressScore < PLATEAU_EPS)
                 plateauCount++;
             else
@@ -549,17 +551,17 @@ public class GATrainer : MonoBehaviour
 
     private float CurrentMutationRate(float progress)
     {
-        return Mathf.Lerp(mutationRate, 0.035f, Mathf.SmoothStep(0f, 1f, progress));
+        return Mathf.Lerp(mutationRate, 0.06f, Mathf.SmoothStep(0f, 1f, progress));
     }
 
     private float CurrentMutationMag(float progress)
     {
-        return Mathf.Lerp(mutationMag, 0.035f, Mathf.SmoothStep(0f, 1f, progress));
+        return Mathf.Lerp(mutationMag, 0.06f, Mathf.SmoothStep(0f, 1f, progress));
     }
 
     private float CurrentImmigrantRate(float progress)
     {
-        return Mathf.Lerp(immigrantRate, 0.07f, Mathf.SmoothStep(0f, 1f, progress));
+        return Mathf.Lerp(immigrantRate, 0.08f, Mathf.SmoothStep(0f, 1f, progress));
     }
 
     private static int CurrentTournamentSize(float progress)
@@ -602,11 +604,12 @@ public class GATrainer : MonoBehaviour
                 c.genes[13] = Random.Range(0.65f, 0.95f); // eAddStats — Bastet buff là AddStats
                 c.genes[15] = Random.Range(0.55f, 0.85f); // eDealDmg — damage trong chain
                 c.genes[2]  = Random.Range(0.60f, 0.90f); // wTierBonus — Bastet tier 5, Sekhmet tier 6
-                c.genes[8]  = Random.Range(0.45f, 0.75f); // tOnDeath — death chain (hỗ trợ)
+                c.genes[8]  = Random.Range(0.55f, 0.85f); // tOnDeath — death chain (hỗ trợ)
+                c.genes[35] = Random.Range(0.50f, 0.85f); // tOnAllyDeploy — khi shell triệu hồi
                 c.genes[27] = Random.Range(0.00f, 0.15f); // wProactiveSell LOW — giữ số lượng unit
                 c.genes[21] = Random.Range(0.00f, 0.25f); // wMerge LOW — số lượng > 3-star
                 c.genes[9]  = Random.Range(0.00f, 0.20f); // tOnAttack LOW
-                c.genes[5]  = Random.Range(0.25f, 0.55f); // wReborn MEDIUM — không phải identity
+                c.genes[5]  = Random.Range(0.45f, 0.75f); // wReborn MEDIUM — không phải identity
                 c.genes[23] = Random.Range(0.10f, 0.40f); // wSaveThreshold LOW — cần thực sự mua unit
                 break;
             case 3: // resilientBot — bền bỉ, phản đòn, không chết dễ
@@ -625,6 +628,13 @@ public class GATrainer : MonoBehaviour
     private static bool IsBabylon(Chromosome c) => c.genes[18] > c.genes[19] && c.genes[18] > c.genes[20];
     private static bool IsNile(Chromosome c) => c.genes[20] > c.genes[19] && c.genes[20] > c.genes[18];
     private static float BestOrZero(IEnumerable<Chromosome> pool) => pool.Any() ? pool.Max(c => c.fitness) : 0f;
+    private static float DiversityIndex(float pctB, float pctN, float pctO)
+    {
+        float b = pctB / 100f;
+        float n = pctN / 100f;
+        float o = pctO / 100f;
+        return Mathf.Clamp01((1f - (b * b + n * n + o * o)) / (2f / 3f)) * 100f;
+    }
 
     private void SaveLibrary()
     {
