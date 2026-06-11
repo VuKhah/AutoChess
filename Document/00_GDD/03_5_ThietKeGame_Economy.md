@@ -13,7 +13,7 @@ bonusNextTurn ← 0 sau khi áp dụng
 - **bonusNextTurn:** Thưởng trì hoãn từ spell (ví dụ *Wager* +3 coin nếu thắng trận tiếp theo).
 - **permanentIncomeBonus:** Cộng dồn suốt ván từ spell đặc biệt (ví dụ *Caishen's Knock* +1/lượt, mua ở lượt 5 → hòa vốn lượt 7, sinh lãi từ lượt 8).
 
-Coin rời tài khoản qua bốn kênh:
+Coin rời tài khoản Sơ Đồ Lưu Thông qua bốn kênh:
 
 | Kênh | Chi phí | Giá trị nhận được | Loại đầu tư |
 |------|---------|-------------------|-------------|

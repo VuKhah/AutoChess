@@ -142,27 +142,27 @@ ScoreFromA(result, hpA, hpB, turns, lateScoreA, lateScoreB, cardScoreA, cardScor
 
 | Tham số | Quick Mode | Production Mode | Ý nghĩa |
 |---------|:----------:|:---------------:|---------|
-| `populationSize` | 30 | 120 | Số chromosome |
-| `generations` | 40 | 180 | Số thế hệ tối đa |
-| `matchesPerChrom` | 5 | 20 | Trận/chromosome/thế hệ |
-| `mutationRate` | 0.10 | 0.10→0.035 | Xác suất mutation (thích nghi) |
-| `mutationMag` | 0.12 | 0.12→0.035 | Biên độ Gaussian σ (thích nghi) |
-| `immigrantRate` | 0.12 | 0.12→0.04 | Tỉ lệ chromosome mới/thế hệ |
+| `populationSize` | 30 | 320 | Số chromosome |
+| `generations` | 40 | 200 | Số thế hệ tối đa |
+| `matchesPerChrom` | 5 | 32 | Trận/chromosome/thế hệ |
+| `mutationRate` | 0.10 | 0.10→0.06 | Xác suất mutation (thích nghi) |
+| `mutationMag` | 0.12 | 0.12→0.06 | Biên độ Gaussian σ (thích nghi) |
+| `immigrantRate` | 0.12 | 0.12→0.08 | Tỉ lệ chromosome mới/thế hệ |
 | `minLibraryDistance` | 0.18 | 0.18 | Khoảng cách Euclidean tối thiểu giữa specialist |
 
-Quick mode hoàn thành trong ~2 phút (kiểm tra logic). Production mode ~20–30 phút cho kết quả tích hợp game.
+Quick mode hoàn thành trong ~2 phút (kiểm tra logic). Production mode ~20–30 phút cho kết quả tích hợp game. Các tham số production có thể override qua Unity Inspector trước khi chạy.
 
 ---
 
 ### 5.5.2 Khởi Tạo — 5 Sub-Population Seeded
 
-Quần thể chia thành 5 nhóm bằng nhau, mỗi nhóm được định hướng bằng seed gene đặc trưng: nhóm 0 seed genes[18] (sBabylon) cao; nhóm 1 seed genes[20] (sNiles) cao; nhóm 2 seed genes[14]+[5]+[8] cho Summoner; nhóm 3 seed genes[1]+[4]+[5]+[6] cho Resilient; nhóm 4 hoàn toàn ngẫu nhiên. Phần gene còn lại của mỗi nhóm vẫn ngẫu nhiên — GA tự tìm giá trị tối ưu. Seeding giải quyết vấn đề thực tiễn: xác suất GA ngẫu nhiên tìm ra chromosome Summoner (đòi hỏi nhiều gene cụ thể đồng thời cao) là cực thấp trong không gian 37 chiều với thời gian training hạn chế.
+Quần thể chia thành 5 nhóm bằng nhau, mỗi nhóm được định hướng bằng seed gene đặc trưng: nhóm 0 seed genes[18] (sBabylon) cao; nhóm 1 seed genes[20] (sNiles) cao; nhóm 2 seed genes[20, 14, 34, 13, 15, 2, 8, 35] cao và genes[27, 21, 9, 23] thấp cho Summoner/Niles-chain; nhóm 3 seed genes[1, 4, 5, 6, 10, 17] cao và genes[0] ở mức vừa phải cho Resilient; nhóm 4 hoàn toàn ngẫu nhiên. Phần gene còn lại của mỗi nhóm vẫn ngẫu nhiên — GA tự tìm giá trị tối ưu. Seeding giải quyết vấn đề thực tiễn: xác suất GA ngẫu nhiên tìm ra chromosome Summoner (đòi hỏi nhiều gene cụ thể đồng thời cao) là cực thấp trong không gian 37 chiều với thời gian training hạn chế.
 
 ---
 
 ### 5.5.3 Đánh Giá Fitness — Self-Play + Benchmark
 
-Mỗi chromosome được đánh giá qua hai tập: **20 trận self-play** với đối thủ ngẫu nhiên từ quần thể (trọng số 1.0×) và **benchmark** với 10 chromosome seeded cố định, được làm mới mỗi 30 thế hệ (trọng số 0.5×). Benchmark cố định cho phép so sánh fitness ổn định qua các thế hệ, không phụ thuộc hoàn toàn vào chất lượng quần thể hiện tại.
+Mỗi chromosome được đánh giá qua hai tập: **`matchesPerChrom` trận self-play** với đối thủ ngẫu nhiên từ quần thể (trọng số 1.0×) và **benchmark** với 10 chromosome seeded cố định (5 archetype × 2 instance), được làm mới mỗi 30 thế hệ (trọng số 0.5×). Benchmark cố định cho phép so sánh fitness ổn định qua các thế hệ, không phụ thuộc hoàn toàn vào chất lượng quần thể hiện tại.
 
 ---
 
@@ -174,7 +174,7 @@ Tournament size tăng theo `progress` (0.0→1.0): k=3 (early, áp lực thấp,
 
 ### 5.5.5 Đột Biến Thích Nghi Và Clone Tinh Chỉnh
 
-`mutationRate` và `mutationMag` giảm từ 10%/σ=0.12 xuống 3.5%/σ=0.035 theo đường cong SmoothStep — đầu training khám phá rộng, cuối training fine-tune. Ngoài crossover thông thường, giai đoạn mid-late còn tạo thêm các *refinement clone*: bản sao của elite chromosome với mutation rate và magnitude giảm thêm 35–55%, tạo ra biến thể tinh chỉnh quanh nghiệm đang tốt mà không trộn genetic với chromosome khác.
+`mutationRate` và `mutationMag` giảm từ 10%/σ=0.12 xuống 6%/σ=0.06 theo đường cong SmoothStep — đầu training khám phá rộng, cuối training fine-tune. Ngoài crossover thông thường, giai đoạn mid-late (progress > 35%) còn tạo thêm các *refinement clone*: bản sao của elite chromosome với mutation rate nhân thêm ×0.65 và magnitude nhân thêm ×0.45, tạo ra biến thể tinh chỉnh quanh nghiệm đang tốt mà không trộn genetic với chromosome khác.
 
 ---
 
@@ -186,19 +186,19 @@ Mỗi thế hệ bảo toàn tối thiểu `eliteCount + 8` cá thể qua bốn 
 
 ### 5.5.7 Immigration — Chống Premature Convergence
 
-Immigrant rate giảm từ 12%→4% theo progress. Ngoài lịch trình cố định, hệ thống theo dõi tỉ lệ tribe trong quần thể và bơm thêm chromosome khi Babylon < 12% hoặc Niles < 12% hoặc "Other" < 8% — đảm bảo babylonBot và nileBot luôn có nguyên liệu di truyền để được chọn cuối training.
+Immigrant rate giảm từ 12%→8% theo progress. Ngoài lịch trình cố định, hệ thống theo dõi tỉ lệ tribe trong quần thể và bơm thêm chromosome khi Babylon < 12% (+2 immigrant) hoặc Niles < 12% (+2) hoặc "Other" < 8% (+3) — đảm bảo babylonBot và nileBot luôn có nguyên liệu di truyền để được chọn cuối training.
 
 ---
 
 ### 5.5.8 Dừng Sớm — Plateau Detection
 
-Dừng sớm khi `std_dev` của fitness quần thể thay đổi dưới 0.5 trong 15 thế hệ liên tiếp. Theo dõi `std_dev` (thay vì best fitness) phát hiện hội tụ thực sự: best có thể không đổi nhưng avg vẫn đang cải thiện, còn khi `std_dev` ổn định, toàn quần thể thực sự đã không còn tiến bộ.
+Dừng sớm khi chỉ số `progressScore` tổng hợp (`bestEver + avgEma×0.45 + avgLate×0.08 + avgCard×0.035`) tăng dưới 150 điểm trong 28 thế hệ liên tiếp, với điều kiện đã qua ít nhất 75% tổng số thế hệ. Dùng composite score thay vì `std_dev` đơn thuần vì nó phản ánh đồng thời tiến độ của best, trung bình quần thể và chất lượng đội hình — plateau trên cả ba chiều mới thực sự là dấu hiệu hội tụ.
 
 ---
 
 ### 5.5.9 Chọn 5 Bot Cuối — Diversity-Aware
 
-5 bot được chọn theo thứ tự: (1) **hardBot** = chromosome Hall of Fame (fitness cao nhất bao giờ); (2) **babylonBot** = Babylon fitness cao nhất, GeneDistance ≥ 0.18 so với hardBot; (3) **nileBot** = Niles fitness cao nhất, cách xa cả hai bot trước; (4) **summonerBot** = SummonerScore cao nhất trong `viable` (fitness ≥ 80% avg); (5) **resilientBot** = ResilientScore cao nhất trong viable. Nếu không tìm được candidate đủ xa, `DiversityBonus` (khoảng cách tối thiểu × 100) được cộng vào score — thưởng cho chromosome "khác biệt nhất" ngay cả khi không phải tốt nhất về fitness thuần.
+5 bot được chọn theo thứ tự: (1) **hardBot** = kết quả *gauntlet cuối*: top-16 từ danh sách `hardCandidates` (tối đa 24 chromosome đa dạng được tích lũy trong suốt training) được đánh giá lại qua 4 tập benchmark độc lập (4×10 = 40 trận), chromosome thắng gauntlet trở thành hardBot — không phải đơn giản là "fitness cao nhất bao giờ" trong training (Hall of Fame chỉ là fallback nếu danh sách rỗng); (2) **babylonBot** = Babylon fitness cao nhất trong quần thể cuối, GeneDistance ≥ 0.18 so với tất cả bot đã chọn; (3) **nileBot** = Niles fitness cao nhất, cách xa cả hai bot trước; (4) **summonerBot** = SummonerScore cao nhất trong `viable` (fitness ≥ max(avgFinal×0.80, hardBot×0.55)); (5) **resilientBot** = ResilientScore cao nhất trong viable. Nếu không tìm được candidate đủ xa, `DiversityBonus` (khoảng cách tối thiểu × 100) được cộng vào score — thưởng cho chromosome "khác biệt nhất" ngay cả khi không phải tốt nhất về fitness thuần.
 
 ---
 
@@ -231,12 +231,12 @@ Lần training được ghi nhận sử dụng production mode trên máy tính 
 | Population size | 120 |
 | Generations (max) | 180 |
 | Matches per chromosome | 20 |
-| Mutation rate (ban đầu → cuối) | 10% → 3.5% |
-| Mutation magnitude | σ=0.12 → 0.035 |
-| Immigrant rate | 12% → 4% |
+| Mutation rate (ban đầu → cuối) | 10% → 6% |
+| Mutation magnitude | σ=0.12 → 0.06 |
+| Immigrant rate | 12% → 8% |
 | Tournament size | k=3 → 4 → 5 |
 
-Tổng số trận đấu simulation tối thiểu: `120 × 20 × 180 = 432.000 trận`. Thực tế cao hơn do benchmark opponents (thêm 10 trận × 120 cá thể/thế hệ).
+Tổng số trận simulation: `120 × (20 + 10) × 180 = 648.000 trận` (20 self-play + 10 benchmark mỗi chromosome mỗi thế hệ, benchmark làm mới mỗi 30 gen).
 
 ---
 
@@ -254,15 +254,15 @@ Dữ liệu CSV log training thể hiện ba giai đoạn rõ ràng:
 
 Best fitness đạt đỉnh 4764 ngay ở thế hệ 6 — Hall of Fame xác định được chromosome tốt nhất rất sớm. Std_dev giảm từ 952 xuống 663 (−30%), quần thể hội tụ về vùng fitness cao hơn nhưng vẫn còn đa dạng.
 
-**Giai đoạn 2 — Tinh chỉnh (Gen 11–70): Avg tăng ổn định**
+**Giai đoạn 2 — Tinh chỉnh (Gen 11–70): Diversity xáo trộn mạnh**
 
-Best fitness giữ nguyên 4764 nhưng avg liên tục tăng từ ~3033 lên ~3100. `pct_other` (non-Babylon, non-Niles) tăng mạnh ở gen 20–45 (từ 19% lên đến 48%), phản ánh quần thể khám phá chiến lược generalist sau khi đã xác định xong hai extreme. Ở gen 40–45, Niles chiếm 66–70% quần thể — dấu hiệu Niles có lợi thế tự nhiên trong game.
+Best fitness giữ nguyên 4764; avg dao động rộng trong khoảng 2933–3117 (không tăng đơn điệu). `pct_other` (non-Babylon, non-Niles) đạt đỉnh 48% quanh gen 19–22, phản ánh quần thể khám phá chiến lược generalist. Sau đó Other sụp xuống 3–7% ở gen 35–45 khi Niles áp đảo hoàn toàn (gen 40: 66.7%, gen 45: 70.0%), kích hoạt immigration injection bổ sung chromosome mới.
 
-**Giai đoạn 3 — Ổn định (Gen 71–179): Duy trì diversity**
+**Giai đoạn 3 — Ổn định (Gen 71–179): Diversity dao động quanh điểm cân bằng**
 
-Avg dao động quanh 2970–3100, std_dev quanh 480–650. Babylon và Niles luôn được duy trì trên 10% nhờ immigrant injection.
+Avg dao động trong khoảng 2864–3118, std_dev trong khoảng 455–710. Nổi bật là một spike diversity lớn ở gen 81–88 (pct_other đạt 68.3% tại gen 84, cao nhất toàn bộ run) — dấu hiệu island model + immigration hoạt động mạnh ở giai đoạn này. Babylon và Niles luôn được duy trì trên 10% nhờ immigrant injection.
 
-> **[HÌNH 5.6 — Đường Cong Fitness Qua 180 Thế Hệ]** *Biểu đồ đường: trục hoành thế hệ (0–179), trục tung điểm fitness. Ba đường: Best (đỏ đậm — plateau tại 4764 từ gen 6), Avg (xanh lam — tăng dần), Worst (xám). Trục phụ: Std Dev (vàng — giảm dần). Đánh dấu gen 6 và vùng 20–45 (pct_other spike).*
+> **[HÌNH 5.6 — Đường Cong Fitness Qua 180 Thế Hệ]** *Biểu đồ đường: trục hoành thế hệ (0–179), trục tung điểm fitness. Ba đường: Best (đỏ đậm — plateau tại 4764 từ gen 6), Avg (xanh lam — dao động), Worst (xám). Trục phụ: Std Dev (vàng). Đánh dấu gen 6 (best đạt đỉnh) và vùng gen 40–45 (Niles 66–70%, pct_other đáy 3%).*
 
 ---
 
@@ -271,10 +271,10 @@ Avg dao động quanh 2970–3100, std_dev quanh 480–650. Babylon và Niles lu
 > **[HÌNH 5.7 — Phân Phối Tribe Qua Các Thế Hệ]** *Area chart xếp chồng: trục hoành gen 0–179, trục tung 0–100%. Ba vùng: Babylon (vàng), Niles (xanh lam), Other (xám). Thể hiện sự dao động nhưng không có bộ tộc nào bị tuyệt chủng.*
 
 - **Babylon** dao động 6.7%–53.3%, trung bình ~30%. Không bao giờ xuống 0 nhờ elitism + immigration.
-- **Niles** dao động 22.5%–70.0%, trung bình ~43%. Có xu hướng chiếm ưu thế ở mid training (gen 35–60).
-- **Other** (generalist/Olympus/mixed): dao động 3.3%–68.3%. Giá trị thấp ở gen 33–47 là dấu hiệu immigration đã kích hoạt và bổ sung chromosome mới.
+- **Niles** dao động 21.7%–70.0%, trung bình ~44%. Chiếm ưu thế ở gen 35–50 (66–70%), sau đó dao động ổn định hơn.
+- **Other** (generalist/Olympus/mixed): dao động 3.3%–68.3%, hai spike đáng chú ý: gen 19–22 (~48%) và gen 81–88 (đỉnh 68.3% tại gen 84). Giá trị thấp ở gen 33–47 là giai đoạn Niles áp đảo, kích hoạt immigration injection.
 
-Std_dev cuối (~500–565) so với ban đầu (952) — giảm ~41% — cho thấy quần thể hội tụ có chủ ý mà không bị premature convergence (nếu premature, std_dev sẽ tiến về 0).
+Std_dev cuối 5 gen (~542) so với ban đầu (952) — giảm ~43% — cho thấy quần thể hội tụ có chủ ý mà không bị premature convergence (nếu premature, std_dev sẽ tiến về 0).
 
 ---
 
@@ -298,7 +298,7 @@ hardBot và babylonBot đều đạt fitness 4764 — được phân biệt khô
 
 **Niles có lợi thế tự nhiên trong game này:** Niles chiếm tỉ lệ quần thể cao hơn Babylon (~43% vs ~30%), phản ánh cơ chế Reborn + OnAllyDeath chain tạo ra sức mạnh combat tự nhiên hơn — đội hình tái sinh liên tục khó bị tiêu diệt. Đây là insight về game balance không thể thu được chỉ từ thiết kế tay.
 
-**Best fitness hội tụ rất sớm, avg tiếp tục cải thiện:** Best không tăng sau gen 6, nhưng avg tăng từ 2871 → ~3050 (+6.2%). GA làm đúng vai trò: không chỉ tìm ra cá thể tốt nhất mà *nâng cao chất lượng trung bình toàn quần thể*.
+**Best fitness hội tụ rất sớm, avg tiếp tục cải thiện:** Best không tăng sau gen 6, nhưng avg tăng từ 2871 → 3018 (+5.1%). GA làm đúng vai trò: không chỉ tìm ra cá thể tốt nhất mà *nâng cao chất lượng trung bình toàn quần thể*.
 
 **Std Dev giảm lành mạnh, không về 0:** Std dev giảm ~41% nhưng không tiến về 0 — island model + immigration thành công ngăn premature convergence: quần thể hội tụ về vùng fitness tốt nhưng vẫn đủ đa dạng để chọn được 5 specialist khác nhau.
 

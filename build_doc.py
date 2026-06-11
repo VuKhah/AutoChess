@@ -4,7 +4,7 @@ Chạy: python build_doc.py
 """
 import subprocess, sys, os
 
-BASE   = "Assets/Document/00_GDD"
+BASE   = "Document/00_GDD"
 OUT_MD = "output/master.md"
 OUT_DOCX = "output/TieuLuan_AutoChess_GA.docx"
 REF_DOCX = "output/reference.docx"
