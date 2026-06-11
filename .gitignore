@@ -65,3 +65,6 @@ ProjectSettings/Packages/
 Assembly-CSharp.csproj
 Assembly-CSharp-Editor.csproj
 AutoChess.slnx
+
+# Build output / generated documents (not tracked in git)
+output/
