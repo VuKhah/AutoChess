@@ -137,6 +137,8 @@ public class UIManager : MonoBehaviour
             rollButton.gameObject.SetActive(!isCombat);
         if (lockButton != null)
             lockButton.gameObject.SetActive(!isCombat);
+        if (actionButton != null)
+            actionButton.interactable = !isCombat;
 
         // 4. Thay đổi nội dung nút hành động chính
         if (actionText != null)
@@ -157,6 +159,12 @@ public class UIManager : MonoBehaviour
 
     private void OnActionPressed()
     {
+        if (GameManager.Instance.isCombatActive)
+        {
+            Debug.Log("<color=grey>UI: Ignore action while combat is active.</color>");
+            return;
+        }
+
         if (!GameManager.Instance.isCombatActive)
         {
             // Nếu đang ở Shop -> Nhấn để Bắt đầu Combat
