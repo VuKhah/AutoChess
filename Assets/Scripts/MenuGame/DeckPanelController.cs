@@ -69,10 +69,10 @@ public class DeckPanelController : MonoBehaviour
     {
         switch (t)
         {
-            case Tribe.Niles:   return "NILES";
+            case Tribe.Niles: return "NILES";
             case Tribe.Babylon: return "BABYLON";
             case Tribe.Olympus: return "OLYMPUS";
-            default:            return "SPELLS";
+            default: return "SPELLS";
         }
     }
 
@@ -80,10 +80,10 @@ public class DeckPanelController : MonoBehaviour
     {
         switch (t)
         {
-            case Tribe.Niles:   return new Color(0.85f, 0.70f, 0.25f, 0.95f); // vàng cát
+            case Tribe.Niles: return new Color(0.85f, 0.70f, 0.25f, 0.95f); // vàng cát
             case Tribe.Babylon: return new Color(0.30f, 0.55f, 0.90f, 0.95f); // xanh dương
             case Tribe.Olympus: return new Color(0.65f, 0.40f, 0.90f, 0.95f); // tím
-            default:            return new Color(0.55f, 0.55f, 0.60f, 0.95f); // xám — Spells
+            default: return new Color(0.55f, 0.55f, 0.60f, 0.95f); // xám — Spells
         }
     }
 
@@ -168,6 +168,21 @@ public class DeckPanelController : MonoBehaviour
 
             CardInstance instance = new CardInstance(cardData, -1);
             ui.Setup(instance);
+
+            // Card trong Kho bài bị GridLayoutGroup kéo rộng hơn kích thước gốc của prefab,
+            // khiến Tribe_Icon (anchor giữa, offset cố định) lệch trái so với góc trên-phải.
+            // Bù lại bằng cách đẩy icon qua phải 20pt và lên trên 4pt, chỉ cho card ở Kho bài.
+            if (ui.tribeIcon != null)
+            {
+                RectTransform tribeRT = ui.tribeIcon.rectTransform;
+                tribeRT.anchoredPosition += new Vector2(21f, 3f);
+            }
+
+            // ATK/HP text cũng bị lệch tương tự — đẩy lên 4pt, ATK sang phải 8pt, HP sang trái 8pt.
+            if (ui.atkText != null)
+                ui.atkText.rectTransform.anchoredPosition += new Vector2(9f, 4f);
+            if (ui.hpText != null)
+                ui.hpText.rectTransform.anchoredPosition += new Vector2(-8f, 4f);
 
             CardDraggable drag = obj.GetComponent<CardDraggable>();
             if (drag != null)

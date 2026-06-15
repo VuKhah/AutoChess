@@ -28,6 +28,9 @@ public class CardUI : MonoBehaviour, IPointerClickHandler
     [Header("Tier Icon")]
     public Image tierIcon;          // Sprite: Sprites/Icons/Tiers/Tier_{n}
 
+    [Header("Tribe Icon")]
+    public Image tribeIcon;         // Sprite: Sprites/Icons/Others/Tribe_{(int)tribe}
+
     [Header("Star Icons (Merge Level)")]
     // Gắn 3 Image vào đây theo thứ tự: [0]=sao 1, [1]=sao 2, [2]=sao 3.
     // mergeLevel=0 → chỉ hiện sao 1; mergeLevel=1 → sao 1+2; mergeLevel=2 → cả 3 sao.
@@ -153,6 +156,14 @@ public class CardUI : MonoBehaviour, IPointerClickHandler
             Sprite tSprite = Resources.Load<Sprite>("Sprites/Icons/Tiers/Tier_" + instance.Data.tier);
             tierIcon.sprite = tSprite;
             tierIcon.gameObject.SetActive(tSprite != null);
+        }
+
+        // --- Tribe icon ---
+        if (tribeIcon != null)
+        {
+            Sprite trSprite = Resources.Load<Sprite>("Sprites/Icons/Others/Tribe_" + (int)instance.Data.tribe);
+            tribeIcon.sprite = trSprite;
+            tribeIcon.gameObject.SetActive(trSprite != null);
         }
 
         // --- Star icons: chỉ hiện cho Unit, spell không có sao ---
