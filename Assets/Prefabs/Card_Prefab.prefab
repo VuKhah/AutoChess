@@ -1014,7 +1014,7 @@ MonoBehaviour:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 0
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1112,7 +1112,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4470633557753479406}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
   m_Name: 
@@ -1692,6 +1692,8 @@ MonoBehaviour:
       hasReborn: 0
       hasSafeguard: 0
       description: 
+      isToken: 0
+      isRepeatingDeploy: 0
       fileName: 
       spellEffects: []
     permanentATKBonus: 0
@@ -1714,6 +1716,9 @@ MonoBehaviour:
     consumedCardIDs: []
     onDeathProcessed: 0
     isBattleSpawned: 0
+    hasDeployed: 0
+    globalPermATKBonus: 0
+    globalPermHPBonus: 0
   normalHealthColor: {r: 1, g: 1, b: 1, a: 1}
   damagedHealthColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &1903266754132774783

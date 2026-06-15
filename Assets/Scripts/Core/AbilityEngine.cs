@@ -240,7 +240,11 @@ public partial class AbilityEngine
                     // Shop phase (Upamaki): luôn thêm ngay — không có combat Reborn flow.
                     bool skipForPendingReborn = _isCombatPhase && target.isReborn && !target.hasRebornUsed;
                     if (!skipForPendingReborn)
+                    {
                         source.consumedCardIDs.Add(target.Data.cardID);
+                        // Hiệu ứng nuốt: source phóng to rồi thu lại trong thoáng chóc
+                        onStatChanged?.Invoke(source, allyBoard, FlashType.Consume);
+                    }
                     // Upamaki mechanic: sao chép abilities của unit bị nuốt vào source (vĩnh viễn)
                     if (ability.copiesAbilitiesOnConsume && target.Data.abilities != null)
                     {

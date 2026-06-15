@@ -177,7 +177,13 @@ public partial class GameManager
         if (action.statSafeguard) ui.currentInstance.safeguardActive = true;
         ui.Setup(ui.currentInstance);
 
-        if (action.flashType != FlashType.None)
+        if (action.flashType == FlashType.Consume)
+        {
+            CardVisuals vis = ui.GetComponent<CardVisuals>();
+            if (vis != null)
+                StartCoroutine(vis.BurstAnimation());
+        }
+        else if (action.flashType != FlashType.None)
         {
             CardVisuals vis = ui.GetComponent<CardVisuals>();
             if (vis != null)

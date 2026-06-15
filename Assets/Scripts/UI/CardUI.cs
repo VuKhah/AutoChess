@@ -55,6 +55,14 @@ public class CardUI : MonoBehaviour, IPointerClickHandler
     private Coroutine _atkPunchRoutine;
     private Coroutine _hpPunchRoutine;
 
+    // Kích thước gốc (chưa phóng to) của atkText/hpText — cache 1 lần để
+    // StatChangeRoutine luôn co về đúng giá trị này, tránh phình to dồn
+    // khi nhiều lần thay đổi chỉ số chồng lên nhau.
+    private Vector3 _atkRestScale = Vector3.one;
+    private Vector3 _hpRestScale = Vector3.one;
+    private bool _atkRestScaleCached;
+    private bool _hpRestScaleCached;
+
     private float _lastClickTime = -999f;
     private const float DoubleClickThreshold = 0.3f;
 
@@ -71,6 +79,9 @@ public class CardUI : MonoBehaviour, IPointerClickHandler
         // Reset theo dõi khi đổi sang card instance khác
         if (currentInstance != instance) { _prevATK = -1; _prevHP = -1; }
         currentInstance = instance;
+
+        if (!_atkRestScaleCached) { _atkRestScale = atkText.transform.localScale; _atkRestScaleCached = true; }
+        if (!_hpRestScaleCached)  { _hpRestScale  = hpText.transform.localScale;  _hpRestScaleCached  = true; }
 
         // --- Name ---
         if (nameText != null) nameText.text = instance.Data.cardName;
@@ -94,7 +105,7 @@ public class CardUI : MonoBehaviour, IPointerClickHandler
             hpText.text  = "";
             hpText.color = normalHealthColor;
             if (_prevATK >= 0 && newCost != _prevATK)
-                TriggerStatChange(ref _atkPunchRoutine, atkText.transform, atkText, newCost > _prevATK);
+                TriggerStatChange(ref _atkPunchRoutine, atkText.transform, atkText, newCost > _prevATK, _atkRestScale);
             _prevATK = newCost;
         }
         else
@@ -106,9 +117,9 @@ public class CardUI : MonoBehaviour, IPointerClickHandler
             hpText.text  = newHP.ToString();
             hpText.color = instance.IsDamaged ? damagedHealthColor : normalHealthColor;
             if (_prevATK >= 0 && newATK != _prevATK)
-                TriggerStatChange(ref _atkPunchRoutine, atkText.transform, atkText, newATK > _prevATK);
+                TriggerStatChange(ref _atkPunchRoutine, atkText.transform, atkText, newATK > _prevATK, _atkRestScale);
             if (_prevHP  >= 0 && newHP  != _prevHP)
-                TriggerStatChange(ref _hpPunchRoutine,  hpText.transform,  hpText,  newHP  > _prevHP);
+                TriggerStatChange(ref _hpPunchRoutine,  hpText.transform,  hpText,  newHP  > _prevHP, _hpRestScale);
             _prevATK = newATK;
             _prevHP  = newHP;
         }
@@ -215,14 +226,14 @@ public class CardUI : MonoBehaviour, IPointerClickHandler
     private static readonly Color StatIncreaseColor = new Color(0.25f, 1f, 0.35f);
     private static readonly Color StatDecreaseColor = new Color(1f, 0.15f, 0.15f);
 
-    private void TriggerStatChange(ref Coroutine slot, Transform target, TextMeshProUGUI text, bool increased)
+    private void TriggerStatChange(ref Coroutine slot, Transform target, TextMeshProUGUI text, bool increased, Vector3 restScale)
     {
         if (!isActiveAndEnabled) return;
         if (slot != null) StopCoroutine(slot);
-        slot = StartCoroutine(StatChangeRoutine(target, text, increased));
+        slot = StartCoroutine(StatChangeRoutine(target, text, increased, restScale));
     }
 
-    private IEnumerator StatChangeRoutine(Transform target, TextMeshProUGUI text, bool increased)
+    private IEnumerator StatChangeRoutine(Transform target, TextMeshProUGUI text, bool increased, Vector3 restScale)
     {
         // text.color đã được Setup() set trước khi coroutine này chạy
         Color settledColor = text.color;
@@ -230,29 +241,32 @@ public class CardUI : MonoBehaviour, IPointerClickHandler
 
         if (increased)
         {
-            Vector3 original = target.localScale;
-            Vector3 big      = original * 1.45f;
+            Vector3 big      = restScale * 1.45f;
             float   upTime   = 0.07f;
             float   downTime = 0.15f;
             float   elapsed  = 0f;
 
             text.color = flashColor;
+            // Bắt đầu từ scale hiện tại (có thể đang giữa một lần phóng to trước đó bị ngắt)
+            // để tránh phình to dồn — nhưng luôn co về đúng restScale ở cuối.
+            Vector3 startScale = target.localScale;
             while (elapsed < upTime)
             {
                 elapsed += Time.deltaTime;
-                target.localScale = Vector3.Lerp(original, big, elapsed / upTime);
+                target.localScale = Vector3.Lerp(startScale, big, elapsed / upTime);
                 yield return null;
             }
             elapsed = 0f;
+            Vector3 fromScale = target.localScale;
             while (elapsed < downTime)
             {
                 elapsed += Time.deltaTime;
                 float t = elapsed / downTime;
-                target.localScale = Vector3.Lerp(big, original, t);
+                target.localScale = Vector3.Lerp(fromScale, restScale, t);
                 text.color        = Color.Lerp(flashColor, settledColor, t);
                 yield return null;
             }
-            target.localScale = original;
+            target.localScale = restScale;
         }
         else
         {
@@ -272,8 +286,8 @@ public class CardUI : MonoBehaviour, IPointerClickHandler
     private void OnDisable()
     {
         if (blinkRoutine != null)    { StopCoroutine(blinkRoutine);    blinkRoutine    = null; }
-        if (_atkPunchRoutine != null) { StopCoroutine(_atkPunchRoutine); _atkPunchRoutine = null; }
-        if (_hpPunchRoutine  != null) { StopCoroutine(_hpPunchRoutine);  _hpPunchRoutine  = null; }
+        if (_atkPunchRoutine != null) { StopCoroutine(_atkPunchRoutine); _atkPunchRoutine = null; if (atkText != null) atkText.transform.localScale = _atkRestScale; }
+        if (_hpPunchRoutine  != null) { StopCoroutine(_hpPunchRoutine);  _hpPunchRoutine  = null; if (hpText  != null) hpText.transform.localScale  = _hpRestScale; }
         if (frameOriginalCached && frameBackground != null) frameBackground.color = frameOriginalColor;
     }
 

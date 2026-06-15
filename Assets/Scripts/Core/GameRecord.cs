@@ -39,6 +39,7 @@ public enum FlashType
     SynergyBabylon,   // vàng — synergy Babylon
     SynergyOlympus,   // cyan — synergy Olympus
     SynergyNiles,     // lục — synergy Niles
+    Consume,          // phóng to rồi thu lại — source vừa "nuốt" một unit (Sekhmet)
 }
 
 [System.Serializable]
