@@ -3,23 +3,34 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-// Panel mờ hiện ra khi đang kéo card từ Hand hoặc PlayerBoard.
-// Thả card vào panel sẽ bán card với giá 1 vàng cộng vào số tiền hiện tại trong round.
-// Tự build UI runtime nếu chưa có trong scene → không cần setup thủ công.
-public class SellZone : MonoBehaviour, IDropHandler
+// Trigger zone: vùng kéo bài vào để kích hoạt / thả để bán — ẩn, chỉ nhận raycast.
+// Notification panel: vùng hiển thị "BÁN +1G" — tách biệt, không nhận raycast.
+public class SellZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
     private static SellZone instance;
-    private CanvasGroup canvasGroup;
+    private CanvasGroup triggerCG;
+    private CanvasGroup notificationCG;
 
-    public static void Show()
+    // Gọi khi bắt đầu kéo từ Hand/PlayerBoard: trigger zone sẵn sàng nhận hover
+    public static void Standby()
     {
         EnsureExists();
-        if (instance != null) instance.SetVisible(true);
+        if (instance != null) instance.SetTriggerActive(true);
     }
 
     public static void Hide()
     {
-        if (instance != null) instance.SetVisible(false);
+        if (instance != null) instance.SetHidden();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        SetNotificationVisible(true);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        SetNotificationVisible(false);
     }
 
     public static SellZone EnsureExists()
@@ -29,24 +40,41 @@ public class SellZone : MonoBehaviour, IDropHandler
         Canvas canvas = Object.FindObjectOfType<Canvas>();
         if (canvas == null) return null;
 
-        GameObject panel = new GameObject(
-            "SellZonePanel",
+        // --- Trigger zone (vùng kéo bài vào, ẩn hoàn toàn) ---
+        GameObject trigger = new GameObject(
+            "SellZoneTrigger",
             typeof(RectTransform), typeof(CanvasRenderer),
             typeof(Image), typeof(CanvasGroup), typeof(SellZone));
-        panel.transform.SetParent(canvas.transform, false);
-        panel.transform.SetAsLastSibling();
+        trigger.transform.SetParent(canvas.transform, false);
+        trigger.transform.SetAsLastSibling();
 
-        RectTransform rt = panel.GetComponent<RectTransform>();
-        rt.anchorMin = new Vector2(0.30f, 0.78f);
-        rt.anchorMax = new Vector2(0.70f, 0.95f);
-        rt.offsetMin = Vector2.zero;
-        rt.offsetMax = Vector2.zero;
+        RectTransform triggerRT = trigger.GetComponent<RectTransform>();
+        triggerRT.anchorMin = new Vector2(0.30f, 0.78f);
+        triggerRT.anchorMax = new Vector2(0.70f, 0.95f);
+        triggerRT.offsetMin = new Vector2(-270f, -280f);
+        triggerRT.offsetMax = new Vector2(452f, -128f);
 
-        Image img = panel.GetComponent<Image>();
-        img.color = new Color(0.85f, 0.15f, 0.15f, 0.35f);
+        // Image trong suốt để nhận raycast mà không hiện ra
+        trigger.GetComponent<Image>().color = Color.clear;
+
+        // --- Notification panel (vùng hiển thị "BÁN +1G") ---
+        GameObject notif = new GameObject(
+            "SellZoneNotification",
+            typeof(RectTransform), typeof(CanvasRenderer),
+            typeof(Image), typeof(CanvasGroup));
+        notif.transform.SetParent(canvas.transform, false);
+        notif.transform.SetAsLastSibling();
+
+        RectTransform notifRT = notif.GetComponent<RectTransform>();
+        notifRT.anchorMin = new Vector2(0.30f, 0.78f);
+        notifRT.anchorMax = new Vector2(0.70f, 0.95f);
+        notifRT.offsetMin = Vector2.zero;
+        notifRT.offsetMax = Vector2.zero;
+
+        notif.GetComponent<Image>().color = new Color(0.85f, 0.15f, 0.15f, 0.35f);
 
         GameObject textGo = new GameObject("Label", typeof(RectTransform));
-        textGo.transform.SetParent(panel.transform, false);
+        textGo.transform.SetParent(notif.transform, false);
         RectTransform trt = textGo.GetComponent<RectTransform>();
         trt.anchorMin = Vector2.zero; trt.anchorMax = Vector2.one;
         trt.offsetMin = Vector2.zero; trt.offsetMax = Vector2.zero;
@@ -58,25 +86,46 @@ public class SellZone : MonoBehaviour, IDropHandler
         t.alignment = TextAlignmentOptions.Center;
         t.color = new Color(1f, 1f, 1f, 0.95f);
 
-        instance = panel.GetComponent<SellZone>();
-        instance.canvasGroup = panel.GetComponent<CanvasGroup>();
-        instance.SetVisible(false);
+        instance = trigger.GetComponent<SellZone>();
+        instance.triggerCG = trigger.GetComponent<CanvasGroup>();
+        instance.notificationCG = notif.GetComponent<CanvasGroup>();
+        instance.SetHidden();
         return instance;
     }
 
     private void Awake()
     {
-        if (canvasGroup == null) canvasGroup = GetComponent<CanvasGroup>();
+        if (triggerCG == null) triggerCG = GetComponent<CanvasGroup>();
         if (instance == null) instance = this;
     }
 
-    private void SetVisible(bool v)
+    private void Update()
     {
-        if (canvasGroup == null) canvasGroup = GetComponent<CanvasGroup>();
-        if (canvasGroup == null) return;
-        canvasGroup.alpha = v ? 1f : 0f;
-        canvasGroup.blocksRaycasts = v;
-        canvasGroup.interactable   = v;
+        // Fallback: nếu chuột nhả ngoài game window (WebGL), tự tắt
+        if (triggerCG != null && triggerCG.blocksRaycasts && !Input.GetMouseButton(0))
+            SetHidden();
+    }
+
+    private void SetTriggerActive(bool active)
+    {
+        if (triggerCG == null) return;
+        triggerCG.blocksRaycasts = active;
+        triggerCG.interactable   = active;
+        if (!active) SetNotificationVisible(false);
+    }
+
+    private void SetNotificationVisible(bool visible)
+    {
+        if (notificationCG == null) return;
+        notificationCG.alpha          = visible ? 1f : 0f;
+        notificationCG.blocksRaycasts = false;
+        notificationCG.interactable   = false;
+    }
+
+    private void SetHidden()
+    {
+        SetTriggerActive(false);
+        SetNotificationVisible(false);
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -94,7 +143,6 @@ public class SellZone : MonoBehaviour, IDropHandler
             : null;
         if (sourceSlot == null) { Hide(); return; }
 
-        // Chỉ cho bán từ Hand hoặc PlayerBoard
         if (sourceSlot.slotType != CardSlot.SlotType.Hand
             && sourceSlot.slotType != CardSlot.SlotType.PlayerBoard)
         {
@@ -102,7 +150,6 @@ public class SellZone : MonoBehaviour, IDropHandler
             return;
         }
 
-        // Bắn OnSell + broadcast OnAllySell cho Unit
         if (ui.currentInstance.Data.cardType == CardType.Unit)
         {
             GameManager.Instance.SyncBoards();
@@ -121,7 +168,7 @@ public class SellZone : MonoBehaviour, IDropHandler
             );
         }
 
-        GameManager.Instance.SellCard();             // +1 vàng + update UI
+        GameManager.Instance.SellCard();
         Destroy(draggedCard.gameObject);
         Hide();
     }

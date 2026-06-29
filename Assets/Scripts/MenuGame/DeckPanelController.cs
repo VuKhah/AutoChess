@@ -132,7 +132,7 @@ public class DeckPanelController : MonoBehaviour
         g.constraint = GridLayoutGroup.Constraint.Flexible;
         g.startCorner = GridLayoutGroup.Corner.UpperLeft;
         g.startAxis = GridLayoutGroup.Axis.Horizontal;
-        g.childAlignment = TextAnchor.UpperLeft;
+        g.childAlignment = TextAnchor.UpperCenter;
 
         return row.transform;
     }

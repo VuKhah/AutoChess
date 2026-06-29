@@ -93,12 +93,18 @@ public class CardVisuals : MonoBehaviour
     {
         AudioManager.Instance?.Attack();
 
-        // 1. Lưu lại vị trí Local ban đầu (thường là 0,0,0 vì nó nằm trong Slot)
-        Vector3 originalLocalPos = Vector3.zero;
+        // Nhấc lên DRAGGING_LAYER để tránh bị Mask của panel cha cắt khi di chuyển
+        Transform originalParent = transform.parent;
+        Vector3 originalScale = transform.localScale;
+        GameObject layerGO = GameObject.Find("--- DRAGGING_LAYER ---");
+        Transform dragLayer = layerGO != null ? layerGO.transform : transform.parent;
+        transform.SetParent(dragLayer, worldPositionStays: true);
+        transform.SetAsLastSibling();
+
         Vector3 startWorldPos = transform.position;
         float elapsed = 0f;
 
-        // 2. Lao lên tấn công (Sử dụng World Position để lao vào điểm giữa)
+        // Lao lên tấn công
         while (elapsed < duration)
         {
             transform.position = Vector3.Lerp(startWorldPos, targetWorldPos, elapsed / duration);
@@ -106,22 +112,23 @@ public class CardVisuals : MonoBehaviour
             yield return null;
         }
 
-        // 3. Rung lắc khi va chạm
+        // Rung lắc khi va chạm
         yield return StartCoroutine(ShakeEffect(0.1f, 5f));
 
-        // 4. Quay về vị trí cũ (Sử dụng Local Position để ĐẢM BẢO nó về đúng tâm Slot)
+        // Quay về vị trí cũ
         elapsed = 0f;
-        Vector3 currentLocalPos = transform.localPosition;
+        Vector3 currentWorldPos = transform.position;
         while (elapsed < duration)
         {
-            // Ép nó về (0,0,0) của Slot cha
-            transform.localPosition = Vector3.Lerp(currentLocalPos, originalLocalPos, elapsed / duration);
+            transform.position = Vector3.Lerp(currentWorldPos, startWorldPos, elapsed / duration);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        // Chốt hạ lần cuối để tránh sai số
+        // Trả về slot gốc, chốt về tâm
+        transform.SetParent(originalParent, worldPositionStays: false);
         transform.localPosition = Vector3.zero;
+        transform.localScale = originalScale;
     }
 
     public IEnumerator ShakeEffect(float duration, float magnitude)

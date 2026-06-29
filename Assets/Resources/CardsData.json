@@ -9,7 +9,7 @@
       "baseATK": 10,
       "baseHP": 10,
       "cost": 3,
-      "description": "OnAllySell (chỉ Babylon, tối đa 2/4/6 lần/lượt): Hấp thụ vĩnh viễn toàn bộ chỉ số của unit vừa bán.",
+      "description": "OnAllySell (Babylon only, up to 2/4/6 times per round): Permanently absorb all stats from the sold ally.",
       "abilities": [
         {
           "trigger": 12,
@@ -30,7 +30,7 @@
       "baseATK": 9,
       "baseHP": 9,
       "cost": 3,
-      "description": "Khi đồng minh deploy (mỗi 2 lần): Nhận 1 Ancient Coin.",
+      "description": "Every 2nd ally deploy: Gain 1 Ancient Coin.",
       "abilities": [
         {
           "trigger": 14,
@@ -50,7 +50,7 @@
       "baseATK": 8,
       "baseHP": 8,
       "cost": 3,
-      "description": "Khi một đồng minh Babylon deploy: Tăng vĩnh viễn +2/+2 cho toàn bộ đồng minh Babylon.",
+      "description": "Whenever a Babylon ally deploys: Permanently grant +2/+2 to all Babylon allies.",
       "abilities": [
         {
           "trigger": 14,
@@ -71,7 +71,7 @@
       "baseATK": 6,
       "baseHP": 6,
       "cost": 3,
-      "description": "Bất cứ khi nào đồng minh Babylon deploy (lần 2/4/6): Tăng vĩnh viễn +3/+3 cho đồng minh yếu nhất.",
+      "description": "Every 2nd Babylon ally deploy: Permanently grant +3/+3 to the weakest ally.",
       "abilities": [
         {
           "trigger": 14,
@@ -95,7 +95,7 @@
       "baseATK": 6,
       "baseHP": 6,
       "cost": 3,
-      "description": "OnSell: Trao vĩnh viễn toàn bộ chỉ số của bản thân cho 2 đồng minh ngẫu nhiên.",
+      "description": "OnSell: Permanently split all your own stats between 2 random allies.",
       "abilities": [
         {
           "trigger": 7,
@@ -114,7 +114,7 @@
       "baseATK": 6,
       "baseHP": 6,
       "cost": 3,
-      "description": "Khi bất kỳ đồng minh bị bán: Tăng vĩnh viễn +1/+2 cho toàn bộ đồng minh.",
+      "description": "Whenever any ally is sold: Permanently grant +1/+2 to all allies.",
       "abilities": [
         {
           "trigger": 12,
@@ -135,7 +135,7 @@
       "baseHP": 15,
       "cost": 3,
       "hasTaunt": true,
-      "description": "Taunt. Khi bị đánh: Phản 5/10/15 sát thương cho kẻ địch trực tiếp.",
+      "description": "Taunt. When attacked: Deal 5/10/15 damage back to the attacker.",
       "abilities": [
         {
           "trigger": 1,
@@ -155,7 +155,7 @@
       "baseHP": 10,
       "cost": 3,
       "hasTaunt": true,
-      "description": "Taunt. OnDeploy: Tăng vĩnh viễn +10/+10 cho bản thân.",
+      "description": "Taunt. OnDeploy: Permanently gain +10/+10.",
       "abilities": [
         {
           "trigger": 6,
@@ -175,7 +175,7 @@
       "baseATK": 5,
       "baseHP": 5,
       "cost": 3,
-      "description": "OnDeploy (1 lần): Nhận 2 đơn vị Babylon ngẫu nhiên đến Tier Shop vào Hand.",
+      "description": "OnDeploy (once): Gain 2 random Babylon units up to Shop Tier into your hand.",
       "abilities": [
         {
           "trigger": 6,
@@ -196,7 +196,7 @@
       "baseATK": 5,
       "baseHP": 5,
       "cost": 3,
-      "description": "Bất cứ khi nào một đồng minh Babylon deploy: Tăng vĩnh viễn +1/+2 cho đồng minh bên phải.",
+      "description": "Whenever a Babylon ally deploys: Permanently grant +1/+2 to the right neighbor.",
       "abilities": [
         {
           "trigger": 14,
@@ -217,7 +217,7 @@
       "baseATK": 8,
       "baseHP": 8,
       "cost": 3,
-      "description": "Mỗi khi nhận chỉ số vĩnh viễn: Tăng thêm vĩnh viễn +2/+1 cho bản thân.",
+      "description": "Whenever this unit receives a permanent stat buff: Also permanently gain +2/+1.",
       "abilities": [
         {
           "trigger": 13,
@@ -237,7 +237,7 @@
       "baseATK": 7,
       "baseHP": 1,
       "cost": 3,
-      "description": "Khi tấn công: Nhận 2 Coin.",
+      "description": "On Attack: Gain 2 Gold.",
       "abilities": [
         {
           "trigger": 2,
@@ -256,7 +256,7 @@
       "baseATK": 8,
       "baseHP": 8,
       "cost": 3,
-      "description": "OnDeploy (1 lần): Nuốt chửng đồng minh Babylon bên trái và bên phải, lấy toàn bộ chỉ số của chúng.",
+      "description": "OnDeploy (once): Devour both Babylon neighbors and permanently absorb all their stats.",
       "abilities": [
         {
           "trigger": 6,
@@ -285,7 +285,7 @@
       "baseHP": 3,
       "cost": 3,
       "hasTaunt": true,
-      "description": "Taunt. Khi bị đánh: Tăng +1/+1 cho toàn bộ đồng minh Babylon trong trận đấu này.",
+      "description": "Taunt. When attacked: Grant +1/+1 to all Babylon allies for this battle.",
       "abilities": [
         {
           "trigger": 1,
@@ -305,7 +305,7 @@
       "baseATK": 1,
       "baseHP": 5,
       "cost": 3,
-      "description": "OnAllySell: Tăng vĩnh viễn +1/+0 cho toàn bộ đồng minh Babylon.",
+      "description": "OnAllySell: Permanently grant +1/+0 to all Babylon allies.",
       "abilities": [
         {
           "trigger": 12,
@@ -324,7 +324,7 @@
       "baseATK": 1,
       "baseHP": 2,
       "cost": 3,
-      "description": "OnDeploy: Nhận 2 Coin.",
+      "description": "OnDeploy: Gain 2 Gold.",
       "abilities": [
         {
           "trigger": 6,
@@ -356,7 +356,7 @@
       "baseATK": 5,
       "baseHP": 1,
       "cost": 3,
-      "description": "OnAllySell: Tăng vĩnh viễn +0/+1 cho toàn bộ đồng minh Babylon.",
+      "description": "OnAllySell: Permanently grant +0/+1 to all Babylon allies.",
       "abilities": [
         {
           "trigger": 12,
@@ -375,7 +375,7 @@
       "baseATK": 3,
       "baseHP": 3,
       "cost": 3,
-      "description": "OnSell: Nhận 1 đơn vị Babylon ngẫu nhiên đến Tier 2 vào Hand.",
+      "description": "OnSell: Gain 1 random Babylon unit up to Tier 2 into your hand.",
       "abilities": [
         {
           "trigger": 7,
@@ -396,7 +396,7 @@
       "baseATK": 3,
       "baseHP": 3,
       "cost": 3,
-      "description": "Bất cứ khi nào bán đồng minh: Tăng vĩnh viễn +1/+1 cho bản thân.",
+      "description": "Whenever you sell an ally: Permanently gain +1/+1.",
       "abilities": [
         {
           "trigger": 12,
@@ -416,7 +416,7 @@
       "baseATK": 2,
       "baseHP": 3,
       "cost": 3,
-      "description": "Bất cứ khi nào đồng minh Babylon deploy: Tăng vĩnh viễn +0/+1 cho bản thân.",
+      "description": "Whenever a Babylon ally deploys: Permanently gain +0/+1.",
       "abilities": [
         {
           "trigger": 14,
@@ -436,7 +436,7 @@
       "baseATK": 2,
       "baseHP": 3,
       "cost": 3,
-      "description": "OnDeploy: Nhận 1 Ancient Coin.",
+      "description": "OnDeploy: Gain 1 Ancient Coin.",
       "abilities": [
         {
           "trigger": 6,
@@ -469,7 +469,7 @@
           "anyAllyTrigger": true
         }
       ],
-      "description": "OnAllyDeath: ban Reborn cho LowestHealthAlly (tối đa 2 lần)"
+      "description": "OnAllyDeath: Grant Reborn to the lowest-health ally (up to 2/4/6 times)."
     },
     {
       "cardID": "U_02_Niles",
@@ -496,7 +496,7 @@
           "isPermanent": false
         }
       ],
-      "description": "OnAllySummon (tối đa 2 lần): Nuốt đồng minh đó. Demise: Triệu hồi lại tất cả đơn vị đã nuốt."
+      "description": "OnAllySummon (up to 2/4/6 times): Devour that ally. Demise: Resummon all devoured units."
     },
     {
       "cardID": "U_03_Niles",
@@ -516,7 +516,7 @@
           "anyAllyTrigger": true
         }
       ],
-      "description": "OnAllyReborn: Nhân đôi/ba/bốn chỉ số của đồng minh đó (x1/x2/x3 theo merge)."
+      "description": "OnAllyReborn: Multiply that ally's stats (×2/×3/×4 scaling with merge level)."
     },
     {
       "cardID": "U_04_Niles",
@@ -546,7 +546,7 @@
           "isPermanent": true
         }
       ],
-      "description": "Bất kể khi nào đồng minh summon/reborn: Tăng vĩnh viễn +1/+2 cho bản thân."
+      "description": "Whenever an ally is summoned or reborns: Permanently gain +1/+2."
     },
     {
       "cardID": "U_05_Niles",
@@ -568,7 +568,7 @@
           "isEscalating": true
         }
       ],
-      "description": "OnAllySummon (mỗi 2 lần): Tăng +1/+1 (tăng dần +1/+1 mỗi lần) cho toàn bộ đồng minh Niles trong trận đấu này."
+      "description": "Every 2nd ally summon: Grant escalating +1/+1 to all Niles allies for this battle (bonus grows each trigger)."
     },
     {
       "cardID": "U_06_Niles",
@@ -591,7 +591,7 @@
           "isPermanent": true
         }
       ],
-      "description": "Slain: Vĩnh viễn +2 ATK cho toàn bộ đơn vị Niles (board/hand/shop/future). Tích lũy qua các lượt."
+      "description": "Slain: Permanently grant +2 ATK to all Niles units everywhere (board, hand, shop, future). Stacks across rounds."
     },
     {
       "cardID": "U_07_Niles",
@@ -611,7 +611,7 @@
           "isPermanent": true
         }
       ],
-      "description": "OnAllyReborn: Tăng vĩnh viễn +3/+3 cho toàn bộ đồng minh."
+      "description": "OnAllyReborn: Permanently grant +3/+3 to all allies."
     },
     {
       "cardID": "U_08_Niles",
@@ -631,7 +631,7 @@
           "isPermanent": false
         }
       ],
-      "description": "OnAllySummon: Tăng +4/+4 cho đồng minh đó trong trận đấu này."
+      "description": "OnAllySummon: Grant +4/+4 to that ally for this battle."
     },
     {
       "cardID": "U_09_Niles",
@@ -651,7 +651,7 @@
           "isReborn": true
         }
       ],
-      "description": "Slain: Ban Reborn cho 1 đồng minh Niles ngẫu nhiên."
+      "description": "Slain: Grant Reborn to 1 random Niles ally."
     },
     {
       "cardID": "U_10_Niles",
@@ -671,7 +671,7 @@
           "isPermanent": false
         }
       ],
-      "description": "Slain: Triệu hồi 2 Niles Warrior."
+      "description": "Slain: Summon 2 Niles Warriors."
     },
     {
       "cardID": "U_11_Niles",
@@ -697,7 +697,7 @@
           "isPermanent": false
         }
       ],
-      "description": "OnDeploy: Remove đồng minh Niles bên trái, ghi nhớ nó. Slain: Sinh ra bản sao của đơn vị đã ghi nhớ."
+      "description": "OnDeploy: Remove and memorize the Niles ally to the left. Slain: Spawn a copy of the memorized unit."
     },
     {
       "cardID": "U_12_Niles",
@@ -715,7 +715,7 @@
           "isPermanent": false
         }
       ],
-      "description": "Đầu trận: Kích hoạt kỹ năng của đồng minh bên trái."
+      "description": "Start of Battle: Trigger the ability of the left neighbor."
     },
     {
       "cardID": "U_13_Niles",
@@ -736,7 +736,7 @@
           "isPermanent": true
         }
       ],
-      "description": "OnAllyDeath (mỗi 3 lần): Tăng vĩnh viễn +1/+0 cho toàn bộ đồng minh Niles."
+      "description": "Every 3rd ally death: Permanently grant +1/+0 to all Niles allies."
     },
     {
       "cardID": "U_14_Niles",
@@ -755,7 +755,7 @@
           "isPermanent": false
         }
       ],
-      "description": "Khi tấn công: Gây 5 sát thương cho kẻ địch trực tiếp."
+      "description": "On Attack: Deal 5 damage to the opposing enemy."
     },
     {
       "cardID": "U_15_Niles",
@@ -775,7 +775,7 @@
           "isPermanent": true
         }
       ],
-      "description": "OnAllyDeath: Tăng vĩnh viễn +1/+1 cho bản thân."
+      "description": "OnAllyDeath: Permanently gain +1/+1."
     },
     {
       "cardID": "U_16_Niles",
@@ -794,7 +794,7 @@
           "isPermanent": false
         }
       ],
-      "description": "OnDeploy: Nhận 1 Ancient Coin."
+      "description": "OnDeploy: Gain 1 Ancient Coin."
     },
     {
       "cardID": "U_17_Niles",
@@ -814,7 +814,7 @@
           "isPermanent": true
         }
       ],
-      "description": "Aura: Tăng vĩnh viễn +2/+0 cho đồng minh ngẫu nhiên."
+      "description": "Aura: Permanently grant +2/+0 to a random ally."
     },
     {
       "cardID": "U_18_Niles",
@@ -844,7 +844,7 @@
           "isPermanent": false
         }
       ],
-      "description": "Bất kể khi nào đồng minh summon/reborn: Tăng +1/+1 cho bản thân trong trận đấu này."
+      "description": "Whenever an ally is summoned or reborns: Gain +1/+1 for this battle."
     },
     {
       "cardID": "U_19_Niles",
@@ -864,7 +864,7 @@
           "isPermanent": false
         }
       ],
-      "description": "Slain: Triệu hồi 2 Medjed."
+      "description": "Slain: Summon 2 Medjed."
     },
     {
       "cardID": "U_20_Niles",
@@ -884,7 +884,7 @@
           "isPermanent": false
         }
       ],
-      "description": "Slain: Triệu hồi 1 Mummy."
+      "description": "Slain: Summon 1 Mummy."
     },
     {
       "cardID": "U_21_Niles",
@@ -913,7 +913,7 @@
           "trigger": 0
         }
       ],
-      "description": "Được triệu hồi khi Niles Warrior hy sinh. Không có kỹ năng."
+      "description": "Summoned when Niles Warrior dies. No ability."
     },
     {
       "cardID": "U_23_Niles",
@@ -929,7 +929,7 @@
           "trigger": 0
         }
       ],
-      "description": "Được triệu hồi khi Tawaret hy sinh. Không có kỹ năng."
+      "description": "Summoned when Tawaret dies. No ability."
     },
     {
       "cardID": "U_24_Niles",
@@ -945,7 +945,7 @@
           "trigger": 0
         }
       ],
-      "description": "Token triệu hồi. Không có kỹ năng."
+      "description": "Summoned token. No ability."
     },
     {
       "cardID": "S_01",
@@ -960,7 +960,7 @@
           "effectValue1": 1
         }
       ],
-      "description": "Nhận 1 đồng.",
+      "description": "Gain 1 Gold.",
       "cardType": 1
     },
     {
@@ -979,7 +979,7 @@
           "isPermanent": true
         }
       ],
-      "description": "Ban vĩnh viễn +3/+0 cho 1 đồng minh.",
+      "description": "Permanently grant +3/+0 to 1 ally.",
       "cardType": 1
     },
     {
@@ -999,7 +999,7 @@
           "isPermanent": true
         }
       ],
-      "description": "Ban vĩnh viễn +0/+3 và Taunt cho 1 đồng minh.",
+      "description": "Permanently grant +0/+3 and Taunt to 1 ally.",
       "cardType": 1
     },
     {
@@ -1016,7 +1016,7 @@
           "targetCount": 1
         }
       ],
-      "description": "Nhận 1 đơn vị ngẫu nhiên Tier 1.",
+      "description": "Gain 1 random Tier 1 unit.",
       "cardType": 1
     },
     {
@@ -1032,13 +1032,13 @@
           "targetCount": 1
         }
       ],
-      "description": "Lấy 1 đơn vị ngẫu nhiên từ Shop hiện tại.",
+      "description": "Take 1 random unit from the current Shop for free.",
       "cardType": 1
     },
     {
       "cardID": "S_06",
       "cardName": "Let's Feast",
-      "tribe": 0,
+      "tribe": 2,
       "tier": 1,
       "cost": 2,
       "fileName": "spell-art_06",
@@ -1052,7 +1052,7 @@
           "isPermanent": false
         }
       ],
-      "description": "Ban +0/+2 cho 3 đồng minh ngẫu nhiên đang trên bàn chiến (chỉ trận này).",
+      "description": "Grant +0/+2 to 3 random allies on the board for this battle.",
       "cardType": 1
     },
     {
@@ -1071,7 +1071,7 @@
           "isPermanent": true
         }
       ],
-      "description": "Ban vĩnh viễn +3/+3 cho 1 đồng minh.",
+      "description": "Permanently grant +3/+3 to 1 ally.",
       "cardType": 1
     },
     {
@@ -1088,7 +1088,7 @@
           "isPermanent": false
         }
       ],
-      "description": "Tăng Thu Nhập thêm 2 đến hết lượt này.",
+      "description": "Increase Income by 2 for this round.",
       "cardType": 1
     },
     {
@@ -1104,7 +1104,7 @@
           "effectValue1": 3
         }
       ],
-      "description": "Nếu thắng trận kế tiếp, nhận 3 đồng.",
+      "description": "If you win the next battle, gain 3 Gold.",
       "cardType": 1
     },
     {
@@ -1123,7 +1123,7 @@
           "isPermanent": true
         }
       ],
-      "description": "Ban vĩnh viễn +1/+1 cho toàn bộ đồng minh.",
+      "description": "Permanently grant +1/+1 to all allies.",
       "cardType": 1
     },
     {
@@ -1140,7 +1140,7 @@
           "isPermanent": true
         }
       ],
-      "description": "Tăng vĩnh viễn Thu Nhập thêm 1.",
+      "description": "Permanently increase Income by 1.",
       "cardType": 1
     },
     {
@@ -1156,7 +1156,7 @@
           "target": 12
         }
       ],
-      "description": "Chọn 1 đơn vị, nhận 1 đơn vị khác cùng Tộc (không trùng đơn vị đã chọn).",
+      "description": "Choose 1 unit, then gain a different unit of the same Tribe.",
       "cardType": 1
     },
     {
@@ -1174,7 +1174,7 @@
           "effectValue2": 2
         }
       ],
-      "description": "Ban cho 1 đồng minh khả năng: cuối mỗi lượt Shop, nhận +2/+2.",
+      "description": "Grant 1 ally: gain +2/+2 at the end of each Shop round.",
       "cardType": 1
     },
     {
@@ -1190,7 +1190,7 @@
           "target": 12
         }
       ],
-      "description": "Loại bỏ 1 đồng minh, chuyển toàn bộ chỉ số của nó cho 1 đồng minh ngẫu nhiên.",
+      "description": "Remove 1 ally and transfer all its stats to a random ally.",
       "cardType": 1
     },
     {
@@ -1207,7 +1207,7 @@
           "targetCount": 3
         }
       ],
-      "description": "Nhận 3 đơn vị ngẫu nhiên Tier 5.",
+      "description": "Gain 3 random Tier 5 units.",
       "cardType": 1
     },
     {
@@ -1227,7 +1227,7 @@
           "effectValue1": 6
         }
       ],
-      "description": "Mất 1 Mạng, nhận 6 đồng.",
+      "description": "Lose 1 Life, gain 6 Gold.",
       "cardType": 1
     },
     {
@@ -1243,7 +1243,7 @@
           "target": 12
         }
       ],
-      "description": "Chọn 1 đơn vị tham chiếu, nâng cấp 1 đơn vị khác cùng Tộc lên +1 Tier.",
+      "description": "Choose a reference unit, then upgrade another unit of the same Tribe by +1 Tier.",
       "cardType": 1
     },
     {
@@ -1259,7 +1259,7 @@
           "target": 12
         }
       ],
-      "description": "Ban Nhân Đôi ATK và Safeguard cho 1 đồng minh.",
+      "description": "Grant 1 ally Double ATK and Safeguard.",
       "cardType": 1
     },
     {
@@ -1277,7 +1277,7 @@
           "effectValue2": 5
         }
       ],
-      "description": "Nếu đơn vị chưa có Taunt: ban Taunt và +0/+5. Nếu đã có Taunt: xóa Taunt và ban +3/+0.",
+      "description": "No Taunt: grant Taunt and +0/+5. Has Taunt: remove Taunt and grant +3/+0.",
       "cardType": 1
     },
     {
@@ -1293,7 +1293,7 @@
           "target": 12
         }
       ],
-      "description": "Ban cho 1 đồng minh ATK và HP bằng Tier hiện tại của Shop.",
+      "description": "Grant 1 ally ATK and HP equal to the current Shop Tier.",
       "cardType": 1
     },
     {
@@ -1310,7 +1310,7 @@
           "targetCount": 1
         }
       ],
-      "description": "Nhận ngẫu nhiên 1 đơn vị cao hơn Shop Tier 1 cấp. Tối đa Tier 6.",
+      "description": "Gain 1 random unit 1 Tier above the current Shop Tier. Max Tier 6.",
       "cardType": 1
     }
   ]

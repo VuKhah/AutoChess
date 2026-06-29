@@ -24,6 +24,9 @@ public class GATrainer : MonoBehaviour
 
     void Start()
     {
+#if UNITY_WEBGL
+        return; // File I/O không hỗ trợ trên WebGL
+#endif
         if (IsLibraryValid())
         {
             Debug.Log("[GATrainer] AI_Library.json đã hợp lệ — bỏ qua training.");
